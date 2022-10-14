@@ -1,0 +1,1894 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gotest.dao.WorkOrderMapper" >
+    <resultMap id="ResultMap" type="com.gotest.domain.WorkOrder" >
+        <id column="work_no" property="workOrderNo" jdbcType="VARCHAR" />
+        <result column="main_task_no" property="mainTaskNo" jdbcType="VARCHAR" />
+        <result column="main_task_name" property="mainTaskName" jdbcType="VARCHAR" />
+        <result column="work_stage" property="stage" jdbcType="VARCHAR" />
+        <result column="work_unit" property="unit" jdbcType="VARCHAR" />
+        <result column="testers" property="testers" jdbcType="VARCHAR" />
+        <result column="sit_date" property="planSitDate" jdbcType="DATE" />
+        <result column="product_date" property="planProDate" jdbcType="DATE" />
+        <result column="uat_date" property="planUatDate" jdbcType="DATE" />
+        <result column="work_flag" property="workOrderFlag" jdbcType="VARCHAR" />
+        <result column="work_manager" property="workManager" jdbcType="VARCHAR" />
+        <result column="work_leader" property="groupLeader" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="field1" property="field1" jdbcType="VARCHAR"/>
+        <result column="field2" property="field2" jdbcType="VARCHAR" />
+        <result column="field3" property="field3" jdbcType="VARCHAR" />
+        <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+        <result column="field5" property="field5" jdbcType="VARCHAR" />
+        <result column="uat_submit_date" property="uatSubmitDate" jdbcType="VARCHAR" />
+        <result column="risk_description" property="riskDescription" jdbcType="VARCHAR" />
+        <result column="sit_flag" property="sitFlag" jdbcType="VARCHAR" />
+        <result column="approval_flag" property="approvalFlag" jdbcType="VARCHAR" />
+        <result column="fst_sit_date" property="fstSitDate" jdbcType="VARCHAR" />
+        <result column="fnl_sit_date" property="fnlSitDate" jdbcType="VARCHAR" />
+        <result column="image_link" property="imageLink" jdbcType="VARCHAR" />
+        <result column="FDEV_GROUP_ID" property="fdevGroupId" jdbcType="VARCHAR"/>
+        <result column="FDEV_GROUP_NAME" property="fdevGroupName" jdbcType="VARCHAR"/>
+        <result column="demand_no" property="demandNo" jdbcType="VARCHAR"/>
+        <result column="demand_name" property="demandName" jdbcType="VARCHAR"/>
+        <result column="demand_id" property="demandId" jdbcType="VARCHAR"/>
+        <result column="fdev_new" property="fdevNew" jdbcType="VARCHAR"/>
+        <result column="order_type" property="orderType" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id = "WorkOrder_Column_List_All" >
+        work_no,
+        main_task_no,
+        main_task_name,
+        work_stage,
+        work_unit,
+        testers,
+        sit_date,
+        product_date,
+        uat_date,
+        work_flag,
+        work_manager,
+        work_leader,
+        remark,
+        create_time,
+        field1,field2,field3,group_id,field5,
+        uat_submit_date,
+        risk_description,
+        sit_flag,
+        approval_flag,
+        fdev_group_id,
+        fst_sit_date,
+        fnl_sit_date,
+        group_id,
+        image_link,
+        demand_no,
+        demand_name,
+        fdev_new,
+        demand_id,
+        order_type
+    </sql>
+    
+    <sql id = "insert_WorkOrder_Column_List_All" >
+        work_no,
+        main_task_no,
+        main_task_name,
+        work_stage,
+        testers,
+        sit_date,
+        product_date,
+        uat_date,
+        work_flag,
+        work_manager,
+        work_leader,
+        remark,
+        create_time,
+        field1,field2,field3,field5
+        ,sit_flag
+        ,fdev_group_id,
+        demand_no,
+        work_unit,
+        demand_name,
+        fdev_new,
+        demand_id,
+        order_type
+    </sql>
+
+    <sql id="queryWorknoGroup">
+        SELECT
+        w.work_no, w.fdev_group_id as group_id
+        FROM
+        work_order w
+        <where>
+            <if test="startDate != '' and startDate != null">
+                and from_unixtime(w.uat_submit_date,'%Y/%m/%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != '' and endDate != null">
+                and from_unixtime(w.uat_submit_date,'%Y/%m/%d') &lt;= #{endDate}
+            </if>
+            <if test="fdevGroupId !=null and fdevGroupId.size() > 0">
+                and fd.FDEV_GROUP_ID in
+                <foreach collection="fdevGroupId" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
+    <select id = "queryAdminAssignOrder" resultMap="ResultMap" >
+        SELECT
+            distinct work_no work_no,
+            main_task_no main_task_no,
+            main_task_name main_task_name,
+            work_stage work_stage,
+            work_unit work_unit,
+            testers testers,
+            sit_date sit_date,
+            product_date product_date,
+            uat_date uat_date,
+            work_flag work_flag,
+            work_manager work_manager,
+            work_leader work_leader,
+            remark remark,
+            create_time create_time,
+            field1 field1,field2 field2,field3 field3,group_id group_id,field5 field5,
+            uat_submit_date uat_submit_date,
+            risk_description risk_description,
+            sit_flag sit_flag,
+            approval_flag approval_flag,
+            fdev_group_id fdev_group_id,
+            fst_sit_date fst_sit_date,
+            fnl_sit_date fnl_sit_date,
+            group_id group_id,
+            image_link image_link,
+            demand_no demand_no,
+            demand_name demand_name,
+            order_type
+        FROM
+            work_order w
+        WHERE
+            work_flag = '1'
+        AND
+            (work_manager IS NULL OR TRIM(work_manager)='')
+        AND
+            work_stage = '0'
+        <if test="taskName != '%%' ">
+            And work_no IN
+            ( SELECT wt.work_no FROM (
+            SELECT work_no FROM work_order WHERE
+            main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+            work_unit like #{taskName} OR demand_no like #{taskName}
+            UNION
+            SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+        </if>
+        ORDER BY
+            create_time desc
+        LIMIT
+            #{start},#{pageSize}
+    </select>
+
+    <select id = "orderAssignCount" resultType="INTEGER" parameterType="STRING">
+        SELECT
+            count(distinct work_no)
+        FROM
+            work_order
+        WHERE
+            work_flag = '1'
+        AND
+            (work_manager IS NULL OR TRIM(work_order.work_manager)='')
+        AND
+            work_order.work_stage = '0'
+        <if test="taskName != '%%' ">
+            And work_no IN
+            ( SELECT wt.work_no FROM (
+            SELECT work_no FROM work_order WHERE
+            main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+            work_unit like #{taskName} OR demand_no like #{taskName}
+            UNION
+            SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+        </if>
+    </select>
+
+    <select id = "queryLeaderAssignOrder" resultMap="ResultMap" >
+        SELECT
+        <include refid="WorkOrder_Column_List_All" />
+        FROM
+        work_order
+        WHERE
+        work_flag = '1'
+        AND
+        work_stage = '0'
+        AND
+        work_leader = #{username}
+        order by create_time desc
+    </select>
+
+    <select id = "queryUserAllWorkOrder" resultMap="ResultMap" >
+        SELECT
+            distinct w.work_no,
+            main_task_no,
+            main_task_name,
+            work_stage,
+            work_unit,
+            testers,
+            sit_date,
+            product_date,
+            uat_date,
+            work_flag,
+            work_manager,
+            work_leader,
+            remark,
+            create_time,
+            w.field1,
+            w.field2,
+            w.field3,
+            uat_submit_date,
+            sit_flag,
+            risk_description,
+            group_id,
+            image_link,
+            FDEV_GROUP_ID,
+            demand_no,
+            demand_name,
+            order_type
+        FROM
+            work_order w
+        <where>
+            <if test="taskName != '%%' ">
+                And w.work_no IN
+                ( SELECT wt.work_no FROM (
+                        SELECT work_no FROM work_order WHERE
+                        main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+                        work_unit like #{taskName} OR demand_no like #{taskName}
+                        UNION
+                        SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+            </if>
+            <choose>
+            <when test="workStage != null and workStage != ''">
+                AND
+                work_stage = #{workStage}
+            </when>
+             <otherwise>
+                 AND
+                 work_stage != '4'
+                 and
+                 work_stage != '11'
+             </otherwise>
+            </choose>
+            <if test="userRole != 1">
+                AND(
+                FIND_IN_SET(#{userName},testers)
+                OR
+                FIND_IN_SET(#{userName},work_leader)
+                OR
+                work_manager = #{userName})
+            </if>
+            <if test="personFilter != null and personFilter != ''">
+                AND(
+                FIND_IN_SET(#{personFilter},testers)
+                OR
+                FIND_IN_SET(#{personFilter},work_leader)
+                OR
+                work_manager = #{personFilter})
+            </if>
+            <choose>
+                <when test="sitFlag == '1'.toString()">
+                    AND
+                        cast(w.sit_flag as signed integer) >= 1
+                </when>
+                <when test="sitFlag == '0'.toString()">
+                    AND
+                        (cast(w.sit_flag as signed integer) &lt; 1
+                    OR
+                    w.sit_flag is null)
+                </when>
+            </choose>
+            <if test="orderType != 'all'">
+                <choose>
+                    <when test="orderType != null and orderType != ''">
+                        AND
+                        order_type = #{orderType}
+                    </when>
+                    <otherwise>
+                        AND
+                        order_type = 'function'
+                    </otherwise>
+                </choose>
+            </if>
+            </where>
+        ORDER BY
+        <if test="groupSort != null and groupSort != ''">
+            group_id ${groupSort},
+        </if>
+        <if test="stageSort != null and stageSort != ''">
+            work_stage ${stageSort},
+        </if>
+            create_time desc
+        LIMIT #{start},#{pageSize}
+    </select>
+
+    <select id = "queryUserAllOrderWithoutPage" resultMap="ResultMap" >
+        SELECT
+            work_no,
+            main_task_no,
+            main_task_name,
+            work_stage,
+            work_unit,
+            testers,
+            sit_date,
+            product_date,
+            uat_date,
+            work_flag,
+            work_manager,
+            work_leader,
+            remark,
+            create_time,
+            field1,
+            field2,
+            field3,
+            uat_submit_date,
+            sit_flag,
+            risk_description,
+            group_id,
+            image_link,
+            w.FDEV_GROUP_ID,
+            if(w.work_flag = '1', m.FDEV_GROUP_NAME, '玉衡自建') as FDEV_GROUP_NAME,
+            demand_no,
+            demand_name,
+            order_type
+        FROM
+            work_order w
+        LEFT JOIN
+            FTMS_GROUP_MAP m
+        ON
+            w.fdev_group_id = m.FDEV_GROUP_ID
+        <where>
+            <choose>
+                <when test="workStage != null and workStage != ''">
+                    work_stage = #{workStage}
+                </when>
+                <otherwise>
+                    work_stage != '4'
+                    and
+                    work_stage != '11'
+                </otherwise>
+            </choose>
+            <if test="userRole != 50">
+                AND(
+                FIND_IN_SET(#{userName},testers)
+                OR
+                FIND_IN_SET(#{userName},work_leader)
+                OR
+                work_manager = #{userName})
+            </if>
+            <if test="personFilter != null and personFilter != ''">
+                AND(
+                FIND_IN_SET(#{personFilter},testers)
+                OR
+                FIND_IN_SET(#{personFilter},work_leader)
+                OR
+                work_manager = #{personFilter})
+            </if>
+            <if test="taskName != '%%' ">
+                And w.work_no IN
+                ( SELECT wt.work_no FROM (
+                SELECT work_no FROM work_order WHERE
+                main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+                work_unit like #{taskName} OR demand_no like #{taskName}
+                UNION
+                SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+            </if>
+            <choose>
+                <when test="sitFlag == '1'.toString()">
+                    AND
+                    cast(sit_flag as signed integer) >= 1
+                </when>
+                <when test="sitFlag == '0'.toString()">
+                    AND
+                    (cast(sit_flag as signed integer) &lt; 1
+                    OR
+                    sit_flag is null)
+                </when>
+            </choose>
+            <if test="orderType != 'all'">
+                <choose>
+                    <when test="orderType != null and orderType != ''">
+                        AND
+                        order_type = #{orderType}
+                    </when>
+                    <otherwise>
+                        AND
+                        order_type = 'function'
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        ORDER BY
+        create_time desc
+    </select>
+
+    <!-- 查询 我的工单 总数 -->
+    <select id = "orderUserCount" resultType="INTEGER" >
+        SELECT
+            count(distinct work_no)
+        FROM
+            work_order
+        <where>
+            <if test="taskName != '%%' ">
+                And work_no IN
+                ( SELECT wt.work_no FROM (
+                SELECT work_no FROM work_order WHERE
+                main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+                work_unit like #{taskName} OR demand_no like #{taskName}
+                UNION
+                SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+            </if>
+            <choose>
+                <when test="workStage != null and workStage != ''">
+                    AND
+                    work_stage = #{workStage}
+                </when>
+                <otherwise>
+                    AND
+                    work_stage != '4'
+                    and
+                    work_stage != '11'
+                </otherwise>
+            </choose>
+            <if test="userRole != 1">
+                AND(
+                FIND_IN_SET(#{userName},testers)
+                OR
+                FIND_IN_SET(#{userName},work_leader)
+                OR
+                work_manager = #{userName})
+            </if>
+            <if test="personFilter != null and personFilter != ''">
+                AND(
+                FIND_IN_SET(#{personFilter},testers)
+                OR
+                FIND_IN_SET(#{personFilter},work_leader)
+                OR
+                work_manager = #{personFilter})
+            </if>
+            <choose>
+                <when test="sitFlag == '1'.toString()">
+                    AND
+                    cast(sit_flag as signed integer) >= 1
+                </when>
+                <when test="sitFlag == '0'.toString()">
+                    AND
+                    (cast(sit_flag as signed integer) &lt; 1
+                    OR
+                    sit_flag is null)
+                </when>
+            </choose>
+            <if test="orderType != 'all'">
+                <choose>
+                    <when test="orderType != null and orderType != ''">
+                        AND
+                        order_type = #{orderType}
+                    </when>
+                    <otherwise>
+                        AND
+                        order_type = 'function'
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <!-- 历史工单页面， 查询总数-->
+    <select id = "orderHistoryCount" resultType="INTEGER" >
+        SELECT
+            count(DISTINCT w.work_no)
+        FROM
+            work_order w
+        WHERE
+            w.work_stage = '4'
+        <if test="taskName != '%%' ">
+            And w.work_no IN
+            ( SELECT wt.work_no FROM (
+            SELECT work_no FROM work_order WHERE
+            main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+            work_unit like #{taskName} OR demand_no like #{taskName}
+            UNION
+            SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+        </if>
+        <if test="testerName != null ">
+        	AND FIND_IN_SET(#{testerName},w.testers)
+        </if>
+        <if test="testerName == null and userRole != 50">
+            AND(
+            FIND_IN_SET(#{userName},w.testers)
+            OR FIND_IN_SET(#{userName},w.work_leader)
+            OR w.work_manager = #{userName})
+        </if>
+        <if test="orderType != 'all'">
+            <choose>
+                <when test="orderType != null and orderType != ''">
+                    AND
+                    order_type = #{orderType}
+                </when>
+                <otherwise>
+                    AND
+                    order_type = 'function'
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="queryOrderExist" parameterType="String" resultType="Integer">
+        SELECT COUNT(*)
+        FROM
+        work_order
+        WHERE
+        work_no = #{workOrderNo}
+    </select>
+
+    <!--查询 分组时间，生成 work_no 流水编号用-->
+    <select id="queryGroupByDate" parameterType="String" resultType="String">
+        SELECT
+            work_no
+        FROM
+            work_order
+        WHERE
+            field3 = #{dateField3}
+        ORDER BY
+            work_no DESC;
+    </select>
+
+    <insert id = "addWorkOrder" parameterType="com.gotest.domain.WorkOrder">
+        INSERT INTO
+        work_order(
+        <include refid="insert_WorkOrder_Column_List_All"/>
+        )
+        values
+        (
+        #{workOrderNo,jdbcType=VARCHAR},#{mainTaskNo,jdbcType=VARCHAR},
+        #{mainTaskName,jdbcType=VARCHAR},#{stage,jdbcType=VARCHAR},
+        #{testers,jdbcType=VARCHAR},
+        #{planSitDate,jdbcType=VARCHAR},#{planProDate,jdbcType=VARCHAR},
+        #{planUatDate,jdbcType=VARCHAR},#{workOrderFlag,jdbcType=VARCHAR},
+        #{workManager,jdbcType=VARCHAR},#{groupLeader,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR},#{createTime,jdbcType=INTEGER},
+        #{field1,jdbcType=VARCHAR},#{field2,jdbcType=VARCHAR},
+        #{field3,jdbcType=VARCHAR},
+        #{field5,jdbcType=VARCHAR},#{sitFlag,jdbcType=VARCHAR},
+        #{fdevGroupId},
+        #{demandNo},
+        #{unit},
+        #{demandName},
+        #{fdevNew},
+        #{demandId},
+        <choose>
+            <when test="orderType != null">
+                #{orderType}
+            </when>
+            <otherwise>
+                'function'
+            </otherwise>
+        </choose>
+        )
+    </insert>
+
+    <update id="updateWorkOrder" parameterType="com.gotest.domain.WorkOrder">
+        UPDATE
+        work_order
+        SET
+        <if test="mainTaskNo != null and mainTaskNo != '' ">
+            main_task_no = #{mainTaskNo},
+        </if>
+        <if test="mainTaskName != null and mainTaskName != '' ">
+            main_task_name = #{mainTaskName},
+        </if>
+        <if test="stage != null and stage != '' ">
+            work_stage = #{stage},
+        </if>
+        <if test="testers != null and testers != '' ">
+            testers = #{testers},
+        </if>
+        <if test="workManager != null and workManager != '' ">
+            work_manager = #{workManager},
+        </if>
+        <if test="groupLeader != null and groupLeader != '' ">
+            work_leader= #{groupLeader},
+        </if>
+        <if test="planSitDate != null and planSitDate != '' ">
+            sit_date= #{planSitDate},
+        </if>
+        <if test="planUatDate != null and planUatDate != '' ">
+            uat_date= #{planUatDate},
+        </if>
+        <if test="remark != null and remark != '' ">
+            remark= #{remark},
+        </if>
+        <if test="field2 != null and field2 != '' ">
+            field2= #{field2},
+        </if>
+        <if test="uatSubmitDate != null and uatSubmitDate != '' ">
+            uat_submit_date = #{uatSubmitDate},
+        </if>
+        <if test="unit != null and unit != '' ">
+            work_unit = #{unit},
+        </if>
+        <if test="riskDescription != null and riskDescription != '' ">
+            risk_description = #{riskDescription},
+        </if>
+        <if test="approvalFlag != null and approvalFlag != '' ">
+        approval_flag = #{approvalFlag},
+        </if>
+        <if test="sitFlag != null and sitFlag != '' ">
+            sit_flag = #{sitFlag},
+        </if>
+        <if test="fnlRollbackDate != null and fnlRollbackDate != '' ">
+            fnl_rollback_date = #{fnlRollbackDate},
+        </if>
+        <if test="groupId != null and groupId != '' ">
+            fdev_group_id = #{groupId},
+        </if>
+        <if test="imageLink != null and imageLink != '' ">
+            image_link = #{imageLink},
+        </if>
+        <if test="demandNo != null and demandNo != '' ">
+            demand_no = #{demandNo},
+        </if>
+        <if test="demandName != null and demandName != '' ">
+            demand_name = #{demandName},
+        </if>
+            field1 = field1 ,
+        product_date= #{planProDate}
+        WHERE
+            work_no = #{workOrderNo}
+    </update>
+
+    <update id="fdevRollBackOrder" parameterType="com.gotest.domain.WorkOrder">
+        UPDATE
+            work_order
+        SET
+        <if test="mainTaskNo != null and mainTaskNo != '' ">
+            main_task_no = #{mainTaskNo},
+        </if>
+        <if test="mainTaskName != null and mainTaskName != '' ">
+            main_task_name = #{mainTaskName},
+        </if>
+        <if test="stage != null and stage != '' ">
+            work_stage = #{stage},
+        </if>
+        <if test="workManager != null and workManager != '' ">
+            work_manager = #{workManager},
+        </if>
+        <if test="groupLeader != null and groupLeader != '' ">
+            work_leader= #{groupLeader},
+        </if>
+        <if test="planSitDate != null and planSitDate != '' ">
+            sit_date= #{planSitDate},
+        </if>
+        <if test="planUatDate != null and planUatDate != '' ">
+            uat_date= #{planUatDate},
+        </if>
+        <if test="planProDate != null and planProDate != '' ">
+            product_date= #{planProDate},
+        </if>
+        <if test="remark != null and remark != '' ">
+            remark= #{remark},
+        </if>
+        <if test="field2 != null and field2 != '' ">
+            field2= #{field2},
+        </if>
+            testers = null
+        WHERE
+            work_no = #{workOrderNo}
+    </update>
+
+    <update id="orderGrab" parameterType="String">
+        UPDATE
+        work_order
+        SET
+        work_manager = #{userName}
+        where
+        work_no = #{orderId}
+    </update>
+
+    <select id="queryWorkOrderByNo" parameterType="String" resultMap="ResultMap">
+        SELECT
+            <include refid="WorkOrder_Column_List_All"/>
+        FROM
+            work_order
+        WHERE
+            work_no = #{workOrderNo}
+    </select>
+
+
+    <update id="assignWorkOrder" parameterType="String">
+        UPDATE
+            work_order
+        SET
+        <if test="testers != null ">
+            testers = #{testers}
+        </if>
+        <if test="workLeader != null ">
+            ,work_leader = #{workLeader}
+        </if>
+        <if test="testers != null and testers != '' and workLeader != null and workLeader != ''">
+            ,work_stage = '1'
+        </if>
+        <if test="groupId != null and groupId != ''">
+            ,fdev_group_id = #{groupId}
+        </if>
+        WHERE
+            work_no = #{orderNo}
+
+    </update>
+
+    <!-- 历史工单页面 查询历史工单-->
+    <select id="queryUserHistoryWorkOrder" resultMap="ResultMap" >
+        SELECT DISTINCT
+            work_no work_no,
+            main_task_no main_task_no,
+            main_task_name main_task_name,
+            work_stage work_stage,
+            work_unit work_unit,
+            testers testers,
+            sit_date sit_date,
+            product_date product_date,
+            uat_date uat_date,
+            work_flag work_flag,
+            work_manager work_manager,
+            work_leader work_leader,
+            remark remark,
+            create_time create_time,
+            field1 field1,field2 field2,field3 field3,group_id group_id,field5 field5,
+            uat_submit_date uat_submit_date,
+            risk_description risk_description,
+            sit_flag sit_flag,
+            approval_flag approval_flag,
+            fdev_group_id fdev_group_id,
+            fst_sit_date fst_sit_date,
+            fnl_sit_date fnl_sit_date,
+            group_id group_id,
+            image_link image_link,
+            demand_no demand_no,
+            demand_name demand_name,
+            order_type as orderType
+        FROM
+            work_order
+        WHERE
+            work_stage = '4'
+        <if test="taskName != '%%' ">
+            And work_no IN
+            ( SELECT wt.work_no FROM (
+            SELECT work_no FROM work_order WHERE
+            main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+            work_unit like #{taskName} OR demand_no like #{taskName}
+            UNION
+            SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+        </if>
+        <if test="testerName != null ">
+            AND FIND_IN_SET(#{testerName},testers)
+        </if>
+        <if test="testerName == null and userRole != 50">
+            AND(
+            FIND_IN_SET(#{userName},testers)
+            OR FIND_IN_SET(#{userName},work_leader)
+            OR work_manager = #{userName})
+        </if>
+        <if test="orderType != 'all'">
+            <choose>
+                <when test="orderType != null and orderType != ''">
+                    AND
+                    order_type = #{orderType}
+                </when>
+                <otherwise>
+                    AND
+                    order_type = 'function'
+                </otherwise>
+            </choose>
+        </if>
+        order by create_time desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <!--查询页面 查询工单-->
+    <select id="queryWorkOrder" resultMap="ResultMap" >
+        SELECT
+            group_concat(distinct work_no) as work_no,
+            main_task_no main_task_no,
+            main_task_name main_task_name,
+            work_stage work_stage,
+            work_unit work_unit,
+            testers testers,
+            sit_date sit_date,
+            product_date product_date,
+            uat_date uat_date,
+            work_flag work_flag,
+            work_manager work_manager,
+            work_leader work_leader,
+            remark remark,
+            create_time create_time,
+            field1 field1,field2 field2,field3 field3,group_id group_id,field5 field5,
+            uat_submit_date uat_submit_date,
+            risk_description risk_description,
+            sit_flag sit_flag,
+            approval_flag approval_flag,
+            fdev_group_id fdev_group_id,
+            fst_sit_date fst_sit_date,
+            fnl_sit_date fnl_sit_date,
+            image_link image_link,
+            demand_no demand_no,
+            demand_name demand_name,
+            order_type as orderType
+        FROM
+            work_order
+        <where>
+            <if test="taskName != '%%' ">
+                And work_no IN
+                ( SELECT wt.work_no FROM (
+                SELECT work_no FROM work_order WHERE
+                main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+                work_unit like #{taskName} OR demand_no like #{taskName}
+                UNION
+                SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+            </if>
+            <if test="userEnName != null and userEnName != '' ">
+                AND (
+                FIND_IN_SET(#{userEnName},testers)
+                OR FIND_IN_SET(#{userEnName},work_leader)
+                OR work_manager = #{userEnName})
+            </if>
+            <if test="groupId != null and groupId != ''">
+                AND fdev_group_id = #{groupId}
+            </if>
+            <if test="orderType != 'all'">
+                <choose>
+                    <when test="orderType != null and orderType != ''">
+                        AND
+                        order_type = #{orderType}
+                    </when>
+                    <otherwise>
+                        AND
+                        order_type = 'function'
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY
+            work_no
+        order by create_time desc
+            limit #{start},#{pageSize}
+    </select>
+
+    <!--查询页面 查询工单总数-->
+    <select id="queryOrderCount" parameterType="String" resultType="Integer" >
+        SELECT
+            count(distinct work_no)
+        FROM
+            work_order
+        <where>
+            <if test="taskName != '%%' ">
+                And work_no IN
+                ( SELECT wt.work_no FROM (
+                SELECT work_no FROM work_order WHERE
+                main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+                work_unit like #{taskName} OR demand_no like #{taskName}
+                UNION
+                SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+            </if>
+            <if test="userEnName != null and userEnName != '' ">
+                AND (
+                FIND_IN_SET(#{userEnName},testers)
+                OR FIND_IN_SET(#{userEnName},work_leader)
+                OR work_manager = #{userEnName})
+            </if>
+            <if test="groupId != null and groupId != ''">
+                AND fdev_group_id = #{groupId}
+            </if>
+            <if test="orderType != 'all'">
+                <choose>
+                    <when test="orderType != null and orderType != ''">
+                        AND
+                        order_type = #{orderType}
+                    </when>
+                    <otherwise>
+                        AND
+                        order_type = 'function'
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <!--废弃工单-->
+    <update id="dropWorkOrderByWorkNo" parameterType="String">
+        UPDATE
+            work_order
+        SET
+            work_stage = '11'
+        WHERE
+            work_no = #{workOrderNo}
+    </update>
+
+    <!--查询工单所属 work_flag 0为自己新建，1为fdev推送-->
+    <select id="queryWorkFlagByWorkNo" parameterType="String" resultType="String">
+        SELECT
+            work_flag
+        FROM
+            work_order
+        WHERE
+            work_no = #{workOrderNo}
+    </select>
+
+    <!-- 根据工单编号 查询工单状态-->
+    <select id="queryOrderStateByWorkNo" resultType="String">
+        SELECT
+        work_stage
+        FROM
+        work_order
+        WHERE
+        work_no = #{workOrderNo}
+    </select>
+
+    <!-- 误抢工单，回退操作-->
+    <update id="rollBackWorkOrder" parameterType="String">
+        UPDATE
+            work_order
+        SET
+            work_manager = null,
+            work_leader = null,
+            testers = null
+        WHERE
+            work_no = #{workOrderNo}
+        AND
+            work_flag = '1'
+    </update>
+
+    <!--根据用户英文名查询 待审核工单-->
+    <select id="queryAduitOrder" parameterType="String" resultMap="ResultMap">
+        SELECT
+        distinct
+        w.work_no work_no,
+        w.main_task_no main_task_no,
+        w.main_task_name main_task_name,
+        w.work_stage work_stage,
+        w.work_unit work_unit,
+        w.testers testers,
+        w.sit_date sit_date,
+        w.product_date product_date,
+        w.uat_date uat_date,
+        w.work_flag work_flag,
+        w.work_manager work_manager,
+        w.work_leader work_leader,
+        w.remark remark,
+        w.create_time create_time,
+        w.field1 field1,w.field2 field2,w.field3 field3,w.group_id group_id,w.field5 field5,
+        w.uat_submit_date uat_submit_date,
+        w.risk_description risk_description,
+        w.sit_flag sit_flag,
+        w.approval_flag approval_flag,
+        w.fdev_group_id fdev_group_id,
+        w.fst_sit_date fst_sit_date,
+        w.fnl_sit_date fnl_sit_date,
+        w.group_id group_id,
+        w.image_link image_link,
+        w.demand_no demand_no,
+        w.demand_name demand_name,
+        w.order_type as orderType
+        FROM
+            work_order w
+        WHERE
+            w.work_stage in (6,10,13)
+        AND
+            w.approval_flag = 0
+        <if test="taskName != '%%' ">
+            And w.work_no IN
+            ( SELECT wt.work_no FROM (
+            SELECT work_no FROM work_order WHERE
+            main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+            work_unit like #{taskName} OR demand_no like #{taskName}
+            UNION
+            SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+        </if>
+        <if test="userRole != 50">
+            AND
+                FIND_IN_SET(#{userEnName}, w.field2)
+        </if>
+        <if test="orderType != 'all'">
+            <choose>
+                <when test="orderType != null and orderType != ''">
+                    AND
+                    w.order_type = #{orderType}
+                </when>
+                <otherwise>
+                    AND
+                    w.order_type = 'function'
+                </otherwise>
+            </choose>
+        </if>
+        LIMIT #{start}, #{pageSize}
+    </select>
+
+    <!-- 查询待审核工单 总数-->
+    <select id="queryAduitOrderCount" resultType="Integer">
+        SELECT
+            count(distinct w.work_no)
+        FROM
+            work_order w
+        WHERE
+            w.work_stage in (6,10)
+        AND
+            w.approval_flag = '0'
+        <if test="taskName != '%%' ">
+            And w.work_no IN
+            ( SELECT wt.work_no FROM (
+            SELECT work_no FROM work_order WHERE
+            main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+            work_unit like #{taskName} OR demand_no like #{taskName}
+            UNION
+            SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+        </if>
+        <if test="userRole != 50">
+            AND
+                FIND_IN_SET(#{userEnName}, w.field2)
+        </if>
+        <if test="orderType != 'all'">
+            <choose>
+                <when test="orderType != null and orderType != ''">
+                    AND
+                    w.order_type = #{orderType}
+                </when>
+                <otherwise>
+                    AND
+                    w.order_type = 'function'
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <!--工单审核通过-->
+    <update id="passAduit" parameterType="String">
+        UPDATE
+            work_order
+        SET
+            approval_flag = '1'
+        WHERE
+            work_no = #{workOrderNo}
+    </update>
+
+    <!--工单审核 拒绝-->
+    <update id="refuseAduit" parameterType="String">
+        UPDATE
+            work_order
+        SET
+            work_stage = '2'
+        WHERE
+            work_no = #{workOrderNo}
+    </update>
+
+    <select id="queryWorkNoByTaskNo" parameterType="String" resultType="Map">
+        SELECT
+            main_task_no,
+            work_no
+        FROM
+            work_order
+        WHERE
+            find_in_set(main_task_no, #{taskNos})
+    </select>
+
+
+    <!-- sit报告页面 查询sit状态以上的工单-->
+    <select id="queryUpSitReport" resultMap="ResultMap" >
+        SELECT DISTINCT
+        w.work_no work_no,
+        w.main_task_no main_task_no,
+        w.main_task_name main_task_name,
+        w.work_stage work_stage,
+        w.work_unit work_unit,
+        w.testers testers,
+        w.sit_date sit_date,
+        w.product_date product_date,
+        w.uat_date uat_date,
+        w.work_flag work_flag,
+        w.work_manager work_manager,
+        w.work_leader work_leader,
+        w.remark remark,
+        w.create_time create_time,
+        w.field1 field1,w.field2 field2,w.field3 field3,w.group_id group_id,w.field5 field5,
+        w.uat_submit_date uat_submit_date,
+        w.risk_description risk_description,
+        w.sit_flag sit_flag,
+        w.approval_flag approval_flag,
+        w.fdev_group_id fdev_group_id,
+        w.fst_sit_date fst_sit_date,
+        w.fnl_sit_date fnl_sit_date,
+        w.group_id group_id,
+        w.image_link image_link,
+        w.demand_no demand_no,
+        w.demand_name demand_name,
+        w.order_type as orderType
+        FROM
+            work_order w
+        WHERE
+            convert(w.work_stage,SIGNED) &gt; '2'
+        AND
+            w.work_stage != '11'
+        <if test="taskName != '%%' ">
+            And w.work_no IN
+            ( SELECT wt.work_no FROM (
+            SELECT work_no FROM work_order WHERE
+            main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+            work_unit like #{taskName} OR demand_no like #{taskName}
+            UNION
+            SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+        </if>
+        AND
+            w.work_no like #{workOrderNo}
+        <if test="userEnName != null and userEnName != '' ">
+        AND
+            FIND_IN_SET(#{userEnName},w.testers)
+        </if>
+        <if test="done == '0'.toString() ">
+            AND
+                w.work_stage != '4'
+            AND
+                w.sit_flag != '2'
+        </if>
+        <if test="done == '1'.toString() ">
+            AND
+            (
+                w.work_stage = '4'
+            OR
+                w.sit_flag = '2'
+            )
+        </if>
+        <if test="orderType != 'all'">
+            <choose>
+                <when test="orderType != null and orderType != ''">
+                    AND
+                    w.order_type = #{orderType}
+                </when>
+                <otherwise>
+                    AND
+                    w.order_type = 'function'
+                </otherwise>
+            </choose>
+        </if>
+        <if test="sortManager != '1'.toString() and sortManager != '0'.toString() ">
+            order by w.create_time desc
+        </if>
+        <if test="sortManager == '1'.toString() ">
+            order by w.work_manager
+        </if>
+        <if test="sortManager == '0'.toString() ">
+            order by w.work_manager desc
+        </if>
+        limit #{start},#{pageSize}
+    </select>
+    <!-- sit报告页面 查询sit状态以上的工单总数-->
+    <select id = "queryUpSitOrderCount" resultType="INTEGER" >
+        SELECT
+            count(DISTINCT w.work_no)
+        FROM
+            work_order w
+        WHERE
+            w.work_stage &gt; '2'
+        AND
+            w.work_stage != '11'
+        <if test="taskName != '%%' ">
+            And w.work_no IN
+            ( SELECT wt.work_no FROM (
+            SELECT work_no FROM work_order WHERE
+            main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+            work_unit like #{taskName} OR demand_no like #{taskName}
+            UNION
+            SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+        </if>
+        AND
+            w.work_no like #{workOrderNo}
+        <if test="userEnName != null and userEnName != '' ">
+        AND
+            FIND_IN_SET(#{userEnName},w.testers)
+        </if>
+        <if test="done == '0'.toString() ">
+            AND
+            w.work_stage != '4'
+            AND
+            w.sit_flag != '2'
+        </if>
+        <if test="done == '1'.toString() ">
+            AND
+            (
+            w.work_stage = '4'
+            OR
+            w.sit_flag = '2'
+            )
+        </if>
+        <if test="orderType != 'all'">
+            <choose>
+                <when test="orderType != null and orderType != ''">
+                    AND
+                    w.order_type = #{orderType}
+                </when>
+                <otherwise>
+                    AND
+                    w.order_type = 'function'
+                </otherwise>
+            </choose>
+        </if>
+        order by w.create_time desc
+    </select>
+
+      <!-- 根据主任务编号查询工单数量-->
+    <select id = "CheckWorkOrderByTaskNo" resultType="INTEGER" >
+        SELECT
+            count(work_no)
+        FROM
+            work_order
+        WHERE
+            main_task_no = #{taskNo}
+    </select>
+
+
+     <!-- 根据主任务编号查询工单编号-->
+    <select id = "queryWorkNoByTaskId" resultType="String" >
+        SELECT
+            work_no
+        FROM
+            work_order
+        WHERE
+            main_task_no = #{task_id}
+        AND
+            work_stage != '11'
+        <choose>
+            <when test="orderType != null and orderType != ''">
+                AND
+                order_type = #{orderType}
+            </when>
+            <otherwise>
+                AND
+                order_type = 'function'
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="queryResourceManagement" resultType="Map">
+       SELECT
+            a.groupId as groupId,
+            a.caseNum as caseNumber,
+            a.exeCaseNum as performCaseNumber,
+            b.orderNum as requestNumber
+        FROM
+       (SELECT
+            w.fdev_group_id as groupId,
+            IFNULL(count(p.id), 0) as caseNum,
+            SUM(IFNULL(EXE_NUM, 0)) as exeCaseNum
+       FROM
+            (SELECT
+               fdev_group_id,
+               work_no
+        FROM
+                work_order
+        <where>
+            <if test="startDate != '' and startDate != null">
+                and from_unixtime(uat_submit_date,'%Y/%m/%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != '' and endDate != null">
+                and from_unixtime(uat_submit_date,'%Y/%m/%d') &lt;= #{endDate}
+            </if>
+            <if test="fdevGroupId !=null and fdevGroupId.size() > 0">
+                and fdev_group_id in
+                <foreach collection="fdevGroupId" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ) w
+       LEFT JOIN
+            FTMS_PLAN_RESULT p
+       ON
+            w.work_no = p.work_no
+        GROUP BY w.fdev_group_id
+        )a,
+        (SELECT
+        fdev_group_id,
+        IFNULL(count(work_no), 0) as orderNum
+        From
+            work_order
+        <where>
+        <if test="startDate != '' and startDate != null">
+            and from_unixtime(uat_submit_date,'%Y/%m/%d') &gt;= #{startDate}
+        </if>
+        <if test="endDate != '' and endDate != null">
+            and from_unixtime(uat_submit_date,'%Y/%m/%d') &lt;= #{endDate}
+        </if>
+        <if test="fdevGroupId !=null and fdevGroupId.size() > 0">
+            and fdev_group_id in
+            <foreach collection="fdevGroupId" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orderType != 'all'">
+            <choose>
+                <when test="orderType != null and orderType != ''">
+                    AND
+                    order_type = #{orderType}
+                </when>
+                <otherwise>
+                    AND
+                    order_type = 'function'
+                </otherwise>
+            </choose>
+        </if>
+        </where>
+        GROUP BY fdev_group_id
+            )b
+        WHERE
+        a.groupId = b.fdev_group_id
+    </select>
+
+    <select id="queryGroupWorkno" resultType="Map">
+        SELECT
+        w.fdev_group_id,GROUP_CONCAT(w.work_no
+        SEPARATOR ',') workNoConut
+        FROM
+            work_order w
+        <where>
+            <if test="startDate != '' and startDate != null">
+                and from_unixtime(w.uat_submit_date,'%Y/%m/%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != '' and endDate != null">
+                and from_unixtime(w.uat_submit_date,'%Y/%m/%d') &lt;= #{endDate}
+            </if>
+            <if test="fdevGroupId !=null and fdevGroupId.size() > 0">
+                and w.fdev_group_id in
+                <foreach collection="fdevGroupId" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY w.fdev_group_id
+    </select>
+
+    <update id="updateSitFlag" parameterType="String">
+        UPDATE
+            work_order
+        SET
+            sit_flag = '1'
+        <if test="updateFlag == '1'.toString()">
+            ,fst_sit_date = #{dateStr}
+            ,fnl_sit_date = #{dateStr}
+        </if>
+        <if test="updateFlag == '0'.toString()">
+            ,fnl_sit_date = #{dateStr}
+        </if>
+        WHERE
+            work_no = #{workNo}
+    </update>
+
+    <update id="setOrderFdevGroupId" parameterType="String">
+        UPDATE
+        work_order
+        SET
+        fdev_group_id = #{fdevGroupId}
+        WHERE
+        work_no = #{workOrderNo}
+    </update>
+
+    <!-- 修改工单状态为废弃 -->
+    <update id="wasteWorkOrder" parameterType="String">
+        UPDATE
+            work_order
+        SET
+            work_stage = '11'
+        WHERE
+            work_no = #{workNo}
+    </update>
+
+    <!-- 历史工单页面 查询历史工单-->
+    <select id="queryWasteOrder" resultMap="ResultMap" >
+        SELECT DISTINCT
+        w.work_no work_no,
+        w.main_task_no main_task_no,
+        w.main_task_name main_task_name,
+        w.work_stage work_stage,
+        w.work_unit work_unit,
+        w.testers testers,
+        w.sit_date sit_date,
+        w.product_date product_date,
+        w.uat_date uat_date,
+        w.work_flag work_flag,
+        w.work_manager work_manager,
+        w.work_leader work_leader,
+        w.remark remark,
+        w.create_time create_time,
+        w.field1 field1,w.field2 field2,w.field3 field3,w.group_id group_id,w.field5 field5,
+        w.uat_submit_date uat_submit_date,
+        w.risk_description risk_description,
+        w.sit_flag sit_flag,
+        w.approval_flag approval_flag,
+        w.fdev_group_id fdev_group_id,
+        w.fst_sit_date fst_sit_date,
+        w.fnl_sit_date fnl_sit_date,
+        w.group_id group_id,
+        w.image_link image_link,
+        w.demand_no demand_no,
+        w.demand_name demand_name,
+        w.order_type as orderType
+        FROM
+            work_order w
+        WHERE
+            w.work_stage = '11'
+        <if test="taskName != '%%' ">
+            And w.work_no IN
+            ( SELECT wt.work_no FROM (
+            SELECT work_no FROM work_order WHERE
+            main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+            work_unit like #{taskName} OR demand_no like #{taskName}
+            UNION
+            SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+        </if>
+        <if test="testerName != null ">
+            AND FIND_IN_SET(#{testerName},w.testers)
+        </if>
+        <if test="testerName == null and userRole != 50">
+            AND(
+                FIND_IN_SET(#{userName},w.testers)
+            OR
+                FIND_IN_SET(#{userName},w.work_leader)
+            OR
+            w.work_manager = #{userName}
+            )
+        </if>
+        <if test="orderType != 'all'">
+            <choose>
+                <when test="orderType != null and orderType != ''">
+                    AND
+                    w.order_type = #{orderType}
+                </when>
+                <otherwise>
+                    AND
+                    w.order_type = 'function'
+                </otherwise>
+            </choose>
+        </if>
+        order by w.create_time desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <!-- 废弃工单页面， 查询总数-->
+    <select id = "queryWasteOrderCount" resultType="INTEGER" >
+        SELECT
+            count(DISTINCT w.work_no)
+        FROM
+            work_order w
+        WHERE
+            w.work_stage = '11'
+        <if test="taskName != '%%' ">
+            And w.work_no IN
+            ( SELECT wt.work_no FROM (
+            SELECT work_no FROM work_order WHERE
+            main_task_name like #{taskName} OR main_task_no like #{taskName} OR demand_name like #{taskName} OR
+            work_unit like #{taskName} OR demand_no like #{taskName}
+            UNION
+            SELECT work_no FROM task_list WHERE task_name like #{taskName} ) wt )
+        </if>
+        <if test="testerName != null ">
+            AND FIND_IN_SET(#{testerName},w.testers)
+        </if>
+        <if test="testerName == null and userRole != 50">
+            AND(
+            FIND_IN_SET(#{userName},w.testers)
+            OR FIND_IN_SET(#{userName},w.work_leader)
+            OR w.work_manager = #{userName})
+        </if>
+        <if test="orderType != 'all'">
+            <choose>
+                <when test="orderType != null and orderType != ''">
+                    AND
+                    w.order_type = #{orderType}
+                </when>
+                <otherwise>
+                    AND
+                    w.order_type = 'function'
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <!-- 计划迁移 -->
+    <update id="movePlan">
+        UPDATE
+            plan_list
+        SET
+            work_no = #{toWorkNo}
+        WHERE
+            plan_id = #{fromPlanId}
+    </update>
+
+    <!-- 案例迁移 -->
+    <update id="moveCase">
+        UPDATE
+            FTMS_PLAN_RESULT
+        SET
+            plan_id = #{toPlanId},
+            work_no = #{toWorkNo}
+        WHERE
+            id = #{resultId}
+    </update>
+
+    <select id="queryUserValidOrder" resultType="Map">
+        SELECT
+            work_no as workNo,
+            main_task_name as mainTaskName,
+            order_type as orderType
+        FROM
+            work_order
+        WHERE
+            work_stage not in ('11','4')
+        <if test="userRole != 50">
+        AND(
+            FIND_IN_SET(#{userName},testers)
+        OR
+            FIND_IN_SET(#{userName},work_leader)
+        OR
+            work_manager = #{userName})
+        </if>
+        <if test="orderType != 'all'">
+            <choose>
+                <when test="orderType != null and orderType != ''">
+                    AND
+                    order_type = #{orderType}
+                </when>
+                <otherwise>
+                    AND
+                    order_type = 'function'
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+    <select id="queryWorkOrderList" resultMap="ResultMap">
+        SELECT
+            WORK_NO,
+            MAIN_TASK_NAME
+        FROM
+            work_order
+    </select>
+
+    <select id="queryTestcaseByTaskId" resultType="Map">
+        SELECT
+            w.main_task_name as mainTaskName,
+            t.testcase_name as testcaseName,
+            t.expected_result as expectedResult
+        FROM
+            work_order w,
+            plan_list p,
+            FTMS_PLAN_RESULT r,
+            testcase t
+        WHERE
+            w.work_no = p.work_no
+        AND
+            p.plan_id = r.PLAN_ID
+        AND
+            r.TESTCASE_ID = t.testcase_no
+        AND
+            w.work_no = #{workNo}
+    </select>
+
+    <update id="writeObstacle">
+        UPDATE
+            work_order
+        SET
+            obstacle = #{obstacle}
+        WHERE
+            work_no = #{workNo}
+    </update>
+
+    <select id="queryOrderHasCase" resultType="java.lang.Integer">
+        SELECT
+            count(fpr.id)
+        FROM
+            work_order w
+        LEFT JOIN
+            FTMS_PLAN_RESULT fpr
+        ON
+            w.work_no = fpr.WORK_NO
+        WHERE
+            w.work_no = #{workNo}
+    </select>
+
+    <select id="updateUatFlag" resultType="Integer">
+        UPDATE
+            work_order
+        SET
+            sit_flag = '2'
+        WHERE
+            work_no = #{workNo}
+    </select>
+
+    <update id="updateImageLink">
+        UPDATE
+            work_order
+        SET
+            image_link = #{imageLink}
+        WHERE
+            work_no = #{workNo}
+    </update>
+
+    <select id="verifyOrderName" resultType="INTEGER">
+        SELECT
+            count(work_no)
+        FROM
+            work_order
+        WHERE
+            main_task_name = #{mainTaskName}
+    </select>
+
+    <select id="queryWorkOrderByUnit" resultMap="ResultMap">
+        SELECT DISTINCT
+            <include refid="WorkOrder_Column_List_All"/>
+        FROM
+            work_order
+        WHERE
+            work_unit = #{unitNo}
+        AND
+            work_stage != '11'
+        <if test="orderType != 'all'">
+            <choose>
+                <when test="orderType != null and orderType != ''">
+                    AND
+                    order_type = #{orderType}
+                </when>
+                <otherwise>
+                    AND
+                    order_type = 'function'
+                </otherwise>
+            </choose>
+        </if>
+        order by create_time asc
+    </select>
+
+    <!--修改工单状态为未提测-->
+    <update id="updateSitFlagDownByWorkNo" parameterType="String">
+        UPDATE
+            work_order
+        SET
+            sit_flag = '0'
+        WHERE
+            work_no = #{workNo}
+    </update>
+
+    <update id="abandonNewOrder">
+        UPDATE
+            work_order
+        SET
+            work_stage = '11'
+        WHERE
+            work_unit in (${fdev_implement_unit_no})
+    </update>
+
+    <!--修改工单状态为提测-->
+    <update id="updateSitFlagUpByWorkNo" parameterType="String">
+        UPDATE
+            work_order
+        SET
+            sit_flag = '1'
+        WHERE
+            work_no = #{workNo}
+    </update>
+
+    <!--根据工单编号修改工单主任务编号-->
+    <update id="updateMainTaskNoByWorkNo" parameterType="String">
+        UPDATE
+            work_order
+        SET
+            main_task_no = #{mainTaskNo}
+        WHERE
+            work_no = #{workNo}
+    </update>
+
+    <update id="updateStage" parameterType="String">
+        UPDATE
+            work_order
+        SET
+            work_stage = #{stage}
+        WHERE
+            work_no = #{oldWorkNo}
+    </update>
+
+    <update id="resetApproval" parameterType="String">
+        UPDATE
+            work_order
+        SET
+            approval_flag = '0'
+        WHERE
+            work_no = #{workOrderNo}
+    </update>
+
+    <!-- 删除工单 -->
+    <delete id="deleteWorkOrderByTaskNo">
+        DELETE FROM
+            work_order
+        WHERE
+            work_no = #{workNo}
+    </delete>
+
+    <!--根据多个工单号删除工单-->
+    <delete id="deleteWorkOrdersByWorkNos">
+        DELETE FROM
+            work_order
+        WHERE
+            work_no in
+        <foreach collection="workNos" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="queryWorkOrderByOrderName" resultMap="ResultMap">
+        SELECT
+            <include refid="WorkOrder_Column_List_All"/>
+        FROM
+            work_order
+        WHERE
+            main_task_name = #{mainTaskName}
+        <choose>
+            <when test="orderType != null and orderType != ''">
+                AND
+                order_type = #{orderType}
+            </when>
+            <otherwise>
+                AND
+                order_type = 'function'
+            </otherwise>
+        </choose>
+    </select>
+
+    <update id="updateOrderName">
+        UPDATE
+            work_order
+        SET
+            main_task_name = #{name}
+        WHERE
+            work_no = #{workNo}
+    </update>
+
+    <select id="queryNewFdevBytaskId" resultType="String">
+        select
+        fdev_new
+        from
+        task_list t
+        left join work_order w on t.work_no=w.work_no
+        where
+        t.task_no= #{taskId}
+    </select>
+
+    <update id="updateOrderStage" parameterType="String">
+        UPDATE
+            work_order
+        SET
+            work_stage = #{stage}
+        WHERE
+            work_no = #{workOrderNo}
+    </update>
+
+    <update id="updateOrderStageAndSitFlag">
+        UPDATE
+        work_order
+        SET
+        work_stage = #{stage},
+        sit_flag = #{sitFlag}
+        WHERE
+        work_no = #{workOrderNo}
+    </update>
+
+    <select id="queryWorkOrderMemberByTaskNo" resultType="Map">
+        SELECT
+            w.testers,
+            w.work_manager,
+            w.work_leader
+        FROM
+            work_order w
+        JOIN
+            task_list t
+        ON
+            w.work_no = t.work_no
+        WHERE
+            t.task_no = #{taskNo}
+        <choose>
+            <when test="orderType != null and orderType != ''">
+                AND
+                w.order_type = #{orderType}
+            </when>
+            <otherwise>
+                AND
+                w.order_type = 'function'
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="queryOrderByTaskNo" resultMap="ResultMap">
+        SELECT
+        <include refid="WorkOrder_Column_List_All"/>
+        FROM
+        work_order
+        WHERE
+        main_task_no = #{taskNo}
+        and
+        order_type = #{orderType}
+    </select>
+
+    <select id="queryNoPassSecurityOrder" resultType="Map">
+        SELECT
+            main_task_no as taskId,
+            main_task_name as taskName
+        FROM
+        work_order
+        WHERE
+            order_type = 'security'
+        and
+            work_stage != '12'
+        and
+            work_stage != '14'
+        and
+            main_task_no in
+        <foreach collection="taskIds" item="taskNo" open="(" separator="," close=")">
+            #{taskNo}
+        </foreach>
+    </select>
+
+    <select id="queryWorkOrderByNos" resultMap="ResultMap">
+        select
+            work_no,
+            main_task_no,
+            main_task_name,
+            work_stage,
+            work_unit,
+            testers,
+            sit_date,
+            work_flag,
+            create_time,
+            group_id,
+            fdev_group_id,
+            demand_no,
+            demand_name,
+            fdev_new,
+            order_type
+        from work_order
+        where work_no in
+        <foreach collection="workNos" item="workNo" open="(" separator="," close=")">
+            #{workNo}
+        </foreach>
+    </select>
+
+    <select id="queryWorkTaskCount" resultType="INTEGER">
+        select
+            count(task_no)
+        from task_list
+        where work_no in (
+            select
+                work_no
+            from work_order
+            where sit_date between #{startDate} and #{endDate}
+            and fdev_group_id in
+            <foreach collection="groupIds" item="groupId" open="(" close=")" separator=",">
+                #{groupId}
+            </foreach>
+        )
+    </select>
+
+    <select id="queryOrderTypeByNos" resultType="Map">
+        select
+            work_no as workNo,
+            fdev_new as fdevNew,
+            order_type as orderType
+        from work_order
+        where work_no in
+        <foreach collection="workNos" item="workNo" open="(" separator="," close=")">
+            #{workNo}
+        </foreach>
+    </select>
+
+    <select id="queryWorkOrderByDemandNo" resultMap="ResultMap">
+        select
+            <include refid="WorkOrder_Column_List_All"/>
+        from work_order
+        where demand_no = #{demandNo}
+    </select>
+</mapper>

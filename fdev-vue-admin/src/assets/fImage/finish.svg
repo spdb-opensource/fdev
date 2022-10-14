@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>finish</title>
+    <defs>
+        <linearGradient x1="100%" y1="54.8427768%" x2="0%" y2="54.8427768%" id="linearGradient-1">
+            <stop stop-color="#69B5FF" offset="0%"></stop>
+            <stop stop-color="#0378EA" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon" transform="translate(-13.000000, -281.000000)" fill-rule="nonzero">
+            <g id="finish" transform="translate(13.000000, 281.000000)">
+                <g id="编组-15" fill="#88C4FF">
+                    <rect id="矩形" x="0" y="0" width="48" height="48" rx="8"></rect>
+                </g>
+                <rect id="矩形" stroke="#FFFFFF" fill="url(#linearGradient-1)" x="11.5" y="10.5" width="25" height="27" rx="2"></rect>
+                <g id="wancheng-2" transform="translate(16.027211, 17.054422)" fill="#FFFFFF">
+                    <path d="M3.6429193e-16,7.03170068 L1.59428572,5.66503401 L5.49482994,8.60272109 C5.49482994,8.60272109 8.38612245,5.45496599 9.96653062,4.09156462 C11.5469388,2.72816326 15.4668027,-1.52655666e-16 15.4668027,-1.52655666e-16 L15.8717007,0.992653061 C15.8717007,0.992653061 11.8673469,4.92054422 10.3443537,7.03170068 C8.82136055,9.14285714 6.57238096,13.8829932 6.57238096,13.8829932 L3.6429193e-16,7.03170068 Z" id="形状"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

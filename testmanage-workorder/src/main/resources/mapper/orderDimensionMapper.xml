@@ -1,0 +1,1325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gotest.dao.OrderDimensionMapper">
+
+    <resultMap id="ResultMap" type="com.gotest.domain.OrderDimension" >
+        <id column="work_no" property="workNo" jdbcType="VARCHAR" />
+        <result column="main_task_name" property="mainTaskName" jdbcType="VARCHAR" />
+        <result column="work_stage" property="workStage" jdbcType="VARCHAR" />
+        <result column="caseExecute" property="caseExecute" jdbcType="INTEGER" />
+        <result column="caseNoExecute" property="caseNoExecute" jdbcType="INTEGER" />
+        <result column="casePass" property="casePass" jdbcType="INTEGER" />
+        <result column="caseFailure" property="caseFailure" jdbcType="INTEGER" />
+        <result column="caseBlock" property="caseBlock" jdbcType="INTEGER" />
+        <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+        <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="WorkOrderStatus" type="com.gotest.domain.WorkOrderStatus" >
+        <id column="work_stage" property="workStage" jdbcType="VARCHAR" />
+        <result column="orderNum" property="stageCount" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="WorkOrderBarAduit" type="com.gotest.domain.WorkOrderBar" >
+        <id column="orderCount" property="orderCount" jdbcType="INTEGER" />
+        <result column="caseCount" property="caseCount" jdbcType="INTEGER" />
+        <result column="casePass" property="casePass" jdbcType="INTEGER" />
+        <result column="passAgainCount" property="passAgainCount" jdbcType="INTEGER" />
+        <result column="orderCreate" property="orderCreate" jdbcType="INTEGER" />
+    </resultMap>
+
+    <resultMap id="tendencyChartMap" type="java.util.Map">
+        <id column="orderNum" property="orderNum" jdbcType="INTEGER" javaType="INTEGER"/>
+        <result column="sumExe" property="sumExe" jdbcType="INTEGER" javaType="INTEGER"/>
+    </resultMap>
+
+    <sql id = "WorkOrder_Column_List" >
+        work_no,
+        main_task_no,
+        main_task_name,
+        work_stage,
+        work_unit,
+        testers,
+        sit_date,
+        product_date,
+        uat_date,
+        work_flag,
+        work_manager,
+        work_leader,
+        remark,
+        create_time
+    </sql>
+
+
+    <select id="queryOrderDimension" resultMap="ResultMap">
+        SELECT
+            e.work_no,
+            e.main_task_name,
+            e.work_stage,
+            e.testers,
+            e.fdev_group_id as group_id,
+            e.order_type,
+            sum(if(ptr.result_status = '1', 1, 0)) as casePass,
+            sum(if(ptr.RESULT_STATUS = '0', 1, 0)) as caseNoExecute,
+            count(ptr.id) as caseCount,
+            IFNULL(sum(ptr.FAIL_EXE_NUM),0) as caseFailure,
+            IFNULL(sum(ptr.BLOCK_EXE_NUM),0) as caseBlock,
+            exe.exe_num as caseExecute,
+            IFNULL(ROUND(sum(if(ptr.result_status = '1', 1, 0)) / count(ptr.id) * 100, 1),0) as percentage
+        FROM
+            (
+                select distinct
+                w.work_no,
+                w.main_task_name,
+                w.work_stage,
+                w.testers,
+                w.fdev_group_id,
+                w.order_type
+                from
+                    (
+                        select
+                        w.work_no,
+                        w.main_task_name,
+                        w.work_stage,
+                        w.testers,
+                        w.fdev_group_id,
+                        w.order_type
+                        from
+                            work_order w,FTMS_PLAN_RESULT t
+                        where
+                            w.work_no = t.work_no
+                            <if test="orderType != 'all'">
+                                <choose>
+                                    <when test="orderType != null and orderType != ''">
+                                        AND
+                                        w.order_type = #{orderType}
+                                    </when>
+                                    <otherwise>
+                                        AND
+                                        w.order_type = 'function'
+                                    </otherwise>
+                                </choose>
+                            </if>
+                            and
+                            left(t.CREATE_TM,10) between #{startTime} and #{endTime}
+                        group by
+                            w.work_no,
+                            w.main_task_name,
+                            w.work_stage,
+                            w.fdev_group_id,
+                            w.order_type
+                    union all
+                        select
+                            w.work_no,
+                            w.main_task_name,
+                            w.work_stage,
+                            w.testers,
+                            w.fdev_group_id,
+                            w.order_type
+                        from
+                            work_order w,FTMS_TESTCASE_EXE_RECORD e
+                        where
+                            w.work_no = e.work_no
+                            <if test="orderType != 'all'">
+                                <choose>
+                                    <when test="orderType != null and orderType != ''">
+                                        AND
+                                        w.order_type = #{orderType}
+                                    </when>
+                                    <otherwise>
+                                        AND
+                                        w.order_type = 'function'
+                                    </otherwise>
+                                </choose>
+                            </if>
+                            and
+                            left(e.date,10) between #{startTime} and #{endTime}
+                        group by
+                            w.work_no,
+                            w.main_task_name,
+                            w.work_stage,
+                            w.fdev_group_id,
+                            w.order_type
+                    union all
+                        select
+                            w.work_no,
+                            w.main_task_name,
+                            w.work_stage,
+                            w.testers,
+                            w.fdev_group_id,
+                            w.order_type
+                        from
+                            work_order w
+                        where
+                            from_unixtime(w.uat_submit_date,'%Y-%m-%d') between #{startTime} and #{endTime}
+                            <if test="orderType != 'all'">
+                                <choose>
+                                    <when test="orderType != null and orderType != ''">
+                                        AND
+                                        w.order_type = #{orderType}
+                                    </when>
+                                    <otherwise>
+                                        AND
+                                        w.order_type = 'function'
+                                    </otherwise>
+                                </choose>
+                            </if>
+                        group by
+                            w.work_no,
+                            w.main_task_name,
+                            w.work_stage,
+                            w.fdev_group_id,
+                            w.order_type
+                    )w
+            )e
+        left join FTMS_PLAN_RESULT ptr
+        on e.work_no = ptr.work_no
+        left join
+        (
+            select
+                count(e.id) as exe_num,w.work_no
+            from
+            (
+                select distinct
+                    w.work_no,w.main_task_name,w.testers, w.work_stage
+                from
+                (
+                    select
+                        w.work_no,w.main_task_name,w.testers, w.work_stage
+                    from
+                        work_order w,FTMS_PLAN_RESULT t
+                    where
+                        w.work_no = t.work_no
+                        <if test="orderType != 'all'">
+                            <choose>
+                                <when test="orderType != null and orderType != ''">
+                                    AND
+                                    w.order_type = #{orderType}
+                                </when>
+                                <otherwise>
+                                    AND
+                                    w.order_type = 'function'
+                                </otherwise>
+                            </choose>
+                        </if>
+                        and
+                        left(t.CREATE_TM,10) between #{startTime} and #{endTime}
+                    group by
+                        w.work_no,w.main_task_name,w.work_stage
+                union all
+                    select
+                        w.work_no,w.main_task_name,w.testers,w.work_stage
+                    from
+                        work_order w,FTMS_TESTCASE_EXE_RECORD e
+                    where
+                        w.work_no = e.work_no
+                        <if test="orderType != 'all'">
+                            <choose>
+                                <when test="orderType != null and orderType != ''">
+                                    AND
+                                    order_type = #{orderType}
+                                </when>
+                                <otherwise>
+                                    AND
+                                    order_type = 'function'
+                                </otherwise>
+                            </choose>
+                        </if>
+                        and
+                        left(e.date,10) between #{startTime} and #{endTime}
+                    group by
+                        w.work_no,w.main_task_name,w.work_stage
+                union all
+                    select
+                        w.work_no,w.main_task_name,w.testers,w.work_stage
+                    from
+                        work_order w
+                    where
+                        from_unixtime(w.uat_submit_date,'%Y-%m-%d') between #{startTime} and #{endTime}
+                        <if test="orderType != 'all'">
+                            <choose>
+                                <when test="orderType != null and orderType != ''">
+                                    AND
+                                    order_type = #{orderType}
+                                </when>
+                                <otherwise>
+                                    AND
+                                    order_type = 'function'
+                                </otherwise>
+                            </choose>
+                        </if>
+                    group by
+                        w.work_no,w.main_task_name,w.work_stage
+                )w
+            )w
+            left join
+            FTMS_TESTCASE_EXE_RECORD e
+            on
+                e.WORK_NO = w.work_no
+            and
+                e.OPR_TYPE = '0'
+            and
+                e.status != '4'
+            group by
+            w.work_no
+        ) exe
+        on exe.work_no = e.WORK_NO
+        <where>
+            e.work_stage !="11"
+            <if test="groupIds !=null and groupIds.size() > 0">
+                and e.fdev_group_id in
+                <foreach collection="groupIds" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tester != null and tester != ''">
+                AND
+                e.testers like concat('%',#{tester},'%')
+            </if>
+            <if test="stage != null and stage != ''">
+                AND
+                e.work_stage = #{stage}
+            </if>
+            <if test="orderNameOrNo != null and orderNameOrNo != ''">
+                AND
+                (
+                e.main_task_name like concat('%',#{orderNameOrNo},'%')
+                OR
+                e.work_no like concat('%',#{orderNameOrNo},'%')
+                )
+            </if>
+        </where>
+        group by
+        e.work_no,
+        e.main_task_name,
+        e.work_stage,
+        exe.exe_num
+    </select>
+
+
+    <select id="queryWorkOrderStatus" resultMap="WorkOrderStatus">
+        SELECT
+            work_stage,count(1) as orderNum
+        FROM
+            (select e.work_no, e.work_stage, e.fdev_group_id
+                from
+                (select
+                    w.work_no,
+                    w.work_stage,
+                    w.fdev_group_id
+                from
+                    work_order w,FTMS_PLAN_RESULT t
+                where
+                    w.work_no = t.work_no
+                and
+                    left(t.CREATE_TM,10) between #{startTime} and #{endTime}
+                <if test="groupIds !=null and groupIds.size() > 0">
+                    and w.fdev_group_id in
+                    <foreach collection="groupIds" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                group by
+                    w.work_no,
+                    w.work_stage,
+                    w.fdev_group_id
+                union all
+                select
+                    w.work_no,
+                    w.work_stage,
+                    w.fdev_group_id
+                from
+                    work_order w,FTMS_TESTCASE_EXE_RECORD e
+                where
+                    w.work_no = e.work_no
+                and
+                    left(e.date,10) between #{startTime} and #{endTime}
+                <if test="groupIds !=null and groupIds.size() > 0">
+                    and w.fdev_group_id in
+                    <foreach collection="groupIds" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                group by
+                    w.work_no,
+                    w.work_stage,
+                    w.fdev_group_id
+                union all
+                select
+                    w.work_no,
+                    w.work_stage,
+                    w.fdev_group_id
+                from work_order w
+                where
+                    from_unixtime(w.uat_submit_date,'%Y-%m-%d') between #{startTime} and #{endTime}
+                <if test="groupIds !=null and groupIds.size() > 0">
+                    and w.fdev_group_id in
+                    <foreach collection="groupIds" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                group by
+                    w.work_no,
+                    w.work_stage,
+                    w.fdev_group_id
+                )e
+                group by e.work_no
+            )work
+        WHERE
+            work.work_stage != '11'
+        GROUP BY
+            work_stage
+        ORDER by
+            CAST(work_stage as SIGNED) DESC;
+    </select>
+
+    <!-- 获取工单 对应的执行计划和案例执行情况 -->
+    <select id="queryPlanStatusCount" resultType="java.util.Map">
+        SELECT
+            group_concat(fpr.id) as `ids`,
+            p.plan_name as `planName`,
+            p.plan_start_date as planStartDate,
+            p.plan_end_date as planEndDate,
+            p.device_info as deviceInfo,
+            ifnull(sum(if(fpr.RESULT_STATUS is not null , 1,0)), 0) as `allCase`,
+            ifnull(sum(if(fpr.RESULT_STATUS = '0', 1,0)), 0) as `sumUnExe`,
+            ifnull(sum(if(fpr.RESULT_STATUS = '1', 1,0)),0) as `sumSucc`,
+            ifnull(sum(fpr.BLOCK_EXE_NUM), 0) as `sumBlock`,
+            ifnull(sum(fpr.FAIL_EXE_NUM), 0) as `sumFail`,
+            ifnull(sum(if(fpr.RESULT_STATUS = '4', 1,0)), 0) as 'invalidCase'
+        FROM
+            plan_list p
+        LEFT JOIN
+            FTMS_PLAN_RESULT fpr
+        ON
+            fpr.PLAN_ID = p.plan_id
+        WHERE
+            p.work_no = #{workNo}
+        GROUP BY
+            p.plan_name,
+            p.plan_start_date,
+            p.plan_end_date,
+            p.device_info
+
+    </select>
+    <!-- 查询工单下 案例的总数，及执行失败总数 -->
+    <select id="queryTestResult" resultType="java.util.Map">
+        SELECT
+            sum(if(fpr.RESULT_STATUS is not null, 1, 0)) as `allCase`,
+			sum(if(fpr.RESULT_STATUS = '1', 1, 0)) as `sumPass`,
+			sum(if(fpr.RESULT_STATUS = '4', 1, 0)) as `sumUseless`
+        FROM
+            plan_list p
+        LEFT JOIN
+            FTMS_PLAN_RESULT fpr
+        ON
+            fpr.PLAN_ID = p.plan_id
+        WHERE
+            p.work_no = #{workNo}
+    </select>
+
+     <resultMap id="groupOrderMap" type="java.util.Map" >
+        <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+        <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+        <result column="sum_order" property="sumOrder" jdbcType="INTEGER" />
+        <result column="already_order" property="alreadyOrder" jdbcType="INTEGER" />
+        <result column="count_user" property="countUser" jdbcType="INTEGER" />
+        <result column="sum_exe" property="sumExe" jdbcType="INTEGER" />
+        <result column="sum_case" property="sumCase" jdbcType="INTEGER" />
+        <result column="un_exe_case" property="unExeCase" jdbcType="INTEGER" />
+        <result column="work_no" property="workNo" jdbcType="VARCHAR" />
+        <result column="main_task_name" property="mainTaskName" jdbcType="VARCHAR" />
+        <result column="work_leader" property="workLeader" jdbcType="VARCHAR" />
+        <result column="work_stage" property="workStage" jdbcType="VARCHAR" />
+        <result column="testsers" property="testsers" jdbcType="VARCHAR" />
+        <result column="day_case" property="dayCase" jdbcType="VARCHAR" />
+        <result column="day_exe" property="dayExe" jdbcType="VARCHAR" />
+        <result column="main_task_no" property="mainTaskNo" jdbcType="VARCHAR" />
+        <result column="dev_order" property="devOrder" jdbcType="INTEGER" />
+        <result column="day_exe" property="dayExe" jdbcType="INTEGER" />
+        <result column="day_create" property="dayCreate" jdbcType="INTEGER" />
+         <result column="noPlanOrder" property="noPlanOrder" jdbcType="INTEGER" />
+         <result column="noTesterOrder" property="noTesterOrder" jdbcType="INTEGER" />
+         <result column="createOrder" property="createOrder" jdbcType="INTEGER" />
+         <result column="underwayOrder" property="underwayOrder" jdbcType="INTEGER" />
+         <result column="alreadyOrder" property="alreadyOrder" jdbcType="INTEGER" />
+         <result column="devOrder" property="devOrder" jdbcType="INTEGER" />
+    </resultMap>
+
+        <!-- 查询:选定时间内完成的工单数量；处在sit的工单数；选定时间内新建的工单数；选定时间内进行的工单数 -->
+    <select id="queryAlreadyOrder" resultMap="groupOrderMap">
+        SELECT
+            k.fdev_group_id as groupId,
+            ifnull(kk.already_order, 0) as alreadyOrder,
+            ifnull(k.dev_order, 0) as devOrder,
+            ifnull(co.createOrder, 0) as createOrder,
+            ifnull(uo.underwayOrder, 0) as underwayOrder
+        FROM
+            (
+            SELECT
+                count(w.work_no) as dev_order, w.fdev_group_id
+            FROM
+                work_order w
+            WHERE
+                w.work_stage = 1
+                and w.order_type = 'function'
+            GROUP BY
+                w.fdev_group_id
+            ) k
+        left join
+            (
+            SELECT
+                ifnull(count(w.work_no),0) as already_order, w.fdev_group_id
+            FROM
+                work_order w
+            WHERE
+                from_unixtime(uat_submit_date,'%Y-%m-%d') between #{startDate} and #{endDate}
+                and w.order_type = 'function'
+            GROUP BY
+                w.fdev_group_id
+            ) kk
+        ON
+            k.fdev_group_id = kk.fdev_group_id
+        LEFT JOIN
+            (
+            SELECT
+                ifnull(count(work_no),0) as createOrder, fdev_group_id
+            FROM
+                work_order
+            WHERE
+                from_unixtime(create_time, '%Y-%m-%d') between #{startDate} and #{endDate}
+                and order_type = 'function'
+            GROUP BY
+                fdev_group_id
+            ) co
+        ON
+            k.fdev_group_id = co.fdev_group_id
+        LEFT JOIN
+            (
+            SELECT
+                ifnull(count(work_no),0) as underwayOrder, fdev_group_id
+            FROM
+                (SELECT
+                    w.work_no,w.fdev_group_id
+                FROM
+                    work_order w,FTMS_PLAN_RESULT t
+                WHERE
+                    w.work_no = t.work_no
+                AND
+                    left(t.CREATE_TM,10) between #{startDate} and #{endDate}
+                    and w.order_type = 'function'
+                UNION
+                SELECT
+                    w.work_no,fdev_group_id
+                FROM
+                    work_order w,FTMS_TESTCASE_EXE_RECORD e
+                WHERE
+                    w.work_no = e.work_no
+                AND
+                    left(e.date,10) between #{startDate} and #{endDate}
+                    and w.order_type = 'function'
+                ) u
+            group by fdev_group_id
+            ) uo
+        ON
+            k.fdev_group_id = uo.fdev_group_id
+        WHERE
+            k.fdev_group_id is not null
+    </select>
+	        
+	<select id="queryDayGroupAllCase" resultMap="groupOrderMap">
+        SELECT
+            t.num as sum_case,
+            e.num as sum_exe
+        from
+            (select
+                w.work_no,
+                count(t.id) as num
+            from
+                work_order w
+            left join
+                FTMS_PLAN_RESULT t
+            on
+                t.WORK_NO = w.work_no
+            where
+                w.work_no = #{workNo}) t,
+            (select
+                w.work_no,
+                count(e.id) as num
+            from
+                work_order w
+            left join
+                FTMS_TESTCASE_EXE_RECORD e
+            on
+                e.work_no = w.work_no
+            where
+                e.OPR_TYPE = '0'
+            and
+                e.status != '4'
+            and
+                w.work_no = #{workNo}
+            ) e
+    </select>
+	        
+    <select id="queryDayGroupReport" resultMap="groupOrderMap">
+        SELECT
+            e.fdev_group_id as group_id,
+            e.work_no,
+            e.main_task_no,
+            e.main_task_name,
+            e.work_stage,
+            e.testers,
+            sum(if(left(t.CREATE_TM,10) between #{startDate} and #{endDate},1,0)) as day_case,
+            exe.exe_num as day_exe
+        FROM
+           (select distinct
+                w.fdev_group_id,
+                w.work_no,
+                w.main_task_no,
+                w.main_task_name,
+                w.work_stage,
+                w.testers
+            from
+            (
+            select
+                w.fdev_group_id,
+                w.work_no,
+                w.main_task_no,
+                w.main_task_name,
+                w.work_stage,
+                w.testers
+            from
+                work_order w,FTMS_PLAN_RESULT t
+            where
+                w.work_no = t.work_no
+            and
+                left(t.CREATE_TM,10) between #{startDate} and #{endDate}
+            and
+                w.order_type = 'function'
+            group by
+                w.fdev_group_id,
+                w.work_no,
+                w.main_task_no,
+                w.main_task_name,
+                w.work_stage,
+                w.testers
+            union all
+            select
+                w.fdev_group_id,
+                w.work_no,
+                w.main_task_no,
+                w.main_task_name,
+                w.work_stage,
+                w.testers
+            from
+                work_order w,FTMS_TESTCASE_EXE_RECORD e
+            where
+                w.work_no = e.work_no
+            and
+                left(e.date,10) between #{startDate} and #{endDate}
+            and
+                w.order_type = 'function'
+            group by
+                w.fdev_group_id,
+                w.work_no,
+                w.main_task_no,
+                w.main_task_name,
+                w.work_stage,
+                w.testers
+            union all
+            select
+                w.fdev_group_id,
+                w.work_no,
+                w.main_task_no,
+                w.main_task_name,
+                w.work_stage,
+                w.testers
+            from
+                work_order w
+            where
+                (w.work_stage = 2
+            or
+                from_unixtime(w.uat_submit_date,'%Y-%m-%d') between #{startDate} and #{endDate})
+            and
+                w.order_type = 'function'
+            group by
+                w.fdev_group_id,
+                w.work_no,
+                w.main_task_no,
+                w.main_task_name,
+                w.work_stage,
+                w.testers
+            )w )e
+        left join
+            FTMS_PLAN_RESULT t
+        on
+            t.work_no = e.work_no
+        left join
+            (select
+                count(e.id) as exe_num,w.work_no
+            from
+                (select distinct w.work_no from(
+                select
+                    w.work_no
+                from
+                    work_order w,FTMS_PLAN_RESULT t
+                where
+                    w.work_no = t.work_no
+                and
+                    left(t.CREATE_TM,10) between #{startDate} and #{endDate}
+                and
+                    w.order_type = 'function'
+                group by
+                    w.work_no
+                union all
+                select
+                    w.work_no
+                from
+                    work_order w,FTMS_TESTCASE_EXE_RECORD e
+                where
+                    w.work_no = e.work_no
+                and
+                    left(e.date,10) between #{startDate} and #{endDate}
+                and
+                    w.order_type = 'function'
+                group by
+                    w.work_no
+                union all
+                select
+                    w.work_no
+                from
+                    work_order w
+                where
+                    (w.work_stage = 2
+                or
+                    from_unixtime(w.uat_submit_date,'%Y-%m-%d') between #{startDate} and #{endDate})
+                and
+                    w.order_type = 'function'
+                group by
+                    w.work_no
+                )w )w
+            left join
+                FTMS_TESTCASE_EXE_RECORD e
+            on
+                e.WORK_NO = w.work_no
+            and
+                e.OPR_TYPE = '0'
+            and
+                e.status != '4'
+            and
+                left(e.date,10) between #{startDate} and #{endDate}
+            group
+                by w.work_no
+            ) exe
+        on
+            exe.work_no = e.WORK_NO
+        where
+            e.fdev_group_id = #{groupId}
+        group by
+            e.fdev_group_id,
+            e.work_no,
+            e.main_task_no,
+            e.main_task_name,
+            e.work_stage,
+            e.testers,
+            exe.exe_num
+    </select>
+
+        <!-- 查询所选日期工单及案例信息 -->
+    <select id="exportReport" resultMap="groupOrderMap">
+	    SELECT
+            w.work_no,
+            w.main_task_name,
+            w.work_leader,
+            sum(t.EXE_NUM) as sum_exe,
+            count(t.ID) as sum_case
+		FROM
+		    work_order w
+		left join
+		    FTMS_PLAN_RESULT t
+		on
+		    t.work_no = w.work_no
+		where
+		    from_unixtime(w.create_time,'%Y-%m-%d') between #{startDate} and #{endDate}
+		and
+		    w.work_stage = 3
+		group by
+            w.work_no,
+            w.main_task_name,
+            w.work_leader
+    </select>
+
+     <select id="queryOrderCaseInfo" resultMap="groupOrderMap">
+         SELECT
+            ifnull(kk.sum_exe, 0) as sum_exe, ifnull(kk.sum_case, 0) as sum_case,
+            ifnull(kk.un_exe_case, 0) as un_exe_case, ifnull(k.day_exe, 0) as day_exe,
+            ifnull(kkk.day_create, 0) as day_create
+         FROM
+            (
+                SELECT
+                    count(*) as day_exe
+                FROM
+                    FTMS_TESTCASE_EXE_RECORD e
+                where
+                    left(e.date, 10) between #{startDate} and #{endDate}
+                AND
+                    e.work_no in (${workStr})
+                AND
+                    e.OPR_TYPE = '0'
+                AND
+                    e.status != '4'
+            )k,
+         (
+             SELECT
+                sum(t.EXE_NUM) as sum_exe,
+                count(t.ID) as sum_case,
+                sum(if(t.RESULT_STATUS = 0,1,0)) as un_exe_case
+             FROM
+                work_order w
+             LEFT JOIN
+                plan_list p
+             ON
+                w.work_no = p.work_no
+             LEFT JOIN
+                FTMS_PLAN_RESULT t
+             ON
+                p.plan_id = t.PLAN_ID
+             WHERE
+                w.work_no in (${workStr})
+         ) kk,
+         (
+             SELECT
+                count(*) as day_create
+             FROM
+                FTMS_PLAN_RESULT r
+             where
+                left(r.CREATE_TM, 10) between #{startDate} and #{endDate}
+             AND
+                r.WORK_NO in (${workStr})
+         ) kkk
+     </select>
+
+    <select id="queryDayTotalWorks" resultMap="groupOrderMap">
+		select
+			w.work_no,w.fdev_group_id as group_id
+		from
+			(select distinct w.work_no,w.fdev_group_id
+                from
+                (select
+                    w.work_no,w.fdev_group_id
+                from work_order w,FTMS_PLAN_RESULT t
+                where
+                    w.work_no = t.work_no
+                and
+                    left(t.CREATE_TM,10) between #{startDate} and #{endDate}
+                and w.order_type = 'function'
+			union
+                select
+                    w.work_no,fdev_group_id
+                from work_order w,FTMS_TESTCASE_EXE_RECORD e
+                where
+                    w.work_no = e.work_no
+                and
+                    left(e.date,10) between #{startDate} and #{endDate}
+                and w.order_type = 'function'
+            union
+                select
+                    work_no,fdev_group_id from work_order
+                where
+                    (from_unixtime(uat_submit_date,'%Y-%m-%d') between #{startDate} and #{endDate}
+                    or
+                    work_stage = '2')
+                    and order_type = 'function'
+            ) w
+        )w
+        WHERE
+            w.fdev_group_id in (${groupFilter})
+    </select>
+
+	<resultMap id="newOrderDimensionMap" type="java.util.Map" >
+		<id column="work_no" property="workNo" jdbcType="VARCHAR" />
+		<result column="group_name" property="groupName" jdbcType="VARCHAR" />
+		<result column="main_task_name" property="mainTaskName" jdbcType="VARCHAR" />
+		<result column="main_task_no" property="mainTaskNo" jdbcType="VARCHAR" />
+		<result column="work_leader" property="groupLeader" jdbcType="VARCHAR" />
+		<result column="testers" property="testers" jdbcType="VARCHAR" />
+        <result column="sum_exe" property="sumExe" jdbcType="INTEGER" />
+        <result column="sum_case" property="sumCase" jdbcType="INTEGER" />
+        <result column="uat_submit_date" property="uatSubmitDate" jdbcType="VARCHAR" />
+	</resultMap>
+
+    <!--查询选定时间段内特定测试人员的工单号（执行案例或新建案例）-->
+    <select id="queryOrderNoByUser" resultType="String">
+        SELECT
+            distinct w.work_no
+        FROM
+            work_order w
+        LEFT JOIN
+            FTMS_TESTCASE_EXE_RECORD e
+        ON
+            w.work_no = e.WORK_NO
+        WHERE
+            w.order_type = 'function'
+        and
+            (
+                find_in_set(#{userEnName}, w.testers)
+            OR
+                find_in_set(#{userEnName}, w.work_leader)
+            OR
+                find_in_set(#{userEnName}, w.work_manager)
+            )
+        AND
+            e.OPR = #{userEnName}
+        AND
+            left(e.DATE, 10) between #{startDate} and #{endDate}
+        UNION
+        SELECT
+            distinct w.work_no
+        FROM
+            work_order w
+        LEFT JOIN
+            FTMS_PLAN_RESULT r
+        ON
+            w.work_no = r.work_no
+        WHERE
+            w.order_type = 'function'
+            and
+            left(r.create_tm,10) between #{startDate} and #{endDate}
+        AND
+            r.CREATE_OPR = #{userEnName}
+        UNION
+        SELECT
+            distinct w.work_no
+        FROM
+            work_order w
+        LEFT JOIN
+            mantis_bug_table m
+        ON
+            w.work_no = m.workNo
+        WHERE
+            w.order_type = 'function'
+            and
+            left(from_unixtime(m.date_submitted),10) between #{startDate} and #{endDate}
+        AND
+            m.reporter_en_name = #{userEnName}
+    </select>
+
+    <!--查询选定时间段内特定测试人员的特定工单信息-->
+    <select id="queryOrderInfoByNo" resultType="Map">
+        SELECT
+            k.work_no as workNo,
+            w.main_task_no as mainTaskNo,
+            w.main_task_name as mainTaskName,
+            k.dayCreate,
+            kk.dayExe,
+            kk.dayDelete,
+            kk.dayUpdate,
+            kk.dayBlock,
+            kk.dayFail
+        FROM
+            work_order w,
+        (
+            SELECT
+                #{workNo} as work_no,
+                count(r.id) as dayCreate
+            FROM
+                work_order w
+            JOIN
+                FTMS_PLAN_RESULT r
+            ON
+                w.work_no = r.WORK_NO
+            WHERE
+                w.work_no = #{workNo}
+            AND
+                r.CREATE_OPR = #{userEnName}
+            AND
+                left(r.CREATE_TM,10) between #{startDate} and #{endDate}
+        ) k,
+        (
+            SELECT
+                #{workNo} as work_no,
+                ifnull(sum(if(e.OPR_TYPE = 0,1,0)),0) as dayExe,
+                ifnull(sum(if(e.OPR_TYPE = 1,1,0)),0) as dayDelete,
+                ifnull(sum(if(e.OPR_TYPE = 2,1,0)),0) as dayUpdate,
+                ifnull(sum(if(e.STATUS = 2 and e.OPR_TYPE = 0,1,0)),0) as dayBlock,
+                ifnull(sum(if(e.STATUS = 3 and e.OPR_TYPE = 0,1,0)),0) as dayFail
+            FROM
+                work_order w
+            JOIN
+                FTMS_TESTCASE_EXE_RECORD e
+            ON
+                w.work_no = e.WORK_NO
+            WHERE
+                w.work_no = #{workNo}
+            AND
+                e.opr = #{userEnName}
+            AND
+                left(e.date,10) between #{startDate} and #{endDate}
+            AND
+                e.status != '4'
+        ) kk
+        WHERE
+            w.work_no = k.WORK_NO
+        AND
+            k.work_no = kk.work_no
+    </select>
+
+    <!--根据组id和日期查当前完成内测的工单数-->
+    <select id="queryDayOrderDone" resultType="Integer">
+        SELECT
+            count(*) as dayOrderDone
+        FROM
+            work_order w
+        WHERE
+            w.fdev_group_id = #{groupId}
+        AND
+            from_unixtime(w.uat_submit_date,'%Y-%m-%d') between #{startDate} and #{endDate}
+        AND
+            w.work_stage in ('3','4','6','7','9','10')
+    </select>
+
+    <!--根据组id和日期查当前提交内测的工单数-->
+    <select id="queryDayOrderSubmit" resultType="Integer">
+        SELECT
+            count(distinct w.work_no)
+        FROM
+            (
+            SELECT
+                work_no, fdev_group_id
+            FROM
+                work_order
+            WHERE
+                fdev_group_id is not null
+            AND
+                fdev_group_id = #{groupId}
+            ) w
+        JOIN
+            (
+            SELECT
+                distinct WORK_NO
+            FROM
+                FTMS_SUBMIT_SIT_RECORD
+            WHERE
+                WORK_NO is not null
+            <if test="startDate != '' and startDate != null">
+                and left(CREATE_TIME, 10) <![CDATA[ >= ]]> #{startDate}
+            </if>
+            <if test="endDate != '' and endDate != null">
+                and left(CREATE_TIME, 10) <![CDATA[ <= ]]> #{endDate}
+            </if>
+            GROUP BY
+                WORK_NO
+            ) s
+        ON
+            w.work_no = s.WORK_NO
+    </select>
+
+    <!--查询待启动和待分配工单-->
+    <select id="queryUndoOrder" resultMap="groupOrderMap">
+        SELECT
+            sum(if(w.work_stage = '0',1,0)) as noTesterOrder,
+            sum(if(p.plan_id is null and w.work_stage = '1',1,0) )as noPlanOrder
+        FROM
+            work_order w
+        LEFT JOIN
+            plan_list p
+        ON
+            w.work_no = p.work_no
+        WHERE
+            w.fdev_group_id = #{groupId}
+    </select>
+
+    <select id="querytendencyChart" resultMap="tendencyChartMap">
+        SELECT
+            orderNum, (sumPayExe + sumOtherExe) as sumExe
+        FROM
+        (
+            SELECT
+                IFNULL(COUNT(DISTINCT a.work_no), 0) AS orderNum,
+                IFNULL(SUM(IF(e.OPR_TYPE = '0' and a.group_id = '9', 2, 0)), 0) AS sumPayExe,
+                IFNULL(SUM(IF(e.OPR_TYPE = '0' and (a.group_id != '9' or a.group_id is null), 1, 0)), 0) AS sumOtherExe
+            FROM
+            (
+                SELECT
+                    DISTINCT work_no, group_id
+                FROM
+                    work_order
+                WHERE
+                    order_type = 'function'
+                    and from_unixtime(uat_submit_date,'%Y-%m-%d') between #{startDate} and #{endDate}
+                    <if test="groupIds != null and groupIds.size() >0 ">
+                        and fdev_group_id in
+                        <foreach collection="groupIds" item="group" open="(" close=")" separator=",">
+                            #{group}
+                        </foreach>
+                    </if>
+            UNION
+                SELECT
+                    DISTINCT w.work_no, w.group_id
+                FROM
+                    work_order w
+                JOIN
+                    FTMS_PLAN_RESULT r
+                ON
+                    w.work_no = r.WORK_NO
+                WHERE
+                    w.order_type = 'function'
+                    and LEFT(r.CREATE_TM, 10) BETWEEN #{startDate} AND #{endDate}
+                    <if test="groupIds != null and groupIds.size() >0 ">
+                        and w.fdev_group_id in
+                        <foreach collection="groupIds" item="group" open="(" close=")" separator=",">
+                            #{group}
+                        </foreach>
+                    </if>
+            UNION
+                SELECT
+                    DISTINCT w.work_no, w.group_id
+                FROM
+                    work_order w
+                JOIN
+                    FTMS_TESTCASE_EXE_RECORD e
+                ON
+                    w.work_no = e.WORK_NO
+                WHERE
+                    w.order_type = 'function'
+                    and LEFT(e.DATE, 10) BETWEEN #{startDate} AND #{endDate}
+                    <if test="groupIds != null and groupIds.size() >0 ">
+                        and w.fdev_group_id in
+                        <foreach collection="groupIds" item="group" open="(" close=")" separator=",">
+                            #{group}
+                        </foreach>
+                    </if>
+            ) a
+            LEFT JOIN
+                (SELECT * FROM FTMS_TESTCASE_EXE_RECORD
+                WHERE LEFT(DATE, 10) BETWEEN #{startDate} AND #{endDate}) e
+            ON
+                a.work_no = e.WORK_NO
+        ) b
+    </select>
+
+    <select id="queryNewWorkOrder" resultType="Integer">
+        SELECT IFNULL(count(work_no),0) as number
+        FROM work_order
+        WHERE
+            from_unixtime(create_time,'%Y-%m-%d') between #{startDate} and #{endDate}
+        <if test="groupId != null and groupId != ''">
+            AND
+            fdev_group_id = #{groupId}
+        </if>
+    </select>
+
+    <select id="queryProcessingWorkOrder" resultType="Integer">
+        SELECT
+            IFNULL(count(work_no),0) as number
+        FROM (
+            SELECT
+                w.work_no,w.group_id
+            FROM
+                work_order w,FTMS_PLAN_RESULT t
+            WHERE
+                w.work_no = t.work_no
+            AND
+                left(t.CREATE_TM,10) between #{startDate} and #{endDate}
+            <if test="groupId != null and groupId != ''">
+                AND
+                w.fdev_group_id = #{groupId}
+            </if>
+            UNION
+            SELECT
+                w.work_no,w.group_id
+            FROM
+                work_order w,FTMS_TESTCASE_EXE_RECORD e
+            WHERE
+                w.work_no = e.work_no
+            AND
+            left(e.date,10) between #{startDate} and #{endDate}
+            <if test="groupId != null and groupId != ''">
+                AND
+                w.fdev_group_id = #{groupId}
+            </if>
+        ) u
+    </select>
+
+    <select id="sitSubmitTimely" resultType="Map">
+        SELECT
+            kk.fdev_group_id as fdevGroupId, ifnull(k.timely, 0) as timely, kk.total as total
+        FROM
+        (
+            SELECT
+                r.fdev_group_id, count(r.work_no) as timely
+            FROM
+            (
+                SELECT
+                    w.work_no, w.sit_date, w.fdev_group_id, s.CREATE_TIME
+                FROM
+                    (
+                        SELECT work_no, fdev_group_id, sit_date
+                        FROM work_order
+                        WHERE fdev_group_id is not null AND sit_date is not null
+                        <if test="startDate != '' and startDate != null">
+                            and left(from_unixtime(create_time), 10) &gt;= #{startDate}
+                        </if>
+                        <if test="endDate != '' and endDate != null">
+                            and left(from_unixtime(create_time), 10) &lt;= #{endDate}
+                        </if>
+                        AND fdev_group_id in (${fdevGroupId})
+                    ) w
+                JOIN
+                    (
+                        SELECT work_no, min(CREATE_TIME) as CREATE_TIME
+                        FROM FTMS_SUBMIT_SIT_RECORD
+                        WHERE CREATE_TIME is not null AND WORK_NO is not null
+                        GROUP BY work_no
+                    ) s
+                ON
+                    w.work_no = s.WORK_NO
+                AND
+                    replace(w.sit_date, '/', '-') >= left(s.CREATE_TIME, 10)
+            ) r
+            group by r.fdev_group_id
+        ) k
+        RIGHT JOIN
+        (
+            SELECT
+                r.fdev_group_id, count(r.work_no) as total
+            FROM
+            (
+                select w.work_no, w.sit_date, w.fdev_group_id, s.CREATE_TIME from
+                    (
+                        SELECT work_no, fdev_group_id, sit_date
+                        FROM work_order
+                        WHERE fdev_group_id is not null AND sit_date is not null
+                        AND fdev_group_id in (${fdevGroupId})
+                    <if test="startDate != '' and startDate != null">
+                        and left(from_unixtime(create_time), 10) &gt;= #{startDate}
+                    </if>
+                    <if test="endDate != '' and endDate != null">
+                        and left(from_unixtime(create_time), 10) &lt;= #{endDate}
+                    </if>
+                    ) w
+                JOIN
+                    (
+                        SELECT work_no, min(CREATE_TIME) as CREATE_TIME
+                        FROM FTMS_SUBMIT_SIT_RECORD
+                        WHERE CREATE_TIME is not null AND WORK_NO is not null
+                        GROUP BY work_no
+                    ) s
+                ON w.work_no = s.WORK_NO
+            ) r
+            GROUP BY
+                r.fdev_group_id
+        ) kk
+        ON
+            k.fdev_group_id = kk.fdev_group_id
+    </select>
+
+    <select id="smokePass" resultType="Map">
+        SELECT
+            b.fdev_group_id as fdevGroupId, ifnull(a.sucNum, 0) as timely, ifnull(b.total, 0) as total
+        FROM
+            (
+                SELECT
+                    w.fdev_group_id, count(distinct w.work_no) as sucNum
+                FROM
+                    (
+                        SELECT
+                            work_no, fdev_group_id
+                        FROM
+                            work_order
+                        WHERE
+                            fdev_group_id is not null
+                        AND
+                            fdev_group_id in (${fdevGroupId})
+                    ) w
+                JOIN
+                    (
+                        SELECT
+                            distinct WORK_NO
+                        FROM
+                            FTMS_SUBMIT_SIT_RECORD
+                        WHERE
+                            WORK_NO is not null
+                        <if test="startDate != '' and startDate != null">
+                            and left(CREATE_TIME, 10) &gt;= #{startDate}
+                        </if>
+                        <if test="endDate != '' and endDate != null">
+                            and left(CREATE_TIME, 10) &lt;= #{endDate}
+                        </if>
+                        GROUP BY
+                            WORK_NO
+                    ) s
+                ON
+                    w.work_no = s.WORK_NO
+                WHERE
+                    w.work_no not in (SELECT distinct WORK_NO FROM FTMS_ROLLBACK_INFO )
+                GROUP BY
+                    w.fdev_group_id
+            ) a
+        LEFT JOIN
+            (
+                SELECT
+                    w.fdev_group_id, count(distinct w.work_no) as total
+                FROM
+                    (
+                        SELECT
+                            work_no, fdev_group_id
+                        FROM
+                            work_order
+                        WHERE
+                            fdev_group_id is not null
+                        AND
+                            fdev_group_id in (${fdevGroupId})
+                    ) w
+                JOIN
+                    (
+                        SELECT
+                            distinct WORK_NO
+                        FROM
+                            FTMS_SUBMIT_SIT_RECORD
+                        WHERE
+                            WORK_NO is not null
+                        <if test="startDate != '' and startDate != null">
+                            and left(CREATE_TIME, 10) &gt;= #{startDate}
+                        </if>
+                        <if test="endDate != '' and endDate != null">
+                            and left(CREATE_TIME, 10) &lt;= #{endDate}
+                        </if>
+                        GROUP BY
+                            WORK_NO
+                    ) s
+                ON
+                    w.work_no = s.WORK_NO
+                GROUP BY
+                    w.fdev_group_id
+            ) b
+        ON
+            a.fdev_group_id = b.fdev_group_id
+    </select>
+
+    <select id="queryExeTimeByFdevGroup" resultType="Map">
+        SELECT
+            w.fdev_group_id as fdevGroupId, count(e.id) as exeTime
+        FROM
+            work_order w
+        JOIN
+            FTMS_TESTCASE_EXE_RECORD e
+        ON
+            w.work_no = e.WORK_NO
+        WHERE
+            e.OPR_TYPE = '0'
+        AND
+            w.fdev_group_id is not null
+        AND
+            w.fdev_group_id in (${fdevGroupId})
+        <if test="startDate != '' and startDate != null">
+            and left(DATE, 10) &gt;= #{startDate}
+        </if>
+        <if test="endDate != '' and endDate != null">
+            and left(DATE, 10) &lt;= #{endDate}
+        </if>
+        GROUP BY
+            w.fdev_group_id
+    </select>
+
+</mapper>

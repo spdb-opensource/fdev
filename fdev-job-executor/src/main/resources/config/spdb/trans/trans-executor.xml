@@ -1,0 +1,859 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.csii.com.cn/schema/pe" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.csii.com.cn/schema/pe http://www.csii.com.cn/schema/pe/pe.xsd">
+
+    <action name="BatchUpdateTaskDocAction" class="com.spdb.executor.action.BatchUpdateTaskDocAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="BatchUpdateTaskDoc" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">BatchUpdateTaskDocAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">定时任务同步文档数据批量</param>
+        </setting>
+    </transaction>
+
+    <action name="CollectGitlabBranchAction" class="com.spdb.executor.action.CollectGitlabBranchAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="CollectGitlabBranch" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">CollectGitlabBranchAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">收集需要清除的分支</param>
+        </setting>
+    </transaction>
+
+
+    <action name="DeleteBranchAction" class="com.spdb.executor.action.DeleteBranchAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="DeleteBranch" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">DeleteBranchAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">删除废弃分支</param>
+        </setting>
+    </transaction>
+
+
+    <action name="UpdateProdTaskStatusAction" class="com.spdb.executor.action.UpdateProdTaskStatusAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="UpdateProdTaskStatus" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">UpdateProdTaskStatusAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">批量更新投产任务</param>
+        </setting>
+    </transaction>
+
+    <action name="DeleteCommissionEventAction" class="com.spdb.executor.action.DeleteCommissionEventAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="DeleteCommissionEvent" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">DeleteCommissionEventAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">批量删除用户代办事项</param>
+        </setting>
+    </transaction>
+
+    <action name="AppCreatePipelineScheduleAction" class="com.spdb.executor.action.AppCreatePipelineScheduleAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="AppCreatePipelineSchedule" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">AppCreatePipelineScheduleAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">应用添加定时pipeline</param>
+        </setting>
+    </transaction>
+
+    <action name="CleanDelayedTasksAction" class="com.spdb.executor.action.CleanDelayedTasksAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="CleanDelayedTasks" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">CleanDelayedTasksAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">批量清理未投产任务</param>
+        </setting>
+    </transaction>
+
+
+    <action name="AppWickedNotifyScheduleAction" class="com.spdb.executor.action.AppWickedNotifyScheduleAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="AppWickedNotifySchedule" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">AppWickedNotifyScheduleAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">异常应用邮件通知添加定时</param>
+        </setting>
+    </transaction>
+
+    <action name="TestPipelineScheduleAction" class="com.spdb.executor.action.TestPipelineScheduleAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="TestPipelineSchedule" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">TestPipelineScheduleAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">测试pipeline</param>
+        </setting>
+    </transaction>
+
+    <action name="SendDemandEmailAction" class="com.spdb.executor.action.SendDemandEmailAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="SendDemandEmail" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">SendDemandEmailAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">定时发送需求超期邮件</param>
+        </setting>
+    </transaction>
+
+    <action name="AllUserTasksAction" class="com.spdb.executor.action.AllUserTasksAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="AllUserTasks" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">AllUserTasksAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">定时发送每天出全量人员的实时任务数量</param>
+        </setting>
+    </transaction>
+
+    <action name="WeekResourceEmailAction" class="com.spdb.executor.action.WeekResourceEmailAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="WeekResourceEmail" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">WeekResourceEmailAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">定时每周出一份全量用户未来一周的参与开发</param>
+        </setting>
+    </transaction>
+
+    <action name="WeekGroupResourceEmailAction" class="com.spdb.executor.action.WeekGroupResourceEmailAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="WeekGroupResourceEmail" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">WeekGroupResourceEmailAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">定时每周出一次小组资源的情况</param>
+        </setting>
+    </transaction>
+
+        <action name="UpdateGitlabUserNameAction" class="com.spdb.executor.action.UpdateGitlabUserNameAction"
+parent="baseQueryAction">
+    </action>
+
+    <transaction id="UpdateGitlabUserName" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">UpdateGitlabUserNameAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">用户模块定时更新GitlabUserName</param>
+        </setting>
+    </transaction>
+
+        <action name="IamsCronAction" class="com.spdb.executor.action.IamsCronAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="IamsCron" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">IamsCronAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">定时清理挡板数据库的日志表和日志备份表</param>
+        </setting>
+    </transaction>
+
+        <action name="AutoTestAction" class="com.spdb.executor.action.AutoTestAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="AutoTest" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">AutoTestAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">自动测试</param>
+        </setting>
+    </transaction>
+    
+    <action name="KfOffBatchNotifyAction" class="com.spdb.executor.action.KfOffBatchNotifyAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="KfOffBatchNotify" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">KfOffBatchNotifyAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">发送邮件提醒批量关闭</param>
+        </setting>
+    </transaction>
+    
+    <action name="NetApprovalNotifyAction" class="com.spdb.executor.action.NetApprovalNotifyAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="NetApprovalNotify" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">NetApprovalNotifyAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">每天提醒网络审核员审核</param>
+        </setting>
+    </transaction>
+
+    <action name="AsyncRqrmntInfoTagAction" class="com.spdb.executor.action.AsyncRqrmntInfoTagAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="AsyncRqrmntInfoTag" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">AsyncRqrmntInfoTagAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">需求信息列表标签同步</param>
+        </setting>
+    </transaction>
+
+    <action name="AsyncRqrmntInfoTagNotAllowAction" class="com.spdb.executor.action.AsyncRqrmntInfoTagNotAllowAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="AsyncRqrmntInfoTagNotAllow" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">AsyncRqrmntInfoTagNotAllowAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">需求列表信息不予投产标签同步</param>
+        </setting>
+    </transaction>
+
+    <action name="UpdateApplicationTaskFlagAction" class="com.spdb.executor.action.UpdateApplicationTaskFlagAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="UpdateApplicationTaskFlagEvent" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">UpdateApplicationTaskFlagAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">刷新组件和应用关联信息</param>
+        </setting>
+    </transaction>
+
+    <action name="UpdateConponentDependencyTreeAction" class="com.spdb.executor.action.UpdateConponentDependencyTreeAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="UpdateConponentDependencyTreeEvent" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">UpdateApplicationTaskFlagAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">刷新最新组件自身依赖树</param>
+        </setting>
+    </transaction>
+
+    <action name="ArchetypeVersionNotifyAction" class="com.spdb.executor.action.ArchetypeVersionNotifyAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="ArchetypeVersionNotifyEvent" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">ArchetypeVersionNotifyAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">检查骨架中涉及组件</param>
+        </setting>
+    </transaction>
+
+    <action name="ArchetypeAutoScanAction" class="com.spdb.executor.action.ArchetypeAutoScanAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="ArchetypeAutoScanActionEvent" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">ArchetypeAutoScanAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">骨架使用组件版本扫描</param>
+        </setting>
+    </transaction>
+    
+    <action name="ClearScanRecordAction" class="com.spdb.executor.action.ClearScanRecordAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="ClearScanRecord" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">ClearScanRecordAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">接口扫描记录定时清理</param>
+        </setting>
+    </transaction>
+
+    <action name="CacheQualityReportAction" class="com.spdb.executor.action.CacheQualityReportAction" parent="baseQueryAction">
+    </action>
+    <transaction id="CacheQualityReport" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">CacheQualityReportAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">缓存玉衡质量报表全量数据</param>
+        </setting>
+    </transaction>
+
+    <action name="sendEmailAssessDemandAction" class="com.spdb.executor.action.sendEmailAssessDemandAction" parent="baseQueryAction">
+    </action>
+
+    <transaction id="sendEmailAssessDemand" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">sendEmailAssessDemandAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">发送需求评估超期通知邮件</param>
+        </setting>
+    </transaction>
+
+    <action name="CollectGitlabBranchNewAction" class="com.spdb.executor.action.CollectGitlabBranchNewAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="CollectGitlabBranchNew" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">CollectGitlabBranchNewAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">收集投产后需要清除的分支</param>
+        </setting>
+    </transaction>
+
+
+    <action name="UpdateIpmpSystemAction" class="com.spdb.executor.action.UpdateIpmpSystemAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="UpdateIpmpSystemInfo" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">UpdateIpmpSystemAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">批量更新IPMP系统信息</param>
+        </setting>
+    </transaction>
+
+    <action name="UpdateGitworkAction" class="com.spdb.executor.action.UpdateGitworkAction" parent="baseQueryAction"></action>
+    <transaction id="batchCodeStatistics" template="publicSequenceTemplate">
+        <description></description>
+        <actions>
+            <ref name="action">UpdateGitworkAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">批量gitlabwork代码统计</param>
+        </setting>
+    </transaction>
+
+    <action name="PipelineExecuteScheduleAction" class="com.spdb.executor.action.PipelineExecuteScheduleAction" parent="baseQueryAction"></action>
+    <transaction id="pipelineExecuteSchedule" template="publicSequenceTemplate">
+        <description></description>
+        <actions>
+            <ref name="action">PipelineExecuteScheduleAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">定时执行流水线</param>
+        </setting>
+    </transaction>
+
+    <action name="PipelineCalcPluginNumAction" class="com.spdb.executor.action.PipelineCalcPluginNumAction" parent="baseQueryAction"></action>
+    <transaction id="pipelineCalcPluginNum" template="publicSequenceTemplate">
+        <description></description>
+        <actions>
+            <ref name="action">PipelineCalcPluginNumAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">一次性执行统计插件数量</param>
+        </setting>
+    </transaction>
+
+    <action name="PipelineCronStopPipelineAction" class="com.spdb.executor.action.PipelineCronStopPipelineAction" parent="baseQueryAction"></action>
+    <transaction id="cronStopPipeline" template="publicSequenceTemplate">
+        <description></description>
+        <actions>
+            <ref name="action">PipelineCronStopPipelineAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">每小时定时停止流水线</param>
+        </setting>
+    </transaction>
+
+
+    <action name="DelAppManagerAndMemberAction" class="com.spdb.executor.action.DelAppManagerAndMemberAction" parent="baseQueryAction"></action>
+    <transaction id="DelAppManagerAndMember" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">DelAppManagerAndMemberAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">清理过期的项目成员与负责人</param>
+        </setting>
+    </transaction>
+
+    <action name="UpdateIpmpUnitTaskAction" class="com.spdb.executor.action.UpdateIpmpUnitTaskAction" parent="baseQueryAction">
+    </action>
+    <transaction id="UpdateIpmpUnitTask" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">UpdateIpmpUnitTaskAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">ipmp任务集下的实施单元增量同步</param>
+        </setting>
+    </transaction>
+
+    <action name="StatisticsIterationAction" class="com.spdb.executor.action.StatisticsIterationAction" parent="baseQueryAction">
+    </action>
+    <transaction id="StatisticsIteration" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">StatisticsIterationAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">大屏后端每天更新需求迭代与用户数据</param>
+        </setting>
+    </transaction>
+
+    <action name="NewCacheQualityReportAction" class="com.spdb.executor.action.NewCacheQualityReportAction" parent="baseQueryAction">
+    </action>
+    <transaction id="NewCacheQualityReport" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">NewCacheQualityReportAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">缓存新玉衡质量报表全量数据</param>
+        </setting>
+    </transaction>
+
+    <action name="TimingSyncFuserAction" class="com.spdb.executor.action.TimingSyncFuserAction" parent="baseQueryAction">
+    </action>
+    <transaction id="TimingSyncFuser" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">TimingSyncFuserAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">跑批老用户新增数据到新用户</param>
+        </setting>
+    </transaction>
+
+    <action name="SyncServiceAppAction" class="com.spdb.executor.action.SyncServiceAppAction" parent="baseQueryAction">
+    </action>
+    <transaction id="SyncServiceApp" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">SyncServiceAppAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">同步老版应用增量数据</param>
+    	</setting>
+    </transaction>
+    
+    <action name="SaveAgileIterationPointsAction" class="com.spdb.executor.action.SaveAgileIterationPointsAction" parent="baseQueryAction">
+</action>
+    <transaction id="SaveAgileIterationPoints" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">SaveAgileIterationPointsAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">保存每日未完成迭代故事点数燃尽图</param>
+        </setting>
+    </transaction>
+
+    <action name="SendEmailDueTodayTasksAction" class="com.spdb.executor.action.SendEmailDueTodayTasksAction" parent="baseQueryAction">
+    </action>
+    <transaction id="SendEmailDueTodayTasks" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">SendEmailDueTodayTasksAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">发送任务评估今日到期通知邮件</param>
+        </setting>
+    </transaction>
+
+    <action name="ClearTaskStatusAction" class="com.spdb.executor.action.ClearTaskStatusAction" parent="baseQueryAction">
+    </action>
+    <transaction id="ClearTaskStatus" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">ClearTaskStatusAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">清楚任务看板无效状态</param>
+        </setting>
+    </transaction>
+
+    <action name="SyncAllIpmpProjectAction" class="com.spdb.executor.action.SyncAllIpmpProjectAction" parent="baseQueryAction">
+    </action>
+    <transaction id="SyncAllIpmpProject" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">SyncAllIpmpProjectAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">同步IPMP全量项目和任务集信息</param>
+        </setting>
+    </transaction>
+
+    <action name="SyncAllIpmpTeamAction" class="com.spdb.executor.action.SyncAllIpmpTeamAction" parent="baseQueryAction">
+    </action>
+    <transaction id="SyncAllIpmpTeam" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">SyncAllIpmpTeamAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">同步IPMP全量牵头单位团队信息</param>
+        </setting>
+    </transaction>
+
+    <action name="SyncAllIpmpDeptAction" class="com.spdb.executor.action.SyncAllIpmpDeptAction" parent="baseQueryAction">
+    </action>
+    <transaction id="SyncAllIpmpDept" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">SyncAllIpmpDeptAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">同步IPMP全量组织机构信息</param>
+        </setting>
+    </transaction>
+
+    <action name="SyncAllIpmpUserAction" class="com.spdb.executor.action.SyncAllIpmpUserAction" parent="baseQueryAction">
+    </action>
+    <transaction id="SyncAllIpmpUser" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">SyncAllIpmpUserAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">同步IPMP全量用户信息</param>
+        </setting>
+    </transaction>
+    
+    <action name="SyncAllIpmpInfoAction" class="com.spdb.executor.action.SyncAllIpmpInfoAction" parent="baseQueryAction">
+    </action>
+    <transaction id="syncAllIpmpInfo" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">SyncAllIpmpInfoAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">从IPMP定时全量同步实施单元</param>
+        </setting>
+    </transaction>
+    
+    <action name="SendUserMountDevUnitAction" class="com.spdb.executor.action.SendUserMountDevUnitAction" parent="baseQueryAction">
+    </action>
+    <transaction id="SendUserMountDevUnit" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">SendUserMountDevUnitAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">定时任务发送邮件提醒用户挂载研发单元</param>
+        </setting>
+    </transaction>
+
+    <action name="calcDemandAssessDaysAction" class="com.spdb.executor.action.calcDemandAssessDaysAction"
+            parent="baseQueryAction">
+    </action>
+
+    <transaction id="calcDemandAssessDays" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">calcDemandAssessDaysAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">批量计算需求评估时长并发送邮件</param>
+        </setting>
+    </transaction>
+
+    <action name="UpdateLeaveUserAction" class="com.spdb.executor.action.UpdateLeaveUserAction" parent="baseQueryAction">
+    </action>
+    <transaction id="updateLeaveUser" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">UpdateLeaveUserAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">定时任务更新用户模块用户离职信息</param>
+        </setting>
+    </transaction>
+
+    <action name="ReportCacheSonarProjectAction" class="com.spdb.executor.action.ReportCacheSonarProjectAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="reportCacheSonarProject" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">ReportCacheSonarProjectAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">度量sonar扫描数据定时维护</param>
+        </setting>
+    </transaction>
+    
+    <action name="GetTestFinishDateByUpdateTimeAction" class="com.spdb.executor.action.GetTestFinishDateByUpdateTimeAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="GetTestFinishDateByUpdateTime" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">GetTestFinishDateByUpdateTimeAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">按时间段获取云测试平台的实施单元</param>
+        </setting>
+    </transaction>
+    
+    <action name="GetTestFinishDateAction" class="com.spdb.executor.action.GetTestFinishDateAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="GetTestFinishDate" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">GetTestFinishDateAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">按实施单元请求云测试平台</param>
+        </setting>
+    </transaction>
+
+    <action name="ConfAssessAction" class="com.spdb.executor.action.ConfAssessAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="confAssess" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">ConfAssessAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">Conflence需求评估数据同步</param>
+        </setting>
+    </transaction>
+
+    <action name="FdevUnitOverdueEmailAction" class="com.spdb.executor.action.FdevUnitOverdueEmailAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="FdevUnitOverdueEmail" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">FdevUnitOverdueEmailAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">研发单元即将超期/超期提醒邮件 </param>
+        </setting>
+    </transaction>
+
+    <action name="GitWorkCommitAction" class="com.spdb.executor.action.GitWorkCommitAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="gitWorkCommit" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">GitWorkCommitAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">gitWork代码统计</param>
+        </setting>
+    </transaction>
+    <action name="SyncTestManagerInfoAction" class="com.spdb.executor.action.SyncTestManagerInfoAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="SyncTestManagerInfo" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">SyncTestManagerInfoAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">同步云测试平台测试经理信息</param>
+        </setting>
+    </transaction>
+    <action name="FdevUnitWarnDelayAction" class="com.spdb.executor.action.FdevUnitWarnDelayAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="FdevUnitWarnDelay" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">FdevUnitWarnDelayAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">研发单元提交用户测试提醒</param>
+        </setting>
+    </transaction>
+    <action name="TechDemandFileTestOrderAction" class="com.spdb.executor.action.TechDemandFileTestOrderAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="TechDemandFileTestOrder" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">TechDemandFileTestOrderAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">科技需求归档提测单</param>
+        </setting>
+    </transaction>
+
+    <action name="IamsInterfaceFileParseAction" class="com.spdb.executor.action.IamsInterfaceFileParseAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="IamsInterfaceFileParse" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">IamsInterfaceFileParseAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">挡板接口文件解析</param>
+        </setting>
+    </transaction>
+
+    <action name="IamsMakeMockDataAction" class="com.spdb.executor.action.IamsMakeMockDataAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="IamsMakeMockData" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">IamsMakeMockDataAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">挡板定时更新mock数据</param>
+        </setting>
+    </transaction>
+
+    <action name="SyncService2IamsAction" class="com.spdb.executor.action.SyncService2IamsAction"
+            parent="baseQueryAction">
+    </action>
+    <transaction id="syncService2Iams" template="publicSequenceTemplate">
+        <description>
+        </description>
+        <actions>
+            <ref name="action">SyncService2IamsAction</ref>
+        </actions>
+        <setting>
+            <param name="descriptionZh">挡板定时更新fdev应用信息</param>
+        </setting>
+    </transaction>
+
+</config>

@@ -1,0 +1,85 @@
+.q-textarea
+
+  .q-field__control
+    min-height: 63px
+    height: auto
+    padding-left: 0
+  .q-field__control-container
+    padding-top: 2px
+    padding-bottom: 2px
+    textarea
+      height 36px
+      max-height 128px
+
+  .q-field__shadow
+    top: 2px
+    bottom: 2px
+
+  .q-field__native, .q-field__prefix, .q-field__suffix
+    line-height: 18px
+
+  .q-field__native
+    resize: vertical
+    padding: 9px 16px
+    min-height: 63px
+    line-height 18px !important
+
+  &.q-field--labeled
+    .q-field__control-container
+      padding-top: 26px
+    .q-field__shadow
+      top: 26px
+    .q-field__native, .q-field__prefix, .q-field__suffix
+      padding-top: 0
+    .q-field__native
+      min-height: 26px
+      padding-top: 1px
+
+  &--autogrow
+    .q-field__native
+      resize: none
+
+  &.q-field--dense
+    .q-field__control, .q-field__native
+      min-height: 36px
+    .q-field__native
+      padding-top: 9px
+
+    &.q-field--labeled
+      .q-field__control-container
+        padding-top: 14px
+      .q-field__shadow
+        top: 14px
+      .q-field__native
+        min-height: 24px
+        padding-top: 3px
+      .q-field__prefix, .q-field__suffix
+        padding-top: 2px
+
+body.mobile .q-textarea,
+.q-textarea.disabled
+  .q-field__native
+    resize: none
+
+.q-input
+  &.q-field--disabled .q-field__marginal
+    background-color  $grey-0
+
+  .q-field
+    &__marginal
+      color $grey-3
+      background-color #fff
+      svg
+        width 16px
+        height 16px
+    &__suffix
+      color $grey-3
+      border-left 1px solid $grey-2
+      padding 0 8px
+  &.q-input-large
+    &.q-field
+      font-size 16px
+    .q-field__control
+      height 40px
+      .q-field__native, .q-field__input
+        line-height 40px !important

@@ -1,0 +1,14 @@
+/fservice/api/app/queryMyApps:
+  req:
+    user_id: "userId"
+/fservice/api/app/findbyid:
+  res:
+    gitlabId: "gitlab_project_id"
+    nameEN: "name_en"
+    nameCN: "name_cn"
+    pipeline: "appCiType"
+    gitAddress: "git"
+#    spdbManagers:
+#      - education: "edu"
+    spdbManagers-key: "spdb_managers"
+    devManagers-key: "dev_managers"

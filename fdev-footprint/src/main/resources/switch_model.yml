@@ -1,0 +1,15 @@
+fdev:
+  channelNo: "fdev"
+  channelName: "fdev"
+  status: "1"
+  autoPercent: "100"
+ftms:
+  channelNo: "ftms"
+  channelName: "ftms"
+  status: "1"
+  autoPercent: "100"
+fdev-new:
+  channelNo: "fdev-new"
+  channelName: "fdev-new"
+  status: "1"
+  autoPercent: "100"

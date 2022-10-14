@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.csii.com.cn/schema/pe" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.csii.com.cn/schema/pe http://www.csii.com.cn/schema/pe/pe.xsd">
+
+    <localeResolver name="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"></localeResolver>
+
+    <!-- View Resolver -->
+    <bean id="mainViewResolver" class="com.csii.pe.channel.http.servlet.HashMapViewResolver">
+        <map name="mapping">
+            <!--<bean name="rest" class="com.csii.pe.channel.http.servlet.view.SchedulerView">-->
+            <!--</bean>-->
+        </map>
+    </bean>
+
+    <bean id="idResolver" class="com.csii.pe.channel.http.TransactionIdResolver" />
+
+    <!-- MVC controller -->
+    <bean id="mainController" class="com.csii.pe.http.ext.SchedulerMainController">
+        <param name="loginView">forceout</param>
+        <ref name="coreController">coreController</ref>
+        <ref name="contextResolver">extendedContextResolver</ref>
+        <ref name="exceptionHandler">exceptionHandler</ref>
+    </bean>
+
+    <bean id="exceptionHandler" class="com.csii.pe.channel.http.servlet.ViewExceptionHandler">
+        <param name="backToInputForValidationError">true</param>
+        <param name="defaultAjaxErrorView">rest</param>
+        <param name="defaultErrorView">rest</param>
+        <param name="defaultPublicErrorView">rest</param>
+        <param name="defaultJsonErrorView">rest</param>
+    </bean>
+
+
+    <bean id="extendedContextResolver" class="com.csii.pe.channel.http.servlet.ext.JsonExtendedContextResolver">
+    </bean>
+
+</config>

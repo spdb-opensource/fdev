@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>时长5</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="添加组件" transform="translate(-815.000000, -690.000000)">
+            <g id="编组-3" transform="translate(613.000000, 64.000000)">
+                <g id="时长5" transform="translate(202.000000, 626.000000)">
+                    <rect id="矩形" x="0" y="0" width="28" height="28"></rect>
+                    <g id="grouped_bar" transform="translate(2.000000, 2.000000)" fill-rule="nonzero">
+                        <polygon id="路径" fill="#0663BE" points="0.0115044248 3.83672566 4.78871681 3.83672566 4.78871681 22.9484513 0.0115044248 22.9484513"></polygon>
+                        <polygon id="路径" fill="#F0B813" points="5.74358407 11.4814159 10.5207965 11.4814159 10.5207965 22.9484513 5.74358407 22.9484513"></polygon>
+                        <polygon id="路径" fill="#0663BE" points="13.300885 0.014380531 18.0780973 0.014380531 18.0780973 22.9484513 13.300885 22.9484513"></polygon>
+                        <polygon id="路径" fill="#F0B813" points="19.0329646 6.70132743 23.810177 6.70132743 23.810177 22.9455752 19.0329646 22.9455752"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

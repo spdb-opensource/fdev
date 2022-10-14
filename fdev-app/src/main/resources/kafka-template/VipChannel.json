@@ -1,0 +1,17 @@
+{
+  "name": "$NAME",
+  "timeout": 1800,
+  "timestamp": "$TIMESTAMP",
+  "command": "$COMMAND",
+  "image": {
+    "name": "$IMAGE"
+  },
+  "metadata": {
+    "CI_PROJECT_NAME": "$PROJECT_NAME",
+    "CI_PROJECT_BRANCH": "$PROJECT_BRANCH",
+    "CI_PROJECT_URL": "$PROJECT_URL",
+    "CI_BUILD_STATE": "$BUILD_STATE",
+    "CI_PROJECT_NAMESPACE": "$PROJECTS_NAMESPACE",
+    "CI_PROJECT_ID": "$PROJECT_ID"
+  }
+}

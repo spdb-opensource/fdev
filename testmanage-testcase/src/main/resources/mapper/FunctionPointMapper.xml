@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.manager.ftms.dao.FunctionPointDao">
+	
+	<select id="queryFuncIdByMenu" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT func_id FROM func_model where field2 = #{funcMenu} and sys_func_id = #{sys_id}	
+	</select>
+	
+	<select id="queryFuncIdByNameAndPid" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT func_id FROM func_model 
+		where func_model_name = #{funcName} 
+		and parent_id = #{parentId}
+		and sys_func_id = #{sys_id}
+	</select>
+
+	<select id="queryParentByFuncName" resultType="Map">
+		SELECT
+			func_id as parentId,
+			func_model_name as parentFuncName
+		FROM
+			func_model
+		WHERE
+			func_id = (
+				SELECT
+					parent_id
+				FROM
+					func_model
+				WHERE
+                    func_id = #{funcId}
+			)
+	</select>
+</mapper>

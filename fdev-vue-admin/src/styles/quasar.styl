@@ -1,0 +1,206 @@
+@import '~#/css/variables.styl';
+@import '~#/css/index.styl'
+@import '../components/FGstree/FGstree.styl'
+@import '../components/BtnCheckbox/BtnCheckbox.styl'
+
+body
+  color $black-0
+  
+.text-ellipsis
+  text-overflow ellipsis
+  overflow hidden
+
+.cursor-text
+  cursor text
+
+a
+  text-decoration: none
+  color $primary
+  &:hover
+    opacity 0.8
+  &.link
+    &:any-link
+      color $primary
+    &:active
+      color $red
+      opacity 1 !important
+
+.bg-none
+  background none
+
+//滚动条
+::-webkit-scrollbar
+    //height 8px
+    //width 8px
+    /**/
+::-webkit-scrollbar-track
+  background rgba(247,247,247,0.30)
+  border-radius 4px
+
+::-webkit-scrollbar-thumb
+  background rgba(176,190,197,0.50)
+  border-radius 4px
+
+.scroll-normal
+.scroll-thin
+  overflow scroll
+
+.scroll-normal::-webkit-scrollbar
+.scroll-normal-x::-webkit-scrollbar
+.scroll-normal-y::-webkit-scrollbar
+  width 8px
+  height 8px
+
+.scroll-normal::-webkit-track
+.scroll-normal-x::-webkit-track
+.scroll-normal-y::-webkit-track
+.scroll-normal-x::-webkit-thumb
+.scroll-normal-y::-webkit-thumb
+.scroll-normal::-webkit-thumb
+  border-radius 4px
+
+.scroll-thin-auto
+.scroll-thin-x-auto
+.scroll-thin-y-auto
+  overflow auto
+
+.scroll-thin-x
+  overflow-y hidden
+  overflow-x scroll
+
+.scroll-thin-y
+  overflow-x hidden
+  overflow-y scroll
+
+.scroll-thin-x-auto
+  overflow-y hidden
+  overflow-x auto
+
+.scroll-thin-y-auto
+  overflow-x hidden
+  overflow-y auto
+
+.scroll-thin-auto::-webkit-scrollbar
+.scroll-thin-x::-webkit-scrollbar
+.scroll-thin-y::-webkit-scrollbar
+.scroll-thin-x-auto::-webkit-scrollbar
+.scroll-thin-y-auto::-webkit-scrollbar
+.scroll-thin::-webkit-scrollbar
+  width 4px
+  height 4px
+
+.scroll-thin-auto
+.scroll-thin-y-auto
+.scroll-thin-x::-webkit-track
+.scroll-thin-y::-webkit-track
+.scroll-thin::-webkit-track
+.scroll-thin-x::-webkit-thumb
+.scroll-thin-y::-webkit-thumb
+.scroll-thin::-webkit-thumb
+  border-radius 2px
+
+
+::-webkit-input-placeholder
+  color: #78909c
+
+
+//组件-表单
+.input-box
+  height 36px
+.input-sm
+  width 96px
+.input-md
+  width 360px
+.input-lg
+  width 500px
+
+.input-column
+  width 280px
+
+.pull-down-style
+  max-height 200px
+  border 1px solid #eceff1
+  position absolute
+  z-index 9999
+
+.hover-bg:hover
+  background #F7F7F7
+
+.text-table-title
+  font-size 1rem
+  font-weight 500
+
+
+// 表格首尾固定
+.my-sticky-column-table
+  thead
+    th:first-child, th:last-child
+      background-color #F4F6FD
+      opacity 1
+  td:first-child, td:last-child
+    background-color #fff
+    opacity 1
+  th:first-child, td:first-child
+    position sticky
+    left 0
+    z-index 99
+    box-shadow 2px 0 4px 0 rgba(51, 51, 51, 0.15)
+  th:last-child, td:last-child
+    position sticky
+    right 0
+    z-index 99
+    box-shadow -2px 0 4px 0 rgba(51, 51, 51, 0.15)
+
+// 表格尾固定
+.my-sticky-last-column-table
+  thead th:last-child
+    background-color #F4F6FD
+    opacity 1
+  td:first-child, td:last-child
+    background-color #fff
+    opacity 1
+  td:last-child, th:last-child
+    position sticky
+    right 0
+    z-index 99
+    box-shadow -2px 0 4px 0 rgba(51, 51, 51, 0.15)
+
+// 表格首固定
+.my-sticky-first-column-table
+  thead th:first-child
+    background-color #F4F6FD
+    opacity 1
+  td:first-child
+    background-color #fff
+    opacity 1
+  td:first-child, th:first-child
+    position sticky
+    left 0
+    z-index 99
+    box-shadow 2px 0 4px 0 rgba(51, 51, 51, 0.15)
+
+.my-sticky-head-table
+  th
+    background-color $indigogrey-0
+    opacity 1
+    position sticky
+    top 0
+    z-index 99
+
+.dia-dc-w
+  width 1000px
+
+.rdia-dc-w
+  width 900px
+
+.q-menu.q-position-engine.scroll
+  min-width 0 !important
+.q-menu.q-position-engine.scroll-thin-y-auto:not(.q-select--menu)
+  min-width 0 !important
+
+.shadow-1
+  border-radius: 6px
+  box-shadow: 0 2px 10px 0 #1e54d533 !important
+
+.el-popper.el-cascader__dropdown
+  z-index 7777 !important

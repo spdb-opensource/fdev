@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>待实施</title>
+    <defs>
+        <linearGradient x1="10.4881069%" y1="13.6559397%" x2="92.5346164%" y2="38.074996%" id="linearGradient-1">
+            <stop stop-color="#24C8F9" offset="0%"></stop>
+            <stop stop-color="#7DDFFD" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#24C8F9" offset="0%"></stop>
+            <stop stop-color="#7DDFFD" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="0702" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="待实施">
+            <rect id="矩形" fill="#B6EEFF" x="0" y="0" width="48" height="48" rx="8"></rect>
+            <g id="编组-14" transform="translate(10.285714, 9.428571)">
+                <rect id="矩形" stroke="#FFFFFF" fill="url(#linearGradient-1)" x="6.5" y="0.5" width="12.7142857" height="11.8571429" rx="3"></rect>
+                <circle id="椭圆形" stroke="#FFFFFF" fill="url(#linearGradient-2)" cx="13.2857143" cy="16.7142857" r="12.7857143"></circle>
+                <path d="M18.2160299,6.85714286 L11.8308353,14.8919575 L3.42857143,19.7307523 C9.30655957,19.41122 12.7724386,19.0906015 13.8262086,18.7688969 C15.4068635,18.28634 15.8259215,16.3733451 16.2043567,15.3617744 C16.4566469,14.687394 17.1272046,11.8525168 18.2160299,6.85714286 Z" id="路径-2" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>

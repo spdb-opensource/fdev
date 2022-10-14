@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PausedStrategyManager">
+    <resultMap id="selectpausedTriggerDate" type="HashMap">
+        <result property="id" column="ID"/>
+        <result property="schedName" column="SCHED_NAME"/>
+        <result property="startPausedDate" column="START_PAUSED_DATE"/>
+        <result property="endPausedDate" column="END_PAUSED_DATE"/>
+        <result property="strategy" column="STRATEGY"/>
+        <result property="strategyName" column="STRATEGY_NAME"/>
+        <result property="jobGroup" column="JOB_GROUP"/>
+    </resultMap>
+    <!--查询时间区间-->
+    <select id="selectpausedTriggerDate" parameterType="HashMap" resultMap="selectpausedTriggerDate">
+        SELECT
+        ID,SCHED_NAME,START_PAUSED_DATE,END_PAUSED_DATE,STRATEGY,STRATEGY_NAME,JOB_GROUP
+        FROM
+        SPDB_PAUSED_STRATEGY
+        WHERE
+        SCHED_NAME = #{schedName}
+        <if test="strategyName != null and strategyName != ''">AND STRATEGY_NAME = #{strategyName}</if>
+        <if test="startPausedDate != null and startPausedDate != ''">AND START_PAUSED_DATE <![CDATA[ <= ]]>#{startPausedDate}</if>
+        <if test="endPausedDate != null and endPausedDate != ''">AND END_PAUSED_DATE <![CDATA[ >= ]]>#{endPausedDate}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+    </select>
+    <!--查询暂停策略列表-->
+    <select id="selectPausedStrategy" parameterType="HashMap" resultMap="selectpausedTriggerDate">
+        SELECT
+        ID,SCHED_NAME,START_PAUSED_DATE,END_PAUSED_DATE,STRATEGY,STRATEGY_NAME,JOB_GROUP
+        FROM
+        SPDB_PAUSED_STRATEGY
+        WHERE
+        SCHED_NAME = #{schedName}
+        <if test="endPausedDate != null and endPausedDate != ''">AND END_PAUSED_DATE <![CDATA[ <= ]]>#{endPausedDate}</if>
+    </select>
+
+    <select id="selectpausedTriggerBetweenDate" parameterType="HashMap" resultMap="selectpausedTriggerDate">
+        SELECT
+        ID,SCHED_NAME,START_PAUSED_DATE,END_PAUSED_DATE,STRATEGY,STRATEGY_NAME,JOB_GROUP
+        FROM
+        SPDB_PAUSED_STRATEGY
+        WHERE
+        SCHED_NAME = #{schedName}
+        <if test="startPausedDate != null and startPausedDate != ''">AND START_PAUSED_DATE <![CDATA[ >= ]]> #{startPausedDate}</if>
+        <if test="endPausedDate != null and endPausedDate != ''">AND END_PAUSED_DATE <![CDATA[ <= ]]>#{endPausedDate}</if>
+        <if test="schedTime != null and schedTime != ''">AND #{schedTime} between START_PAUSED_DATE AND END_PAUSED_DATE</if>
+        <if test="validTime != null and validTime != ''">AND END_PAUSED_DATE <![CDATA[ >= ]]>#{validTime}</if>
+        <if test="failureTime != null and failureTime != ''">AND END_PAUSED_DATE <![CDATA[ <= ]]>#{failureTime}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+        <if test="strategyName != null and strategyName != ''">AND STRATEGY_NAME like concat(concat('%',#{strategyName}),'%')</if>
+        ORDER BY END_PAUSED_DATE DESC
+    </select>
+    <!--查询暂停策略任务-->
+    <select id="selectpausedTrigger" parameterType="HashMap" resultMap="selectpausedTriggerDate">
+        SELECT
+        ID,SCHED_NAME,START_PAUSED_DATE,END_PAUSED_DATE,STRATEGY,STRATEGY_NAME,JOB_GROUP
+        FROM
+        SPDB_PAUSED_STRATEGY
+        WHERE
+        SCHED_NAME = #{schedName}
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+        <if test="endPausedDate != null and endPausedDate != ''">AND END_PAUSED_DATE <![CDATA[ <= ]]>#{endPausedDate}</if>
+    </select>
+
+    <resultMap id="selectPausedTriggerDateJob" type="HashMap">
+        <result property="pausedDateId" column="PAUSED_DATE_ID"/>
+        <result property="schedName" column="SCHED_NAME"/>
+        <result property="triggerGroup" column="TRIGGER_GROUP"/>
+        <result property="triggerName" column="TRIGGER_NAME"/>
+        <result property="jobGroup" column="JOB_GROUP"/>
+        <result property="jobName" column="JOB_NAME"/>
+        <result property="stateType" column="STATE_TYPE"/>
+    </resultMap>
+    <!--查询时间区间job-->
+    <select id="selectPausedTriggerDateJob" parameterType="HashMap" resultMap="selectPausedTriggerDateJob">
+        SELECT
+        PAUSED_DATE_ID,SCHED_NAME,TRIGGER_GROUP,TRIGGER_NAME,JOB_GROUP,JOB_NAME,STATE_TYPE
+        FROM
+        SPDB_PAUSED_STRATEGY_JOB
+        WHERE
+        SCHED_NAME = #{schedName}
+        <if test="pausedDateId != null and pausedDateId != ''">AND PAUSED_DATE_ID = #{pausedDateId}</if>
+        <if test="jobName != null and jobName != ''">AND JOB_NAME LIKE concat(concat('%',#{jobName}),'%')</if>
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+        <if test="stateType != null">AND STATE_TYPE = #{stateType}</if>
+    </select>
+
+    <resultMap id="selectJobAndpausedDate" type="HashMap">
+        <result property="pausedDateId" column="PAUSED_DATE_ID"/>
+        <result property="triggerGroup" column="TRIGGER_GROUP"/>
+        <result property="triggerName" column="TRIGGER_NAME"/>
+        <result property="jobGroup" column="JOB_GROUP"/>
+        <result property="jobName" column="JOB_NAME"/>
+        <result property="strategyName" column="STRATEGY_NAME"/>
+        <result property="startPausedDate" column="START_PAUSED_DATE"/>
+        <result property="endPausedDate" column="END_PAUSED_DATE"/>
+        <result property="stateType" column="STATE_TYPE"/>
+        <result property="description" column="DESCRIPTION"/>
+    </resultMap>
+    <!--查询job所在区间-->
+    <select id="selectJobAndpausedDate" parameterType="HashMap" resultMap="selectJobAndpausedDate">
+        SELECT
+        PAUSED_DATE_ID,SPDB_PAUSED_STRATEGY_JOB.TRIGGER_GROUP,SPDB_PAUSED_STRATEGY_JOB.TRIGGER_NAME,SPDB_PAUSED_STRATEGY_JOB.JOB_GROUP,
+        SPDB_PAUSED_STRATEGY_JOB.JOB_NAME,STATE_TYPE,STRATEGY_NAME,START_PAUSED_DATE,END_PAUSED_DATE,DESCRIPTION
+        FROM
+        SPDB_PAUSED_STRATEGY_JOB
+        LEFT JOIN SPDB_PAUSED_STRATEGY
+        ON SPDB_PAUSED_STRATEGY_JOB.PAUSED_DATE_ID = SPDB_PAUSED_STRATEGY.ID
+        AND SPDB_PAUSED_STRATEGY_JOB.SCHED_NAME = SPDB_PAUSED_STRATEGY.SCHED_NAME
+        LEFT JOIN QRTZ_JOB_DETAILS
+        ON SPDB_PAUSED_STRATEGY_JOB.JOB_NAME = QRTZ_JOB_DETAILS.JOB_NAME
+        AND SPDB_PAUSED_STRATEGY_JOB.JOB_GROUP = QRTZ_JOB_DETAILS.JOB_GROUP
+        AND SPDB_PAUSED_STRATEGY_JOB.SCHED_NAME = QRTZ_JOB_DETAILS.SCHED_NAME
+        WHERE
+        SPDB_PAUSED_STRATEGY_JOB.SCHED_NAME = #{schedName}
+        <if test="startPausedDate != null and startPausedDate != ''">AND START_PAUSED_DATE <![CDATA[ <= ]]> #{startPausedDate}</if>
+        <if test="endPausedDate != null and endPausedDate != ''">AND END_PAUSED_DATE <![CDATA[ >= ]]> #{endPausedDate}</if>
+        <if test="jobName != null and jobName != ''">AND (SPDB_PAUSED_STRATEGY_JOB.JOB_NAME like concat(concat('%',#{jobName}), '%') OR DESCRIPTION like concat(concat('%',#{jobName}), '%'))</if>
+        <if test="validTime != null and validTime != ''">AND END_PAUSED_DATE <![CDATA[ >= ]]>#{validTime}</if>
+        <if test="failureTime != null and failureTime != ''">AND END_PAUSED_DATE <![CDATA[ <= ]]>#{failureTime}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND SPDB_PAUSED_STRATEGY_JOB.JOB_GROUP = #{jobGroup}</if>
+    </select>
+
+    <insert id="insertpausedTriggerDateJob" parameterType="HashMap">
+        INSERT INTO SPDB_PAUSED_STRATEGY_JOB
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="schedName != null and schedName != ''">SCHED_NAME,</if>
+            <if test="pausedDateId != null and pausedDateId != ''">PAUSED_DATE_ID,</if>
+            <if test="triggerGroup != null and triggerGroup != ''">TRIGGER_GROUP,</if>
+            <if test="triggerName != null and triggerName != ''">TRIGGER_NAME,</if>
+            <if test="jobGroup != null and jobGroup != ''">JOB_GROUP,</if>
+            <if test="jobName != null and jobName != ''">JOB_NAME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="schedName != null and schedName != ''">#{schedName},</if>
+            <if test="pausedDateId != null and pausedDateId != ''">#{pausedDateId},</if>
+            <if test="triggerGroup != null and triggerGroup != ''">#{triggerGroup},</if>
+            <if test="triggerName != null and triggerName != ''">#{triggerName},</if>
+            <if test="jobGroup != null and jobGroup != ''">#{jobGroup},</if>
+            <if test="jobName != null and jobName != ''">#{jobName},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertpausedTriggerDate" parameterType="HashMap">
+        INSERT INTO SPDB_PAUSED_STRATEGY
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="schedName != null and schedName != ''">SCHED_NAME,</if>
+            <if test="strategyName != null and strategyName != ''">STRATEGY_NAME,</if>
+            <if test="startPausedDate != null and startPausedDate != ''">START_PAUSED_DATE,</if>
+            <if test="endPausedDate != null and endPausedDate != ''">END_PAUSED_DATE,</if>
+            <if test="strategy != null and strategy != ''">STRATEGY,</if>
+            <if test="jobGroup != null and jobGroup != ''">JOB_GROUP,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="schedName != null and schedName != ''">#{schedName},</if>
+            <if test="strategyName != null and strategyName != ''">#{strategyName},</if>
+            <if test="startPausedDate != null and startPausedDate != ''">#{startPausedDate},</if>
+            <if test="endPausedDate != null and endPausedDate != ''">#{endPausedDate},</if>
+            <if test="strategy != null and strategy != ''">#{strategy},</if>
+            <if test="jobGroup != null and jobGroup != ''">#{jobGroup},</if>
+        </trim>
+    </insert>
+
+    <delete id="deletePausedStrategy" parameterType="HashMap">
+        DELETE
+        FROM
+        SPDB_PAUSED_STRATEGY
+        WHERE SCHED_NAME = #{schedName}
+        <if test="id != null">AND ID = #{id}</if>
+    </delete>
+    <delete id="deletePausedJob" parameterType="HashMap">
+        DELETE
+        FROM
+        SPDB_PAUSED_STRATEGY_JOB
+        WHERE SCHED_NAME = #{schedName}
+        <if test="id != null">AND PAUSED_DATE_ID = #{id}</if>
+        <if test="jobName != null and jobName != ''">AND JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+        <if test="triggerName != null and triggerName != ''">AND TRIGGER_NAME = #{triggerName}</if>
+        <if test="triggerGroup != null and triggerGroup != ''">AND TRIGGER_GROUP = #{triggerGroup}</if>
+    </delete>
+
+    <update id="updatePausedStrategyJob" parameterType="HashMap">
+        UPDATE SPDB_PAUSED_STRATEGY_JOB
+        <set>
+            <if test="stateType != null">STATE_TYPE = #{stateType},</if>
+        </set>
+        WHERE SCHED_NAME = #{schedName}
+        <if test="pausedDateId != null and pausedDateId != ''">AND PAUSED_DATE_ID = #{pausedDateId}</if>
+        <if test="jobName != null and jobName != ''">AND JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+        <if test="triggerName != null and triggerName != ''">AND TRIGGER_NAME = #{triggerName}</if>
+        <if test="triggerGroup != null and triggerGroup != ''">AND TRIGGER_GROUP = #{triggerGroup}</if>
+    </update>
+</mapper>

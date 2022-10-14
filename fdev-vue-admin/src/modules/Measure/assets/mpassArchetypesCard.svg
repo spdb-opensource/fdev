@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 172 90" style="enable-background:new 0 0 172 90;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:url(#path-2_5_);}
+	.st1{filter:url(#Adobe_OpacityMaskFilter);}
+	.st2{fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;}
+	
+		.st3{opacity:0.1526;mask:url(#mask-3_1_);fill:none;stroke:#FFFFFF;stroke-width:0.5;stroke-linecap:square;enable-background:new    ;}
+	.st4{filter:url(#Adobe_OpacityMaskFilter_1_);}
+	
+		.st5{opacity:0.1526;mask:url(#mask-3_2_);fill:none;stroke:#FFFFFF;stroke-width:0.5;stroke-linecap:square;enable-background:new    ;}
+	.st6{filter:url(#Adobe_OpacityMaskFilter_2_);}
+	.st7{opacity:0.1;mask:url(#mask-3_3_);fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;enable-background:new    ;}
+</style>
+<title>编组 11</title>
+<g id="矩形">
+	
+		<linearGradient id="path-2_5_" gradientUnits="userSpaceOnUse" x1="-56.6686" y1="322.9012" x2="-55.6686" y2="322.9012" gradientTransform="matrix(172 0 0 -90 9747 29106.1133)">
+		<stop  offset="0" style="stop-color:#FAD7A1"/>
+		<stop  offset="1" style="stop-color:#E96D71"/>
+	</linearGradient>
+	<path id="path-2_1_" class="st0" d="M4,0h164c2.2,0,4,1.8,4,4v82c0,2.2-1.8,4-4,4H4c-2.2,0-4-1.8-4-4V4C0,1.8,1.8,0,4,0z"/>
+</g>
+<defs>
+	<filter id="Adobe_OpacityMaskFilter" filterUnits="userSpaceOnUse" x="75.1" y="46.6" width="33.7" height="34.7">
+		<feColorMatrix  type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+	</filter>
+</defs>
+<mask maskUnits="userSpaceOnUse" x="75.1" y="46.6" width="33.7" height="34.7" id="mask-3_1_">
+	<g class="st1">
+		<path id="path-2_2_" class="st2" d="M4,0h164c2.2,0,4,1.8,4,4v82c0,2.2-1.8,4-4,4H4c-2.2,0-4-1.8-4-4V4C0,1.8,1.8,0,4,0z"/>
+	</g>
+</mask>
+<line id="直线-2" class="st3" x1="108.5" y1="47" x2="75.5" y2="81"/>
+<defs>
+	<filter id="Adobe_OpacityMaskFilter_1_" filterUnits="userSpaceOnUse" x="45.1" y="70.6" width="33.7" height="34.7">
+		<feColorMatrix  type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+	</filter>
+</defs>
+<mask maskUnits="userSpaceOnUse" x="45.1" y="70.6" width="33.7" height="34.7" id="mask-3_2_">
+	<g class="st4">
+		<path id="path-2_3_" class="st2" d="M4,0h164c2.2,0,4,1.8,4,4v82c0,2.2-1.8,4-4,4H4c-2.2,0-4-1.8-4-4V4C0,1.8,1.8,0,4,0z"/>
+	</g>
+</mask>
+<line id="直线-2_1_" class="st5" x1="78.5" y1="71" x2="45.5" y2="105"/>
+<defs>
+	<filter id="Adobe_OpacityMaskFilter_2_" filterUnits="userSpaceOnUse" x="-17.5" y="-45.1" width="161.9" height="161.9">
+		<feColorMatrix  type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+	</filter>
+</defs>
+<mask maskUnits="userSpaceOnUse" x="-17.5" y="-45.1" width="161.9" height="161.9" id="mask-3_3_">
+	<g class="st6">
+		<path id="path-2_4_" class="st2" d="M4,0h164c2.2,0,4,1.8,4,4v82c0,2.2-1.8,4-4,4H4c-2.2,0-4-1.8-4-4V4C0,1.8,1.8,0,4,0z"/>
+	</g>
+</mask>
+<rect id="矩形_1_" x="-19.5" y="4.3" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -6.7444 55.3708)" class="st7" width="166" height="63"/>
+</svg>

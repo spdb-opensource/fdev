@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.gotest.dao.PlanlistTestcaseRelationMapper">
+	<resultMap id="BaseResultMap"
+		type="com.gotest.domain.PlanlistTestcaseRelation">
+		<id column="id" jdbcType="INTEGER" property="planlistTestcaseId" />
+		<result column="TESTCASE_ID" jdbcType="VARCHAR"
+			property="testcaseNo" />
+		<result column="plan_id" jdbcType="INTEGER" property="planId" />
+		<result column="RESULT_STATUS" jdbcType="CHAR"
+			property="testcaseExecuteResult" />
+		<result column="FNL_TM" jdbcType="DATE"
+			property="testcaseExecuteDate" />
+		<result column="FST_TM" jdbcType="VARCHAR" property="fstTm" />
+		<result column="FST_OPR" jdbcType="VARCHAR" property="fstOpr" />
+		<result column="FNL_OPR" jdbcType="VARCHAR" property="fnlOpr" />
+		<result column="CREATE_TM" jdbcType="VARCHAR"
+			property="createTm" />
+		<result column="EXE_NUM" jdbcType="INTEGER" property="exeNum" />
+		<result column="FAIL_EXE_NUM" jdbcType="INTEGER" property="failExeNum" />
+		<result column="BLOCK_EXE_NUM" jdbcType="INTEGER" property="blockExeNum" />
+		<result column="WORK_NO" jdbcType="VARCHAR" property="workNo" />
+	</resultMap>
+
+	<sql id = "PlanlistTestcaseRelation_Column_List" >
+		ID,
+		PLAN_ID,
+		TESTCASE_ID,
+		RESULT_STATUS,
+		FST_OPR,
+		FST_TM,
+		FNL_OPR,
+		FNL_TM,
+		CREATE_TM,
+		EXE_NUM,
+		FNL_ISSUE_TM,
+		FAIL_EXE_NUM,
+		BLOCK_EXE_NUM,
+		CREATE_OPR,
+		FNL_UPDATE_TM,
+		FNL_UPDATE_OPR,
+		WORK_NO,
+		ORDER_NUM
+	</sql>
+
+
+	<select id="queryByWorkNo" resultMap="BaseResultMap">
+		SELECT
+			<include refid="PlanlistTestcaseRelation_Column_List" />
+		FROM
+			FTMS_PLAN_RESULT
+		WHERE
+			WORK_NO = #{workNo}
+	</select>
+
+
+
+	<update id="updateWorkNoById">
+		UPDATE
+			FTMS_PLAN_RESULT
+		SET
+			WORK_NO = #{workNo}
+		WHERE
+			ID = #{planlistTestcaseId}
+	</update>
+
+	<select id="queryTestCaseExeByWorkNo" resultType="Map">
+		SELECT
+			ID,FPR_ID,DATE,OPR,STATUS,WORK_NO,PLAN_ID,TESTCASE_NO,OPR_TYPE
+		FROM
+			FTMS_TESTCASE_EXE_RECORD
+		WHERE
+			WORK_NO=#{workNo}
+	</select>
+
+	<update id="updateTestCaseExeWorkNoById">
+		UPDATE
+			FTMS_TESTCASE_EXE_RECORD
+		SET
+			WORK_NO = #{workNo}
+		WHERE
+			ID = #{id}
+	</update>
+
+	<update id="updateWorkNoByWorkNos">
+		UPDATE
+			FTMS_PLAN_RESULT
+		SET
+			WORK_NO = #{workNo}
+		WHERE
+			WORK_NO IN
+		<foreach collection="workNos" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<update id="updateTestCaseExeWorkNoByWorkNos">
+		UPDATE
+			FTMS_TESTCASE_EXE_RECORD
+		SET
+			WORK_NO = #{workNo}
+		WHERE
+			WORK_NO IN
+		<foreach collection="workNos" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+</mapper>

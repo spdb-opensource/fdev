@@ -1,0 +1,2 @@
+tag:pro-20200903_003-001%obname:spdb-cli-mobcli%port:8080%replicasnu:1
+tag:pro-20200905_001-001%obname:spdb-icard-server%port:8080%replicasnu:1

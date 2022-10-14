@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gotest.dao.AduitRecordMapper" >
+
+    <resultMap id="ResultMap" type="com.gotest.domain.AduitRecord" >
+        <id column="aduit_id" property="aduitId" jdbcType="INTEGER" />
+        <result column="aduit_work_no" property="aduitWorkNo" jdbcType="VARCHAR" />
+        <result column="work_leader" property="workLeader" jdbcType="VARCHAR" />
+        <result column="testers" property="testers" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="field1" property="field1" jdbcType="VARCHAR" />
+        <result column="field2" property="field2" jdbcType="VARCHAR" />
+        <result column="field3" property="field3" jdbcType="VARCHAR" />
+        <result column="field4" property="field4" jdbcType="VARCHAR" />
+        <result column="field5" property="field5" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id = "Aduit_Record_Column_List" >
+        aduit_work_no,
+        work_leader,
+        testers,
+        create_time,
+        field1,
+        field2,
+        field3,
+        field4,
+        field5
+    </sql>
+
+    <sql id = "Aduit_Record_Column_All" >
+        aduit_id,
+        aduit_work_no,
+        work_leader,
+        testers,
+        create_time,
+        field1,
+        field2,
+        field3,
+        field4,
+        field5
+    </sql>
+
+    <insert id="addRecordPassOrder" parameterType="com.gotest.domain.AduitRecord">
+        insert into
+            work_order_aduit_record
+        (<include refid="Aduit_Record_Column_List"/>)
+        values(
+            #{aduitWorkNo,jdbcType=VARCHAR},
+            #{workLeader,jdbcType=VARCHAR},
+            #{testers,jdbcType=VARCHAR},
+            #{createTime,jdbcType=VARCHAR},
+            #{field1,jdbcType=VARCHAR},
+            #{field2,jdbcType=VARCHAR},
+            #{field3,jdbcType=VARCHAR},
+            #{field4,jdbcType=VARCHAR},
+            #{field5,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <select id="queryByAduitWorkNo" resultMap="ResultMap">
+        SELECT
+            <include refid="Aduit_Record_Column_All" />
+        FROM
+            work_order_aduit_record
+        WHERE
+            aduit_work_no = #{aduitWorkNo}
+    </select>
+
+    <update id="updateAduitWorkNoByAduitId">
+        UPDATE
+            work_order_aduit_record
+        SET
+            aduit_work_no = #{aduitWorkNo}
+        WHERE
+            aduit_id = #{aduitId}
+    </update>
+
+    <update id="updateAduitWorkNoByWorkNos">
+        UPDATE
+            work_order_aduit_record
+        SET
+            aduit_work_no = #{aduitWorkNo}
+        WHERE
+            aduit_work_no in
+        <foreach collection="aduitWorkNos" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>

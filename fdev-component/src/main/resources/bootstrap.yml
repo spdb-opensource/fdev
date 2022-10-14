@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: fcomponent
+  cloud:
+    config:
+    #快速失败响应
+      fail-fast: true
+      label: master
+      uri: xxx/fdev-configserver
+      name: fcomponent
+      profile: ${SPRING_PROFILE_ACTIVE}
+#  配置文件热加载
+    bus:
+      refresh:
+        enabled: true
+
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: bus-refresh

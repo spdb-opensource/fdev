@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.auto.dao.ModuleDetailMapper">
+
+    <resultMap id="ModuleDetail" type="com.auto.entity.ModuleDetail">
+        <id column="MODULE_DETAIL_ID" jdbcType="INTEGER" property="moduleDetailId"/>
+        <result column="MODULE_ID" jdbcType="VARCHAR" property="moduleId"/>
+        <result column="ELEMENT_STEP_NO" jdbcType="VARCHAR" property="elementStepNo"/>
+        <result column="ELEMENT_ID" jdbcType="VARCHAR" property="elementId"/>
+        <result column="ELEMENT_DYNAMIC_TYPE" jdbcType="VARCHAR" property="elementType"/>
+        <result column="ELEMENT_DATA" jdbcType="VARCHAR" property="elementData"/>
+        <result column="EXE_TIMES" jdbcType="VARCHAR" property="exeTimes"/>
+        <result column="DELETED" jdbcType="VARCHAR" property="deleted"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="VARCHAR" property="modifyTime"/>
+        <result column="LAST_OPR" jdbcType="VARCHAR" property="lastOpr"/>
+        <result column="MODULE_NAME" jdbcType="VARCHAR" property="moduleName"/>
+        <result column="ELEMENT_NAME" jdbcType="VARCHAR" property="elementName"/>
+    </resultMap>
+
+    <sql id = "ModuleDetail_Column_List" >
+        MODULE_DETAIL_ID,
+        MODULE_ID,
+        ELEMENT_STEP_NO,
+        ELEMENT_ID,
+        ELEMENT_DYNAMIC_TYPE,
+        ELEMENT_DATA,
+        EXE_TIMES,
+        DELETED,
+        CREATE_TIME,
+        MODIFY_TIME,
+        LAST_OPR
+    </sql>
+
+    <insert id="addModuleDetail" parameterType="com.auto.entity.ModuleDetail" >
+        INSERT INTO
+            AUTO_MODULE_DETAIL
+            (MODULE_ID, ELEMENT_STEP_NO, ELEMENT_ID, ELEMENT_DYNAMIC_TYPE, ELEMENT_DATA,
+            EXE_TIMES, DELETED, CREATE_TIME, MODIFY_TIME,LAST_OPR)
+        VALUES
+            (#{moduleId,jdbcType=VARCHAR}, #{elementStepNo,jdbcType=VARCHAR},
+            #{elementId,jdbcType=VARCHAR}, #{elementType,jdbcType=VARCHAR},
+            #{elementData,jdbcType=VARCHAR}, #{exeTimes,jdbcType=VARCHAR},
+            #{deleted,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR},
+            #{modifyTime,jdbcType=VARCHAR}, #{lastOpr,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="queryModuleDetail" resultMap="ModuleDetail">
+        SELECT
+            m.MODULE_NAME,
+            d.MODULE_DETAIL_ID,
+            d.MODULE_ID,
+            d.ELEMENT_STEP_NO,
+            d.ELEMENT_ID,
+            d.ELEMENT_DYNAMIC_TYPE,
+            d.ELEMENT_DATA,
+            d.EXE_TIMES,
+            d.EXE_TIMES,
+            d.DELETED,
+            d.CREATE_TIME,
+            d.MODIFY_TIME,
+            d.LAST_OPR,
+            e.ELEMENT_NAME
+        FROM
+            AUTO_MODULE_DETAIL d
+        LEFT JOIN
+            AUTO_MODULE m
+        ON
+            m.MODULE_ID = d.MODULE_ID
+        LEFT JOIN
+            AUTO_ELEMENT e
+        ON
+            d.ELEMENT_ID = e.ELEMENT_ID
+        <where>
+            <if test="search != '' and search != null">
+                AND
+                    m.MODULE_NAME like concat('%', #{search}, '%')
+            </if>
+            <if test="valid != '' and valid != null">
+                AND
+                    d.DELETED = #{valid}
+            </if>
+        </where>
+    </select>
+    
+    <select id="queryModuleDetailByIdAndStep" resultMap="ModuleDetail">
+        SELECT
+           <include refid="ModuleDetail_Column_List" />
+        FROM
+            AUTO_MODULE_DETAIL
+		WHERE 
+			DELETED = '0'
+            <if test="moduleId != '' and moduleId != null">
+                AND  MODULE_ID = #{moduleId}
+            </if>
+            <if test="elementStepNo != '' and elementStepNo != null">
+                AND ELEMENT_STEP_NO = #{elementStepNo}
+            </if>
+            <if test="moduleDetailId != '' and moduleDetailId != null">
+                AND MODULE_DETAIL_ID != #{moduleDetailId}
+            </if>
+    </select>
+    
+    <select id="queryModuleDetailByModuleId" resultMap="ModuleDetail">
+        SELECT
+            m.MODULE_NAME,
+            d.MODULE_DETAIL_ID,
+            d.MODULE_ID,
+            d.ELEMENT_STEP_NO,
+            d.ELEMENT_ID,
+            d.ELEMENT_DYNAMIC_TYPE,
+            d.ELEMENT_DATA,
+            d.EXE_TIMES,
+            d.EXE_TIMES,
+            d.DELETED,
+            d.CREATE_TIME,
+            d.MODIFY_TIME,
+            d.LAST_OPR,
+            e.ELEMENT_NAME
+        FROM
+            AUTO_MODULE_DETAIL d
+        LEFT JOIN
+            AUTO_MODULE m
+        ON
+            m.MODULE_ID = d.MODULE_ID
+        LEFT JOIN
+            AUTO_ELEMENT e
+        ON
+            d.ELEMENT_ID = e.ELEMENT_ID
+        WHERE 
+        	d.DELETED = '0'
+            <if test="moduleId != '' and moduleId != null">
+                AND
+                    d.MODULE_ID = #{moduleId}
+            </if>
+        ORDER BY cast(d.ELEMENT_STEP_NO as unsigned integer)
+    </select>
+
+    <update id="deleteModuleDetail" parameterType="String">
+        UPDATE
+            AUTO_MODULE_DETAIL
+        SET
+            DELETED = '1',
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            MODULE_DETAIL_ID in (${module})
+    </update>
+
+    <update id="updateModuleDetail" parameterType="String">
+        UPDATE
+            AUTO_MODULE_DETAIL
+        SET
+            MODULE_ID = #{moduleId},
+            ELEMENT_STEP_NO = #{elementStepNo},
+            ELEMENT_ID = #{elementId},
+            ELEMENT_DYNAMIC_TYPE = #{elementType},
+            ELEMENT_DATA = #{elementData},
+            EXE_TIMES = #{exeTimes},
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            MODULE_DETAIL_ID = #{moduleDetailId}
+    </update>
+</mapper>

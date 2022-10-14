@@ -1,0 +1,33 @@
+.q-dialog-plugin
+  min-width 400px
+  max-width 450px !important
+  border-radius 6px !important
+  box-shadow  0 2px 10px 0 rgba(30, 84, 213, 0.2)
+  padding 28px 32px 20px 32px
+
+  &__form
+    max-height: 50vh
+  
+  .q-dialog__title
+    margin-bottom 20px
+    font-size 16px
+    font-weight 600
+    line-height 1.5em
+
+  .q-dialog__message
+    line-height 22px
+    margin-bottom 5px
+
+  .q-card__section + .q-card__section
+    padding-top: 0
+
+  .q-card__section--vert
+    padding 0
+
+  .q-card__actions
+    padding-right 0
+    &--horiz > .q-btn-item + .q-btn-item
+      margin-left 16px
+
+  &--progress
+    text-align: center

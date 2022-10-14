@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="CollectGitlabBranch" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="description" value="收集需要清除的分支"/>
+        <property name="durability" value="true"/>
+        <property name="jobClass" value="com.spdb.quartz.JobTemplate"/>
+        <property name="jobDataMap">
+            <map>
+                <entry key="serviceId" value="fdev-job-executor"/>
+                <entry key="method" value="CollectGitlabBranch"/>
+                <entry key="contextPath" value="fdev-job-executor"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="UpdateProdTaskStatus" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="description" value="更新已投产任务状态"/>
+        <property name="durability" value="true"/>
+        <property name="jobClass" value="com.spdb.quartz.JobTemplate"/>
+        <property name="jobDataMap">
+            <map>
+                <entry key="serviceId" value="fdev-job-executor"/>
+                <entry key="method" value="UpdateProdTaskStatus"/>
+                <entry key="contextPath" value="fdev-job-executor"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="DeleteCommissionEvent" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="description" value="删除代办事项"/>
+        <property name="durability" value="true"/>
+        <property name="jobClass" value="com.spdb.quartz.JobTemplate"/>
+        <property name="jobDataMap">
+            <map>
+                <entry key="serviceId" value="fdev-job-executor"/>
+                <entry key="method" value="DeleteCommissionEvent"/>
+                <entry key="contextPath" value="fdev-job-executor"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="DeleteBranch" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="description" value="删除废弃分支"/>
+        <property name="durability" value="true"/>
+        <property name="jobClass" value="com.spdb.quartz.JobTemplate"/>
+        <property name="jobDataMap">
+            <map>
+                <entry key="serviceId" value="fdev-job-executor"/>
+                <entry key="method" value="DeleteBranch"/>
+                <entry key="contextPath" value="fdev-job-executor"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="AppCreatePipelineSchedule" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="description" value="应用添加定时pipeline"/>
+        <property name="durability" value="true"/>
+        <property name="jobClass" value="com.spdb.quartz.JobTemplate"/>
+        <property name="jobDataMap">
+            <map>
+                <entry key="serviceId" value="fdev-job-executor"/>
+                <entry key="method" value="AppCreatePipelineSchedule"/>
+                <entry key="contextPath" value="fdev-job-executor"/>
+            </map>
+        </property>
+    </bean>
+
+    <!-- 定义触发器来管理任务bean -->
+    <bean id="CollectGitlabBranchCron" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="cronExpression" value="0 3 1 * * ?"/>
+        <property name="jobDetail" ref="CollectGitlabBranch"/>
+    </bean>
+
+    <bean id="UpdateProdTaskStatusCron" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="cronExpression" value="0 6 1 * * ?"/>
+        <property name="jobDetail" ref="UpdateProdTaskStatus"/>
+    </bean>
+    <bean id="DeleteCommissionEventCron" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="cronExpression" value="0 9 1 * * ?"/>
+        <property name="jobDetail" ref="DeleteCommissionEvent"/>
+    </bean>
+    <bean id="DeleteBranchCron" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="cronExpression" value="0 12 1 * * ?"/>
+        <property name="jobDetail" ref="DeleteBranch"/>
+    </bean>
+    <bean id="AppCreatePipelineScheduleCron" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="cronExpression" value="0 15 1 * * ?"/>
+        <property name="jobDetail" ref="AppCreatePipelineSchedule"/>
+    </bean>
+
+    <!-- 执行实际的调度 -->
+    <bean id="SchedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="schedulerName" value="jobScheduler"/>
+        <property name="autoStartup" value="true"/> <!-- 自动启动 -->
+        <property name="startupDelay" value="30"/> <!-- 延时启动，应用启动成功后在启动 -->
+        <property name="configLocation" value="classpath:quartz.properties"/>
+        <property name="jobFactory" ref="MyQuartzJobFactory"/>
+        <property name="triggers">
+            <list>
+                <ref bean="CollectGitlabBranchCron"/>
+                <ref bean="UpdateProdTaskStatusCron"/>
+                <ref bean="DeleteCommissionEventCron"/>
+                <ref bean="DeleteBranchCron"/>
+                <ref bean="AppCreatePipelineScheduleCron"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="schedulerFactoryFillRun" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="configLocation" value="classpath:quartz.properties"/>
+        <property name="jobFactory" ref="MyQuartzJobFactory"/>
+    </bean>
+</beans>

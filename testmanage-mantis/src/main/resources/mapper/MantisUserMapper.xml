@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mantis.dao.MantisUserDao">
+
+	<insert id="addProjectAccessLevel" >
+		insert
+		into
+		mantis_project_user_list_table(
+		project_id,
+		user_id,
+		access_level
+		)
+		values
+		(#{projectId},
+		(select id from mantis_user_table where username = #{userName}),
+		#{level}
+		)
+	</insert>
+
+	<update id="changeProjectAccessLevel" >
+		update
+			mantis_project_user_list_table
+		set
+			access_level = #{level}
+		where
+			project_id = #{projectId}
+		and
+			user_id  = (select id from mantis_user_table where username = #{userName})
+	</update>
+
+	<select id="queryProjectUserLevel" resultType="String">
+		select
+			access_level
+		from
+			mantis_project_user_list_table
+		where
+			project_id = #{projectId}
+		and
+			user_id = (select id from mantis_user_table where username = #{userName})
+	</select>
+
+	<select id="queryAllMantisUser" resultType="String">
+		select
+			username
+		from
+			mantis_user_table
+		where
+			id != '1'
+	</select>
+
+	<select id="queryUserById" resultType="java.util.Map">
+		select
+			id,
+			username as userName,
+			realname as realName,
+			email
+		from
+			mantis_user_table
+		where
+			id = #{id}
+	</select>
+</mapper>

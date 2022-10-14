@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.auto.dao.UserMapper">
+
+    <resultMap id="User" type="com.auto.entity.User">
+        <id column="USER_ID" jdbcType="INTEGER" property="userId"/>
+        <result column="USERNAME" jdbcType="VARCHAR" property="userName"/>
+        <result column="QUERYPWD" jdbcType="VARCHAR" property="queryPwd"/>
+        <result column="DELETED" jdbcType="VARCHAR" property="deleted"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="VARCHAR" property="modifyTime"/>
+        <result column="LAST_OPR" jdbcType="VARCHAR" property="lastOpr"/>
+    </resultMap>
+
+    <sql id = "User_Column_List" >
+        USER_ID,
+        USERNAME,
+        QUERYPWD,
+        DELETED,
+        CREATE_TIME,
+        MODIFY_TIME,
+        LAST_OPR
+    </sql>
+
+    <insert id="addUser" parameterType="com.auto.entity.User" >
+        INSERT INTO
+            AUTO_USER
+            (USERNAME, QUERYPWD, DELETED, CREATE_TIME, MODIFY_TIME,LAST_OPR)
+        VALUES
+            (#{userName,jdbcType=VARCHAR},
+            #{queryPwd,jdbcType=VARCHAR}, #{deleted,jdbcType=VARCHAR},
+            #{createTime,jdbcType=VARCHAR}, #{modifyTime,jdbcType=VARCHAR},
+            #{lastOpr,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="queryUser" resultMap="User">
+        SELECT
+            <include refid="User_Column_List"/>
+        FROM
+            AUTO_USER
+        <where>
+            <if test="userName != '' and userName != null">
+                AND (
+                    USERNAME like concat('%', #{userName}, '%') 
+                )
+            </if>
+            <if test="valid != '' and valid != null">
+                AND
+                    DELETED = #{valid}
+            </if>
+        </where>
+    </select>
+    
+    <select id="queryUserByName" resultMap="User">
+        SELECT
+            <include refid="User_Column_List"/>
+        FROM
+            AUTO_USER
+        WHERE DELETED = '0'
+        <if test="userName != '' and userName != null">
+            AND (
+                USERNAME = #{userName}
+            )
+        </if>
+        <if test="userId != '' and userId != null">
+            AND
+                USER_ID != #{userId}
+        </if>
+    </select>
+
+    <update id="deleteUser" parameterType="String">
+        UPDATE
+            AUTO_USER
+        SET
+            DELETED = '1',
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            USER_ID in (${userId})
+    </update>
+
+    <update id="updateUser" parameterType="String">
+        UPDATE
+            AUTO_USER
+        SET
+            USERNAME = #{userName},
+            QUERYPWD = #{queryPwd},
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            USER_ID = #{userId}
+    </update>
+</mapper>

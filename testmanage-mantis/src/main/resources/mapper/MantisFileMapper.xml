@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mantis.dao.MantisFileDao">
+	
+	<resultMap id="fileMap" type="java.util.Map">
+		<result column="file_id" jdbcType="VARCHAR" property="file_id" />
+		<result column="content" jdbcType="VARCHAR" property="content" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="file_type" jdbcType="VARCHAR" property="file_type" />
+		<result column="filesize" jdbcType="VARCHAR" property="filesize" />
+	</resultMap>
+	<select id="queryIssueFiles"  resultMap="fileMap">
+		SELECT id as file_id, bug_id as id,content,filename as name,file_type,filesize
+		FROM mantis_bug_file_table where bug_id = #{id};
+	</select>
+
+	<select id="queryIssueFilesExcludeContent"  resultMap="fileMap">
+		SELECT id as file_id, bug_id as id,filename as name,file_type
+		FROM mantis_bug_file_table where bug_id = #{id};
+	</select>
+
+	<select id="queryFileById"  resultMap="fileMap">
+		SELECT id as file_id, bug_id as id,content,filename as name,file_type,filesize
+		FROM mantis_bug_file_table where id = #{id};
+	</select>
+	
+	<delete id="deleteFile">
+		DELETE FROM mantis_bug_file_table WHERE id = #{file_id}
+	</delete>
+</mapper>

@@ -1,0 +1,401 @@
+{
+  "total": [
+    {
+      "name": "智慧办公系统",
+      "url": "http://ia.spdb.com/Portal/Default.aspx",
+	  "iconEn":"smartoffice",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "name": "集团人力资源门户",
+      "url": "http://hr.spdb.com/psp/HCMPRD/EMPLOYEE/HRMS/h/?tab=DEFAULT",
+	  "iconEn":"HR",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "name": "会议室预定",
+      "url":"http://meeting.spdb.com:8081/meetingRoomOrder/index.html#/home/techIndex",
+	  "iconEn":"meetingoder",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "name": "IPMP",
+      "url": "http://ipmp.spdb.com/ipmp/biz/ipmp.html#/home",
+     
+	  "iconEn":"ipmp",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "name": "挡板(iams)",
+	  "iconEn":"iams",
+      "url": "xxx/iams/"
+    },
+    {
+      "name": "玉衡测试管理平台(ftms)",
+	  "iconEn":"ftms",
+      "url": "xxx/tui/"
+    },
+    {
+      "name": "缺陷管理工具(JIRA)",
+      "url": "xxx/login.jsp",
+	    "iconEn":"jira"
+    },
+    {
+      "name": "gitlab",
+      "url": "http://xxx/users/sign_in",
+      "icon": "@/modules/Network/assets/toolguide/gitlab.svg",
+	  "iconEn":"gitlab",
+      "tooltip": "只能在虚拟机内访问"
+    },
+    {
+      "name": "接口管理工具(yapi)",
+      "url": "xxx/login",
+      "icon": "@/modules/Network/assets/toolguide/yapi.svg",
+	  "iconEn":"yapi",
+	  "tooltip": "只能在虚拟机内访问"
+    },
+    {
+      "name": "ESB对外小工具",
+      "url": "xxx/",
+      "icon": "@/modules/Network/assets/toolguide/esb.svg",
+	  "iconEn":"esb",
+	  "tooltip": "只能在虚拟机内访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/mantis.svg",
+	  "iconEn":"mantis",
+      "name": "mantis",
+      "url": "xxx/login_page.php",
+	  "tooltip": "只能在虚拟机内访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/speed4j.svg",
+	  "iconEn":"speed4j",
+      "name": "speed4J",
+      "url": "xxx"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/learnlab.svg",
+	  "iconEn":"learnlab",
+      "name": "learn lab",
+      "url": "xxx",
+      "tooltip": "只能在虚拟机内访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/pylearn.svg",
+	  "iconEn":"pylearn",
+      "name": "浦银大学",
+      "url": "http://univ.spdb.com/lms/app/login/login.jsp",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/lepu.svg",
+	  "iconEn":"lepu",
+      "name": "乐浦",
+      "url": "http://ic.spdb.com/#/home",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon":"@/modules/Network/assets/toolguide/wiki.svg",
+	  "iconEn":"wiki",
+      "name": "工程师指南",
+      "url": "http://wiki.spdb.com/#/nav",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/finance.svg",
+	  "iconEn":"finance",
+      "name": "财务集约化",
+      "url": "http://e-accounting.spdb.com/caiwugongxiang",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/mpaas.svg",
+	  "iconEn":"mpaas",
+      "name": "mpaas 画板介绍",
+      "url": "xxx/resource/index.html"
+    },
+	{
+      "icon": "@/modules/Network/assets/toolguide/fdevIssue.svg",
+	  "iconEn":"fdevIssue",
+      "name": "fdev issue",
+      "url": "http://xxx/ebank_fdev/fdev_issuses/-/issues",
+      "tooltip": "只能虚拟机内访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/afIssue.svg",
+	  "iconEn":"afIssue",
+      "name": "应用架构issue",
+      "url": "http://xxx/ebank_fdev/AppArch_issues/-/issues",
+      "tooltip": "只能虚拟机内访问"
+    },
+    {
+      "icon":"@/modules/Network/assets/toolguide/integrateIssue.svg",
+	  "iconEn":"integrateIssue",
+      "name": "集成架构issue",
+      "url": "http://xxx/ebank/common/issues-integratedarch/-/issues",
+      "tooltip": "只能虚拟机内访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/mpaasIssue.svg",
+	  "iconEn":"mpaasIssue",
+      "name": "mpaas issue",
+      "url": "http://xxx/ebank/mpaas-issues/issues",
+      "tooltip": "只能虚拟机内访问"
+    },
+    {
+      "icon": "require('@/modules/Network/assets/toolguide/oaNew.svg')",
+	  "iconEn":"oaNew",
+      "name": "数字办公平台(新)",
+      "url": "http://gcoa.spdb.com/",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon":"@/modules/Network/assets/toolguide/oaOld.svg",
+	  "iconEn":"oaOld",
+      "name": "数字办公平台(老)",
+      "url": "http://oa.spdb.com/SPDB.OA.Portal2/Page/Default.aspx",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/pdos.svg",
+	  "iconEn":"pdos",
+      "name": "统一运维门户",
+      "url": "http://pdos.spdb.com/o/esm_saas/#/portalIndex",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+	  "iconEn":"xtest",
+      "name": "云测试平台",
+      "url": "http://xxx/xtest/login.jsp"
+    },
+    {
+	  "iconEn":"speedstudio",
+      "name": "浦天开物",
+      "url": "xxx/speedstudio/"
+    },
+     {
+	  "iconEn":"usermanual",
+      "name": "fdev用户手册",
+      "url": "xxx/view/l/teu8564"
+    },
+     {
+	  "iconEn":"codesearch",
+      "name": "代码搜索",
+      "url": "xxx",
+      "tooltip": "只能虚拟机内访问"
+    },
+     {
+	  "iconEn":"conflunce",
+      "name": "Conflunce",
+      "url": "http://conf.spdb.com:8090"
+    }
+  ],
+  "office": [
+     {
+      "name": "智慧办公系统",
+      "url": "http://ia.spdb.com/Portal/Default.aspx",
+      "icon": "@/modules/Network/assets/toolguide/smartoffice.svg",
+	  "iconEn":"smartoffice",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "name": "集团人力资源门户",
+      "url": "http://hr.spdb.com/psp/HCMPRD/EMPLOYEE/HRMS/h/?tab=DEFAULT",
+      "icon": "@/modules/Network/assets/toolguide/HR.svg",
+	  "iconEn":"HR",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "name": "会议室预定",
+      "url":"http://meeting.spdb.com:8081/meetingRoomOrder/index.html#/home/techIndex",
+      "icon": "@/modules/Network/assets/toolguide/meetingoder.svg",
+	  "iconEn":"meetingoder",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "name": "IPMP",
+      "url": "http://ipmp.spdb.com/ipmp/biz/ipmp.html#/home",
+      "icon": "@/modules/Network/assets/toolguide/ipmp.svg",
+	  "iconEn":"ipmp",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon": "require('@/modules/Network/assets/toolguide/oaNew.svg')",
+	  "iconEn":"oaNew",
+      "name": "数字办公平台(新)",
+      "url": "http://gcoa.spdb.com/",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon":"@/modules/Network/assets/toolguide/oaOld.svg",
+	  "iconEn":"oaOld",
+      "name": "数字办公平台(老)",
+      "url": "http://oa.spdb.com/SPDB.OA.Portal2/Page/Default.aspx",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/pdos.svg",
+	  "iconEn":"pdos",
+      "name": "统一运维门户",
+      "url": "http://pdos.spdb.com/o/esm_saas/#/portalIndex",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/finance.svg",
+	  "iconEn":"finance",
+      "name": "财务集约化",
+      "url": "http://e-accounting.spdb.com/caiwugongxiang",
+      "tooltip": "只能在办公机访问"
+    },
+     {
+      "icon": "@/modules/Network/assets/toolguide/conflunce.svg",
+	  "iconEn":"conflunce",
+      "name": "Conflunce",
+      "url": "http://conf.spdb.com:8090"
+    }
+  ],
+  "development": [
+    {
+      "icon": "@/modules/Network/assets/toolguide/iams.svg",
+      "name": "挡板(iams)",
+	  "iconEn":"iams",
+      "url": "xxx/iams/"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/ftms.svg",
+      "name": "玉衡测试管理平台(ftms)",
+	  "iconEn":"ftms",
+      "url": "xxx/tui/"
+    },
+    {
+      "name": "缺陷管理工具(JIRA)",
+      "url": "xxx/login.jsp",
+      "icon": "@/modules/Network/assets/toolguide/jira.svg",
+	    "iconEn":"jira"
+    },
+    {
+      "name": "gitlab",
+      "url": "http://xxx/users/sign_in",
+      "icon": "@/modules/Network/assets/toolguide/gitlab.svg",
+	  "iconEn":"gitlab",
+      "tooltip": "只能在虚拟机内访问"
+    },
+    {
+      "name": "接口管理工具(yapi)",
+      "url": "xxx/login",
+      "icon": "@/modules/Network/assets/toolguide/yapi.svg",
+	  "iconEn":"yapi",
+	  "tooltip": "只能在虚拟机内访问"
+    },
+    {
+      "name": "ESB对外小工具",
+      "url": "xxx/",
+      "icon": "@/modules/Network/assets/toolguide/esb.svg",
+	  "iconEn":"esb",
+	  "tooltip": "只能在虚拟机内访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/mantis.svg",
+	    "iconEn":"mantis",
+      "name": "mantis",
+      "url": "xxx/login_page.php",
+	   "tooltip": "只能在虚拟机内访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/speed4j.svg",
+	    "iconEn":"speed4j",
+      "name": "speed4J",
+      "url": "xxx"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/mpaas.svg",
+      "name": "mpaas 画板介绍",
+      "url": "xxx/resource/index.html",
+      "iconEn":"mpaas"
+    },
+	{
+      "icon": "@/modules/Network/assets/toolguide/fdevIssue.svg",
+      "iconEn":"fdevIssue",
+      "name": "fdev issue",
+      "url": "http://xxx/ebank_fdev/fdev_issuses/-/issues",
+      "tooltip": "只能虚拟机内访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/afIssue.svg",
+      "iconEn":"afIssue",
+      "name": "应用架构issue",
+      "url": "http://xxx/ebank_fdev/AppArch_issues/-/issues",
+      "tooltip": "只能虚拟机内访问"
+    },
+    {
+      "icon":"@/modules/Network/assets/toolguide/integrateIssue.svg",
+      "iconEn":"integrateIssue",
+      "name": "集成架构issue",
+      "url": "http://xxx/ebank/common/issues-integratedarch/-/issues",
+      "tooltip": "只能虚拟机内访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/mpaasIssue.svg",
+      "iconEn":"mpaasIssue",
+      "name": "mpaas issue",
+      "url": "http://xxx/ebank/mpaas-issues/issues",
+      "tooltip": "只能虚拟机内访问"
+    },
+    {
+	  "iconEn":"xtest",
+      "name": "云测试平台",
+      "url": "http://xxx/xtest/login.jsp"
+    },
+     {
+	  "iconEn":"speedstudio",
+      "name": "浦天开物",
+      "url": "xxx/speedstudio/"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/codesearch.svg",
+	  "iconEn":"codesearch",
+      "name": "代码搜索",
+      "url": "xxx",
+      "tooltip": "只能虚拟机内访问"
+    }
+  ],
+  "learn": [
+    {
+      "icon": "@/modules/Network/assets/toolguide/wiki.svg",
+      "iconEn":"wiki",
+      "name": "工程师指南",
+      "url": "http://wiki.spdb.com/#/nav",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/learnlab.svg",
+      "iconEn":"learnlab",
+      "name": "learn lab",
+      "url": "xxx",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/pylearn.svg",
+      "iconEn":"pylearn",
+      "name": "浦银大学",
+      "url": "http://univ.spdb.com/lms/app/login/login.jsp",
+      "tooltip": "只能在办公机访问"
+    },
+    {
+      "icon": "@/modules/Network/assets/toolguide/usermanual.svg",
+	  "iconEn":"usermanual",
+      "name": "fdev用户手册",
+      "url": "xxx/view/l/teu8564"
+    }
+  ],
+  "community": [
+    {
+      "icon": "@/modules/Network/assets/toolguide/lepu.svg",
+      "iconEn":"lepu",
+      "name": "乐浦",
+      "url": "http://ic.spdb.com/#/home",
+      "tooltip": "只能在办公机访问"
+    }
+  ]
+}

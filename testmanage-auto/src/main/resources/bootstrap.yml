@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: tauto
+  cloud:
+    config:
+    #快速失败响应
+      fail-fast: true
+      label: master
+      uri: xxx/fdev-configserver
+      name: tauto
+      profile: ${SPRING_PROFILE_ACTIVE}
+    bus:
+        enabled: false
+        trace:
+          enabled: false
+    stream:
+      kafka:
+        binder:
+          brokers:
+          -xxx:8092
+          -xxx:8092
+          -xxx:8092
+          zkNodes: 
+          -xxx:8181
+          -xxx:8181
+          -xxx:8181
+
+toalarmemail:
+  fdevAppDownAlert:
+    - xxx
+    - xxx
+  fdevTaskAlert:
+    - xxx
+    - xxx
+  fdevReleaseAlert:
+    - xxx
+    - xxx
+  fdevInterfaceAlert:
+    - xxx
+    - xxx
+  fdevEnvConfigAlert:
+    - xxx
+    - xxx
+  others:
+    - xxx
+    - xxx
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: bus-refresh

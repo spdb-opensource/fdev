@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.manager.ftms.dao.WorkOrderMapper" >
+    <resultMap id="ResultMap" type="com.manager.ftms.entity.WorkOrder" >
+        <id column="work_no" property="workOrderNo" jdbcType="VARCHAR" />
+        <result column="main_task_no" property="mainTaskNo" jdbcType="VARCHAR" />
+        <result column="main_task_name" property="mainTaskName" jdbcType="VARCHAR" />
+        <result column="work_stage" property="stage" jdbcType="VARCHAR" />
+        <result column="work_unit" property="unit" jdbcType="VARCHAR" />
+        <result column="testers" property="testers" jdbcType="VARCHAR" />
+        <result column="sit_date" property="planSitDate" jdbcType="DATE" />
+        <result column="product_date" property="planProDate" jdbcType="DATE" />
+        <result column="uat_date" property="planUatDate" jdbcType="DATE" />
+        <result column="work_flag" property="workOrderFlag" jdbcType="VARCHAR" />
+        <result column="work_manager" property="workManager" jdbcType="VARCHAR" />
+        <result column="work_leader" property="groupLeader" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="field1" property="field1" jdbcType="VARCHAR"/>
+        <result column="field2" property="field2" jdbcType="VARCHAR" />
+        <result column="field3" property="field3" jdbcType="VARCHAR" />
+        <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+        <result column="field5" property="field5" jdbcType="VARCHAR" />
+        <result column="uat_submit_date" property="uatSubmitDate" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id = "WorkOrder_Column_List_All" >
+        work_no,
+        main_task_no,
+        main_task_name,
+        work_stage,
+        work_unit,
+        testers,
+        sit_date,
+        product_date,
+        uat_date,
+        work_flag,
+        work_manager,
+        work_leader,
+        remark,
+        create_time,
+        field1,field2,field3,group_id,field5,
+        uat_submit_date
+    </sql>
+
+    <select id="queryWorkOrderByNo" parameterType="String" resultMap="ResultMap">
+        SELECT
+        <include refid="WorkOrder_Column_List_All"/>
+        FROM
+        work_order
+        WHERE
+        work_no = #{workOrderNo}
+    </select>
+
+    <select id="queryTaskByNo" resultType="String">
+        SELECT
+            task_no
+        FROM
+            task_list
+        WHERE
+            work_no = #{workNo}
+    </select>
+
+    <select id="queryPlanByOrderNo" resultType="Map">
+        SELECT
+            plan_id as planId, plan_name as planName
+        FROM
+            plan_list
+        WHERE
+            work_no = #{workNo}
+    </select>
+</mapper>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gotest.dao.QualityReportMapper" >
+
+    <select id="querySubmitInfo" resultType="Map">
+        SELECT
+            distinct b.task_no as taskNo,
+            b.task_name as taskName,
+            b.orderName,
+            replace(a.realSitTime,'-','') as realSitTime,
+            replace(replace(b.planSitDate,'-',''),'/','') as planSitDate,
+            b.fdevGroupId,
+            r.DATE as rollBackTime,
+            r.ROLLBACK_OPR as rollbackOpr,
+            r.REASON as reason,
+            b.fdev_new as fdevNew
+        FROM
+        (
+            SELECT
+                distinct
+                task_no,
+                task_name,
+                orderName,
+                planSitDate,
+                fdevGroupId,
+                fdev_new
+            FROM (
+                SELECT
+                    w.main_task_name as orderName,
+                    w.FDEV_GROUP_ID as fdevGroupId,
+                    replace(sit_date,'/','-')as planSitDate,
+                    t.task_name,
+                    t.task_no,
+                    w.fdev_new
+                FROM work_order w
+                JOIN task_list t
+                ON w.work_no = t.work_no
+                WHERE
+                    w.sit_date is not null
+                    and
+                    w.FDEV_GROUP_ID is not null
+                    and
+                    w.work_stage != '11'
+                    AND
+                    w.order_type = 'function'
+                UNION
+                SELECT
+                    main_task_name as orderName,
+                    fdev_group_id as fdevGroupId,
+                    replace(sit_date,'/','-')as planSitDate,
+                    main_task_name as task_name,
+                    main_task_no as task_no,
+                    fdev_new
+                FROM work_order
+                WHERE
+                    main_task_no is not null
+                    and
+                    main_task_no != ''
+                    and
+                    sit_date is not null
+                    and
+                    FDEV_GROUP_ID is not null
+                    and
+                    work_stage != '11'
+                    AND
+                    order_type = 'function'
+            ) k
+            group by task_no
+        ) b
+        LEFT JOIN
+        (
+            SELECT
+                distinct TASK_NO,
+                left(min(CREATE_TIME),10) as realSitTime
+            FROM FTMS_SUBMIT_SIT_RECORD
+            group by TASK_NO
+        ) a
+        ON
+            a.TASK_NO = b.TASK_NO
+        LEFT JOIN
+            FTMS_ROLLBACK_INFO r
+        ON
+            b.task_no = r.FDEV_TASK_NO
+    </select>
+
+    <select id="queryExeTime" resultType="Map">
+        select a.fdev_group_id as fdevGroupId, replace(a.exeTime,'-','') as exeTime, count(a.exeTime) as times from
+        (
+        SELECT w.fdev_group_id, left(r.DATE, 10) as exeTime FROM FTMS_TESTCASE_EXE_RECORD r, work_order w
+        where r.WORK_NO = w.work_no and fdev_group_id is not null
+        AND w.order_type = 'function'
+        ) a
+        group by a.exeTime,a.fdev_group_id
+    </select>
+
+    <select id="querySubmitInfoByDateAndGroup" resultType="Map">
+        SELECT
+            distinct b.task_no as taskNo,
+            b.task_name as taskName,
+            b.orderName,
+            replace(a.realSitTime,'-','') as realSitTime,
+            replace(replace(b.planSitDate,'-',''),'/','') as planSitDate,
+            b.fdevGroupId,
+            r.DATE as rollBackTime,
+            r.ROLLBACK_OPR as rollbackOpr,
+            b.fdev_new as fdevNew
+        FROM
+        (
+            SELECT
+                distinct
+                task_no,
+                task_name,
+                orderName,
+                planSitDate,
+                fdevGroupId,
+                fdev_new
+            FROM (
+                SELECT
+                    w.main_task_name as orderName,
+                    w.FDEV_GROUP_ID as fdevGroupId,
+                    replace(sit_date,'/','-')as planSitDate,
+                    t.task_name,
+                    t.task_no,
+                    w.fdev_new
+                FROM work_order w
+                JOIN task_list t
+                ON w.work_no = t.work_no
+                WHERE
+                w.sit_date is not null
+                and
+                w.FDEV_GROUP_ID is not null
+                and
+                w.work_stage != '11'
+            UNION
+                SELECT
+                    main_task_name as orderName,
+                    fdev_group_id as fdevGroupId,
+                    replace(sit_date,'/','-')as planSitDate,
+                    main_task_name as task_name,
+                    main_task_no as task_no,
+                    fdev_new
+                FROM work_order
+                WHERE
+                main_task_no is not null
+                and
+                main_task_no != ''
+                and
+                sit_date is not null
+                and
+                FDEV_GROUP_ID is not null
+                and
+                work_stage != '11'
+            ) k
+            group by task_no
+        ) b
+        LEFT JOIN
+        (
+            SELECT
+                distinct TASK_NO,
+                left(min(CREATE_TIME),10) as realSitTime
+            FROM FTMS_SUBMIT_SIT_RECORD
+            group by TASK_NO
+        ) a
+        ON a.TASK_NO = b.TASK_NO
+        LEFT JOIN
+        FTMS_ROLLBACK_INFO r
+        ON b.task_no = r.FDEV_TASK_NO
+    </select>
+</mapper>

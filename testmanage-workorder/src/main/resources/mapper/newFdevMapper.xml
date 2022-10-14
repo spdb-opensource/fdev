@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gotest.dao.NewFdevMapper" >
+    <resultMap id="WorkOrder" type="com.gotest.domain.WorkOrder" >
+        <id column="work_no" property="workOrderNo" jdbcType="VARCHAR" />
+        <result column="main_task_no" property="mainTaskNo" jdbcType="VARCHAR" />
+        <result column="main_task_name" property="mainTaskName" jdbcType="VARCHAR" />
+        <result column="work_stage" property="stage" jdbcType="VARCHAR" />
+        <result column="work_unit" property="unit" jdbcType="VARCHAR" />
+        <result column="testers" property="testers" jdbcType="VARCHAR" />
+        <result column="sit_date" property="planSitDate" jdbcType="DATE" />
+        <result column="product_date" property="planProDate" jdbcType="DATE" />
+        <result column="uat_date" property="planUatDate" jdbcType="DATE" />
+        <result column="work_flag" property="workOrderFlag" jdbcType="VARCHAR" />
+        <result column="work_manager" property="workManager" jdbcType="VARCHAR" />
+        <result column="work_leader" property="groupLeader" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="field1" property="field1" jdbcType="VARCHAR"/>
+        <result column="field2" property="field2" jdbcType="VARCHAR" />
+        <result column="field3" property="field3" jdbcType="VARCHAR" />
+        <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+        <result column="field5" property="field5" jdbcType="VARCHAR" />
+        <result column="uat_submit_date" property="uatSubmitDate" jdbcType="VARCHAR" />
+        <result column="risk_description" property="riskDescription" jdbcType="VARCHAR" />
+        <result column="sit_flag" property="sitFlag" jdbcType="VARCHAR" />
+        <result column="approval_flag" property="approvalFlag" jdbcType="VARCHAR" />
+        <result column="fst_sit_date" property="fstSitDate" jdbcType="VARCHAR" />
+        <result column="fnl_sit_date" property="fnlSitDate" jdbcType="VARCHAR" />
+        <result column="image_link" property="imageLink" jdbcType="VARCHAR" />
+        <result column="FDEV_GROUP_ID" property="fdevGroupId" jdbcType="VARCHAR"/>
+        <result column="FDEV_GROUP_NAME" property="fdevGroupName" jdbcType="VARCHAR"/>
+        <result column="demand_no" property="demandNo" jdbcType="VARCHAR"/>
+        <result column="fdev_new" property="fdevNew" jdbcType="VARCHAR"/>
+        <result column="demand_id" property="demandId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="BaseResulStatustMap" type="java.util.Map">
+        <!-- 案例总数 -->
+        <result column="allCase" jdbcType="INTEGER" property="allCase" />
+        <!-- 点击执行总数 -->
+        <result column="exeNum" jdbcType="INTEGER" property="exeNum" />
+        <!-- 执行通过的 -->
+        <result column="sumSucc" jdbcType="INTEGER" property="sumSucc" />
+        <!-- 执行失败的 -->
+        <result column="sumFail" jdbcType="INTEGER" property="sumFail" />
+        <!-- 执行阻塞的 -->
+        <result column="sumBlock" jdbcType="INTEGER" property="sumBlock" />
+        <!-- 未执行案例数 -->
+        <result column="sumUnExe" jdbcType="INTEGER" property="sumUnExe" />
+    </resultMap>
+
+    <resultMap id="testCaseResultMap"
+               type="com.gotest.domain.Testcase">
+        <id column="testcase_no" jdbcType="VARCHAR" property="testcaseNo" />
+        <result column="testcase_name" jdbcType="VARCHAR"
+                property="testcaseName" />
+        <result column="testcase_status" jdbcType="CHAR"
+                property="testcaseStatus" />
+        <result column="testcase_type" jdbcType="CHAR"
+                property="testcaseType" />
+        <result column="testcase_priority" jdbcType="CHAR"
+                property="testcasePriority" />
+        <result column="testcase_pre" jdbcType="VARCHAR"
+                property="testcasePre" />
+        <result column="testcase_nature" jdbcType="CHAR"
+                property="testcaseNature" />
+        <result column="funcation_point" jdbcType="VARCHAR"
+                property="funcationPoint" />
+        <result column="testcase_describe" jdbcType="VARCHAR"
+                property="testcaseDescribe" />
+        <result column="expected_result" jdbcType="VARCHAR"
+                property="expectedResult" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="testcase_version" jdbcType="CHAR"
+                property="testcaseVersion" />
+        <result column="testcase_people" jdbcType="VARCHAR"
+                property="testcasePeople" />
+        <result column="testcase_date" jdbcType="VARCHAR"
+                property="testcaseDate" />
+        <result column="testcase_func_id" jdbcType="INTEGER"
+                property="testcaseFuncId" />
+        <result column="sys_module_name" jdbcType="VARCHAR"
+                property="systemName" />
+        <result column="sys_id" jdbcType="INTEGER" property="systemId" />
+        <result column="func_model_name" jdbcType="VARCHAR"
+                property="testcaseFuncName" />
+        <result column="field1" jdbcType="VARCHAR" property="field1" />
+        <result column="field2" jdbcType="VARCHAR" property="field2" />
+        <result column="field3" jdbcType="VARCHAR" property="field3" />
+        <result column="field4" jdbcType="VARCHAR" property="field4" />
+        <result column="field5" jdbcType="VARCHAR" property="field5" />
+        <result column="user_name" jdbcType="VARCHAR"
+                property="userName" />
+        <result column="id" jdbcType="INTEGER"
+                property="planlistTestcaseId" />
+        <result column="PLAN_ID" jdbcType="INTEGER" property="planId" />
+        <result column="RESULT_STATUS" jdbcType="VARCHAR"
+                property="testcaseExecuteResult" />
+        <result column="FNL_TM" jdbcType="VARCHAR"
+                property="testcaseExecuteDate" />
+        <result column="IS_TEST" jdbcType="VARCHAR"
+                property="necessaryFlag" />
+        <result column="ORDER_NUM" jdbcType="VARCHAR"
+                property="orderNum" />
+
+    </resultMap>
+
+    <resultMap id="taskMap" type="com.gotest.domain.TaskList" >
+        <id column="task_no" property="taskno" jdbcType="VARCHAR" />
+        <result column="work_no" property="workno" jdbcType="VARCHAR" />
+        <result column="task_name" property="taskname" jdbcType="VARCHAR" />
+        <result column="task_unit" property="taskunit" jdbcType="VARCHAR" />
+        <result column="spdb_manager" property="spdbmanager" jdbcType="VARCHAR" />
+        <result column="developer" property="developer" jdbcType="VARCHAR" />
+        <result column="flag" property="flag" jdbcType="INTEGER" />
+        <result column="field1" property="field1" jdbcType="VARCHAR" />
+        <result column="field2" property="field2" jdbcType="VARCHAR" />
+        <result column="field3" property="field3" jdbcType="VARCHAR" />
+        <result column="field4" property="field4" jdbcType="VARCHAR" />
+        <result column="field5" property="field5" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id ="WorkOrder_Column_List" >
+        work_no,
+        main_task_no,
+        main_task_name,
+        work_stage,
+        work_unit,
+        testers,
+        sit_date,
+        product_date,
+        uat_date,
+        work_flag,
+        work_manager,
+        work_leader,
+        remark,
+        create_time,
+        uat_submit_date
+    </sql>
+
+    <sql id = "WorkOrder_Column_List_All" >
+        work_no,
+        main_task_no,
+        main_task_name,
+        work_stage,
+        work_unit,
+        testers,
+        sit_date,
+        product_date,
+        uat_date,
+        work_flag,
+        work_manager,
+        work_leader,
+        remark,
+        create_time,
+        field1,field2,field3,group_id,field5,
+        uat_submit_date,
+        risk_description,
+        sit_flag,
+        approval_flag,
+        fdev_group_id,
+        fst_sit_date,
+        fnl_sit_date,
+        group_id,
+        image_link,
+        demand_no,
+        demand_name,
+        fdev_new,
+        demand_id
+    </sql>
+    
+    <sql id = "insert_WorkOrder_Column_List_All" >
+        work_no,
+        main_task_no,
+        main_task_name,
+        work_stage,
+        testers,
+        sit_date,
+        product_date,
+        uat_date,
+        work_flag,
+        work_manager,
+        work_leader,
+        remark,
+        create_time,
+        field1,field2,field3,field5
+        ,sit_flag
+        ,fdev_group_id,
+        demand_no,
+        work_unit,
+        demand_name
+    </sql>
+  <!-- 实施单元id编号查询工单-->
+    <select id="queryWorkOrderByOaRealNo" resultMap="WorkOrder">
+        SELECT
+        <include refid="WorkOrder_Column_List_All"/>
+        FROM
+        work_order
+        <where>
+            <if test=" unitNos != null and unitNos != '' ">
+                and  work_unit=#{unitNos}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询执行计划下案例对应状态数量 -->
+    <select id="queryAllStatus" parameterType="java.lang.Integer"
+            resultMap="BaseResulStatustMap">
+        SELECT
+        a.plan_id as PLAN_ID,
+        a.allCase,
+        ifnull(b.exeNum, 0) as exeNum,
+        a.sumSucc,
+        a.sumBlock,
+        a.sumFail,
+        a.sumUnExe
+        FROM
+        (
+        SELECT
+        pl.PLAN_ID,
+        count(fpr.RESULT_STATUS) as allCase,
+        sum(if(fpr.RESULT_STATUS = 1, 1, 0)) as sumSucc,
+        sum(if(fpr.RESULT_STATUS = 2, 1, 0)) as sumBlock,
+        sum(if(fpr.RESULT_STATUS = 3, 1, 0)) as sumFail,
+        sum(if(fpr.RESULT_STATUS = 0, 1, 0)) as sumUnExe
+        FROM
+        plan_list pl
+        LEFT JOIN
+        FTMS_PLAN_RESULT fpr
+        ON
+        fpr.PLAN_ID = pl.plan_id
+        WHERE
+        pl.PLAN_ID = #{planId}
+        ) a
+        LEFT JOIN
+        (
+        SELECT
+        plan_id,
+        sum(if(STATUS != 4 and OPR_TYPE = 0, 1, 0)) as exeNum
+        FROM
+        FTMS_TESTCASE_EXE_RECORD
+        WHERE
+        plan_id = #{planId}
+        ) b
+        ON
+        a.plan_id = b.plan_id
+    </select>
+
+    <!-- 案例编号查询案例详情-->
+    <select id="querytestCaseByTestCaseNo" resultType="java.util.Map">
+        SELECT testcase_no ,
+        t.testcase_name,
+        t.testcase_status,
+        t.testcase_type,
+        t.testcase_priority,
+        t.testcase_date,
+        t.testcase_describe,
+        t.testcase_people,
+        t.funcation_point,
+        t.expected_result
+        FROM testcase t
+        where
+        testcase_no=#{testcaseNo}
+    </select>
+
+    <!--查询同需求id的新fdev生成的工单-->
+    <select id="checkOrderExist" resultMap="WorkOrder">
+        SELECT
+            <include refid="WorkOrder_Column_List_All" />
+        FROM
+            work_order
+        WHERE
+            work_unit = #{unitId}
+        AND
+            fdev_new = '1'
+    </select>
+    <select id="queryDetailByTestcaseNo" resultMap= "testCaseResultMap">
+        select
+        f.TESTCASE_ID as testcase_no ,
+        t.testcase_name,
+        f.RESULT_STATUS as testcase_status ,
+        t.testcase_type,
+        t.testcase_priority,
+        t.testcase_pre, t.testcase_nature,
+        t.funcation_point, t.testcase_describe,t.expected_result,
+        t.remark,t.IS_TEST,
+        t.testcase_version,
+        t.testcase_people, t.testcase_date,
+        t.testcase_func_id
+        from
+        FTMS_PLAN_RESULT f
+        left join
+        testcase t
+        on
+        f.TESTCASE_ID=t.testcase_no
+        where  f.PLAN_ID=#{planId}  and  f.TESTCASE_ID=#{testcaseNo}
+    </select>
+
+    <select id="queryCaseByTestcaseNo" resultMap= "testCaseResultMap">
+        select
+        f.TESTCASE_ID as testcase_no,
+        t.testcase_name,
+        f.RESULT_STATUS as testcase_status,
+        t.testcase_type,
+        t.testcase_priority,
+        t.testcase_pre, t.testcase_nature,
+        t.funcation_point, t.testcase_describe,t.expected_result,
+        t.remark,
+        t.IS_TEST,
+        t.testcase_version,
+        t.testcase_people, t.testcase_date,
+        t.testcase_func_id,
+        fm.func_model_name,
+        sm.sys_module_name,sm.sys_id
+        from
+        FTMS_PLAN_RESULT f left join testcase t
+        on f.TESTCASE_ID=t.testcase_no
+        join func_model fm
+        on t.testcase_func_id = fm.func_id
+        join sys_model sm
+        on fm.sys_func_id = sm.sys_id
+        where  f.PLAN_ID=#{planId}  and  f.TESTCASE_ID=#{testcaseNo}
+    </select>
+
+    <select id="queryWorkNoByUnitNos" resultMap= "WorkOrder">
+        SELECT
+        work_no
+        FROM
+        work_order
+        where
+        work_stage!=11 and
+        work_unit
+        in (${unitNo});
+    </select>
+
+    <update id="deleteWorkOrderByUnitNo">
+        UPDATE
+            work_order
+        SET
+            work_stage = '11'
+        WHERE
+            work_unit in (${unitNos})
+    </update>
+
+    <delete id="deleteTask">
+        DELETE FROM
+            task_list
+        WHERE
+            task_no
+        IN
+            (${taskIds})
+    </delete>
+
+    <select id="queryWorkByTaskIds" resultMap="taskMap">
+        SELECT
+        distinct work_no
+        FROM
+        task_list
+        where task_no in (${taskIds});
+    </select>
+
+    <select id="queryWorkinfoByTaskNo" resultType="Map">
+        select
+        t.task_no,
+        t.work_no,
+        t.task_name,
+        w.main_task_name,
+        w.work_unit,
+        w.fdev_group_id,
+        w.fdev_new,
+        w.demand_id
+        from
+        task_list t
+        left join
+        work_order w
+        on
+        t.work_no=w.work_no
+        where
+        t.task_no=#{taskNo}
+    </select>
+
+    <select id="queryWorkOrderByMainTaskNo" resultType="Map">
+        SELECT
+        work_no ,
+        main_task_no
+        FROM work_order where main_task_no=#{taskNo};
+    </select>
+
+    <update id="synIpmpUpdateOrderName" >
+        update
+        work_order
+        set
+        main_task_name=#{name}
+        where
+        work_unit=#{unitNo}
+    </update>
+
+    <select id="queryWorkNoBynuitNo" resultMap= "WorkOrder">
+        SELECT
+        work_no
+        FROM
+        work_order
+        where
+        work_stage!=11 and
+        work_unit=#{unitNo}
+    </select>
+
+    <update id="synDemandUpdateOrderInfo" >
+        update
+        work_order
+        set
+        demand_name = #{name}
+        where
+        demand_id = #{demandId}
+    </update>
+</mapper>

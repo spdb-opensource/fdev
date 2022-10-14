@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gotest.dao.RollbackInfoMapper" >
+
+
+    <insert id="addRollbackInfo" parameterType="com.gotest.domain.RollbackInfo">
+        INSERT into
+        FTMS_ROLLBACK_INFO
+        (WORK_NO,
+        DATE,
+        ROLLBACK_OPR,
+        REASON,
+        FDEV_GROUP_ID,
+        MAIN_TASK_NAME,
+        FDEV_TASK_NO,
+        DETAIL_INFO)
+        VALUES
+        (#{workNo}
+        ,#{date}
+        ,#{rollbcakOpr}
+        ,#{reason}
+        ,#{fdevGroupId}
+        ,#{mainTaskName}
+        ,#{fdevTaskNo}
+        ,#{detailInfo})
+    </insert>
+
+    <resultMap id="totalRollback" type="java.util.Map">
+        <result column="work_no" property="workNo" jdbcType="VARCHAR" />
+        <result column="fst_sit_date" property="fstSitDate" jdbcType="VARCHAR" />
+        <result column="main_task_name" property="mainTaskName" jdbcType="VARCHAR" />
+        <result column="testers" property="testers" jdbcType="VARCHAR" />
+        <result column="fnl_rollback_date" property="fnlRollbackDate" jdbcType="VARCHAR" />
+        <result column="reason" property="reason" jdbcType="VARCHAR" />
+        <result column="rollback_num" property="rollbackNum" jdbcType="VARCHAR" />
+        <result column="date" property="date" jdbcType="VARCHAR" />
+        <result column="rollback_opr" property="rollbackOpr" jdbcType="VARCHAR" />
+        <result column="FDEV_GROUP_ID" property="groupId" jdbcType="VARCHAR" />
+        <result column="FDEV_TASK_NO" property="mainTaskNo" jdbcType="VARCHAR" />
+        <result column="DETAIL_INFO" property="detailInfo" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="ResultMap" type="com.gotest.domain.RollbackInfo">
+        <id column="ID" property="id" jdbcType="INTEGER" />
+        <result column="WORK_NO" property="workNo" jdbcType="VARCHAR"/>
+        <result column="DATE" property="date" jdbcType="VARCHAR"/>
+        <result column="ROLLBACK_OPR" property="rollbcakOpr" jdbcType="VARCHAR"/>
+        <result column="REASON" property="reason" jdbcType="VARCHAR"/>
+        <result column="FDEV_GROUP_ID" property="fdevGroupId" jdbcType="VARCHAR"/>
+        <result column="MAIN_TASK_NAME" property="mainTaskName" jdbcType="VARCHAR"/>
+        <result column="FDEV_TASK_NO" property="fdevTaskNo" jdbcType="VARCHAR"/>
+        <result column="DETAIL_INFO" property="detailInfo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="countOrderRollback" resultMap="totalRollback">
+        SELECT
+            w.work_no,
+            w.fst_sit_date,
+            w.main_task_name,
+            w.testers,
+            w.fnl_rollback_date,
+            fr.rollback_num,
+            r.REASON,r.date,
+            r.ROLLBACK_OPR,
+            r.FDEV_GROUP_ID,
+            r.FDEV_TASK_NO,
+            r.DETAIL_INFO
+        FROM
+            FTMS_ROLLBACK_INFO r
+        LEFT JOIN
+            work_order w
+        ON
+            w.work_no = r.WORK_NO
+        LEFT JOIN
+            (SELECT
+                count(WORK_NO) as rollback_num,
+                WORK_NO
+            FROM
+                FTMS_ROLLBACK_INFO
+            GROUP BY
+                WORK_NO) fr
+        ON fr.WORK_NO = r.WORK_NO
+        JOIN
+            task_list t
+        ON
+            r.FDEV_TASK_NO = t.task_no
+        <where>
+            <if test=" mainTaskName != null and mainTaskName != ''">
+                AND r.main_task_name = #{mainTaskName}
+            </if>
+            <if test="groupId != null and groupId != ''">
+                AND r.FDEV_GROUP_ID in
+                <foreach item="groupids" collection="groupId.split(',')" open="(" separator="," close=")">
+                    #{groupids}
+                </foreach>
+            </if>
+            <if test="startDate != '' and startDate != null">
+                AND r.DATE &gt;= #{startDate}
+            </if>
+            <if test="endDate != '' and endDate != null">
+                AND r.DATE &lt;= #{endDate}
+            </if>
+            <if test="reason != null and reason != ''">
+                and r.reason = #{reason}
+            </if>
+        </where>
+        ORDER BY fr.rollback_num,r.id
+    </select>
+
+    <!--根据任务id查询-->
+    <select id="queryByTaskNo" resultMap="ResultMap">
+        SELECT
+            f.ID,
+            f.WORK_NO,
+            f.DATE,
+            f.ROLLBACK_OPR,
+            f.REASON,
+            f.FDEV_GROUP_ID,
+            f.MAIN_TASK_NAME,
+            f.FDEV_TASK_NO,
+            f.DETAIL_INFO
+        FROM
+            FTMS_ROLLBACK_INFO f
+        left join work_order w
+        on f.work_no=w.work_no
+        WHERE
+            f.FDEV_TASK_NO = #{taskNo}
+        <choose>
+            <when test="orderType != null and orderType != ''">
+                AND
+                w.order_type = #{orderType}
+            </when>
+            <otherwise>
+                AND
+                w.order_type = 'function'
+            </otherwise>
+        </choose>
+    </select>
+
+    <update id="updateWorkNoById">
+        UPDATE
+            FTMS_ROLLBACK_INFO
+        SET
+            WORK_NO = #{workNo}
+        WHERE
+            ID = #{id}
+    </update>
+
+    <select id="queryRollbackCount" resultType="INTEGER">
+        SELECT
+            count(ID)
+        FROM
+            FTMS_ROLLBACK_INFO
+        WHERE
+            FDEV_TASK_NO = #{taskNo}
+        AND
+            WORK_NO = #{workNo}
+    </select>
+
+    <update id="updateWorkNoByTaskNos">
+        UPDATE
+            FTMS_ROLLBACK_INFO
+        SET
+            WORK_NO = #{newWorkNo}
+        WHERE
+            FDEV_TASK_NO in
+        <foreach collection="taskIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateRollBackInfoByTaskNos">
+        UPDATE
+            FTMS_ROLLBACK_INFO
+        SET
+            WORK_NO = #{newWorkNo},
+            MAIN_TASK_NAME = #{mainTaskName},
+            FDEV_GROUP_ID = #{fdevGroupId}
+        WHERE
+            FDEV_TASK_NO
+        IN
+        <foreach collection="taskIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

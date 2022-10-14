@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: fuser
+  cloud:
+    config:
+    #快速失败响应
+      fail-fast: true
+      label: master
+      uri: xxx/fdev-configserver
+      name: fuser
+      profile: ${SPRING_PROFILE_ACTIVE}
+    bus:
+      refresh:
+        enabled: true
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: bus-refresh

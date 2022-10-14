@@ -1,0 +1,532 @@
+<template>
+  <Loading :visible="loading">
+    <fdev-table
+      :data="tableData"
+      :columns="columns"
+      row-key="id"
+      no-export
+      selection="multiple"
+      :selected.sync="rowSelected"
+      :pagination.sync="pagination"
+      @request="pageTableRequest"
+      :on-search="findMyApproveList"
+      title-icon="todo_list_s_f"
+      title="我的审批列表"
+      class="my-sticky-column-table"
+      :visible-columns="visibleCols"
+      :on-select-cols="saveVisibleColumns"
+    >
+      <template #top-right>
+        <span>
+          <fdev-btn normal label="查询全部" @click="jumpToApproveList" />
+        </span>
+        <span>
+          <fdev-tooltip v-if="rowSelected.length === 0" position="top">
+            请先勾选需要审批的研发单元
+          </fdev-tooltip>
+          <fdev-btn
+            :disable="rowSelected.length === 0"
+            normal
+            label="批量审批"
+            :loading="allAprovePassLoading"
+            @click="allAprovePass"
+          />
+        </span>
+      </template>
+      <template v-slot:top-bottom>
+        <f-formitem label="搜索条件" class="q-pr-md">
+          <fdev-input
+            :value="terms"
+            placeholder="请输入研发单元编号/内容"
+            clearable
+            @input="saveTerms($event)"
+            @keyup.enter="findMyApproveList()"
+            @clear="clearTerms()"
+            ><template v-slot:append>
+              <f-icon
+                name="search"
+                class="cursor-pointer"
+                @click="findMyApproveList"
+              />
+            </template>
+          </fdev-input>
+        </f-formitem>
+        <f-formitem label="审批类型" class="q-pr-md">
+          <fdev-select
+            :value="approveType"
+            :options="approveOptions"
+            @input="saveType($event), init()"
+            @clear="saveType('')"
+            clearable
+          >
+          </fdev-select>
+        </f-formitem>
+      </template>
+      <!-- 研发单元编号跳转 -->
+      <template v-slot:body-cell-fdevUnitNo="props">
+        <fdev-td :title="props.row.fdevUnitNo">
+          <div class="text-ellipsis">
+            <router-link
+              v-if="props.row.demandId && props.row.fdevUnitNo"
+              class="link"
+              :to="{
+                path: '/rqrmn/devUnitDetails',
+                query: {
+                  demandId: props.row.demandId,
+                  dev_unit_no: props.row.fdevUnitNo
+                }
+              }"
+            >
+              {{ props.row.fdevUnitNo }}
+              <fdev-popup-proxy context-menu>
+                <fdev-banner style="max-width:300px">
+                  {{ props.row.fdevUnitNo }}
+                </fdev-banner>
+              </fdev-popup-proxy>
+            </router-link>
+            <span v-else>{{ props.row.fdevUnitNo }}</span>
+          </div>
+        </fdev-td>
+      </template>
+      <!-- 需求名称跳转 -->
+      <template v-slot:body-cell-demandName="props">
+        <fdev-td :title="props.row.demandName">
+          <div class="text-ellipsis">
+            <router-link
+              v-if="props.row.demandId && props.row.demandName"
+              :to="`/rqrmn/rqrProfile/${props.row.demandId}`"
+              class="link"
+            >
+              {{ props.row.demandName }}
+              <fdev-popup-proxy context-menu>
+                <fdev-banner style="max-width:300px">
+                  {{ props.row.demandName }}
+                </fdev-banner>
+              </fdev-popup-proxy>
+            </router-link>
+            <span v-else>{{ props.row.demandName || '-' }}</span>
+          </div>
+        </fdev-td>
+      </template>
+      <!-- 需求编号跳转 -->
+      <template v-slot:body-cell-demandNo="props">
+        <fdev-td :title="props.row.demandNo">
+          <div class="text-ellipsis">
+            <router-link
+              v-if="props.row.demandId && props.row.demandName"
+              :to="`/rqrmn/rqrProfile/${props.row.demandId}`"
+              class="link"
+            >
+              {{ props.row.demandNo }}
+              <fdev-popup-proxy context-menu>
+                <fdev-banner style="max-width:300px">
+                  {{ props.row.demandNo }}
+                </fdev-banner>
+              </fdev-popup-proxy>
+            </router-link>
+            <span v-else>{{ props.row.demandNo || '-' }}</span>
+          </div>
+        </fdev-td>
+      </template>
+      <!-- 研发单元状态 -->
+      <template v-slot:body-cell-fdevUnitState="props">
+        <fdev-td class="text-ellipsis">
+          <div class="row no-wrap items-center">
+            <f-status-color
+              :gradient="
+                devUnitStatus(
+                  props.row.fdevUnitSpecialState,
+                  props.row.fdevUnitState
+                ) | statusFilter
+              "
+            ></f-status-color>
+
+            <span
+              :title="
+                devUnitStatus(
+                  props.row.fdevUnitSpecialState,
+                  props.row.fdevUnitState
+                )
+              "
+            >
+              {{
+                devUnitStatus(
+                  props.row.fdevUnitSpecialState,
+                  props.row.fdevUnitState
+                )
+              }}
+            </span>
+          </div>
+        </fdev-td>
+      </template>
+      <!-- 研发单元牵头人 -->
+      <template v-slot:body-cell-fdevUnitLeaderInfo="props">
+        <fdev-td>
+          <div
+            class="text-ellipsis"
+            :title="props.value.map(v => v.user_name_cn).join('，')"
+          >
+            <span v-for="(item, index) in props.value" :key="index">
+              <router-link
+                v-if="item.id"
+                :to="{ path: `/user/list/${item.id}` }"
+                class="link"
+              >
+                {{ item.user_name_cn }}
+              </router-link>
+              <span v-else class="span-margin">{{ item.user_name_cn }}</span>
+            </span>
+          </div>
+        </fdev-td>
+      </template>
+      <!-- 申请人 -->
+      <template v-slot:body-cell-applicantName="props">
+        <fdev-td>
+          <div class="text-ellipsis" :title="props.value">
+            <span>
+              <router-link
+                v-if="props.row.applicantId"
+                :to="{ path: `/user/list/${props.row.applicantId}` }"
+                class="link"
+              >
+                {{ props.value }}
+              </router-link>
+              <span v-else class="span-margin">{{ props.value }}</span>
+            </span>
+          </div>
+        </fdev-td>
+      </template>
+      <!-- 审批状态 -->
+      <template v-slot:body-cell-approveState="props">
+        <fdev-td class="text-ellipsis">
+          <div class="row no-wrap items-center">
+            <f-status-color
+              :gradient="
+                approveStatus(props.row.approveState) | approveStatusFilter
+              "
+            ></f-status-color>
+
+            <span :title="approveStatus(props.row.approveState)">
+              {{ approveStatus(props.row.approveState) }}
+            </span>
+          </div>
+        </fdev-td>
+      </template>
+      <!-- 审批人 -->
+      <template v-slot:body-cell-approverName="props">
+        <fdev-td>
+          <div class="text-ellipsis" :title="props.value">
+            <span>
+              <router-link
+                v-if="props.row.approverId"
+                :to="{ path: `/user/list/${props.row.approverId}` }"
+                class="link"
+              >
+                {{ props.value }}
+              </router-link>
+              <span v-else class="span-margin">{{ props.value }}</span>
+            </span>
+          </div>
+        </fdev-td>
+      </template>
+      <!-- 操作列 -->
+      <template v-slot:body-cell-operate="props">
+        <fdev-td :auto-width="true" class="td-padding">
+          <div class="border-right">
+            <div class="inline-block" style="display: inline-block;">
+              <fdev-tooltip position="top" v-if="props.row.overdueReason">
+                {{ props.row.overdueReason }}
+              </fdev-tooltip>
+              <fdev-btn
+                flat
+                label="审批通过"
+                class="q-mr-sm"
+                @click="clickApprovePass(props.row)"
+              />
+            </div>
+            <div class="inline-block" style="display: inline-block;">
+              <fdev-btn
+                flat
+                label="审批拒绝"
+                class="q-mr-sm"
+                @click="clickApproveReject(props.row)"
+              />
+            </div>
+          </div>
+        </fdev-td>
+      </template>
+    </fdev-table>
+    <f-dialog title="审批拒绝" f-sc v-model="rejectOpen">
+      <f-formitem label="审批说明" diaS>
+        <fdev-input v-model="approveRejectReason" clearable type="textarea" />
+      </f-formitem>
+      <template v-slot:btnSlot>
+        <fdev-btn label="取消" outline dialog @click="rejectOpen = false"/>
+        <fdev-btn
+          label="确定"
+          dialog
+          @click="approveRejectsure"
+          :loading="btnloading"
+      /></template>
+    </f-dialog>
+  </Loading>
+</template>
+
+<script>
+import { mapState, mapActions, mapMutations } from 'vuex';
+import Loading from '@/components/Loading';
+import { successNotify } from '@/utils/utils';
+import { createReUnitColumns } from '@/modules/HomePage/utils/constants';
+import { devStatusColorMap } from '@/modules/Rqr/model';
+
+export default {
+  name: 'unitApprovals',
+  components: { Loading },
+  data() {
+    return {
+      loading: false,
+      tableData: [],
+      pagination: {
+        page: 1,
+        rowsPerPage: 5,
+        rowsNumber: 0
+      },
+      rowSelected: [],
+      columns: createReUnitColumns(),
+      eventTodoNum: 0,
+      eventNum: {
+        todo: 0,
+        done: 0
+      },
+      rejectOpen: false,
+      approveRejectReason: '',
+      rejectId: '',
+      btnloading: false,
+      allAprovePassLoading: false,
+      approveOptions: [
+        {
+          label: '开发审批',
+          value: '0'
+        },
+        {
+          label: '超期审批',
+          value: '1'
+        },
+        {
+          label: '开发审批&超期审批',
+          value: '2'
+        }
+      ]
+    };
+  },
+  props: ['label', 'name'],
+
+  watch: {
+    pagination: {
+      handler(val) {
+        this.saveCurrentTodoPage(val);
+      },
+      deep: true
+    }
+  },
+
+  computed: {
+    ...mapState('userForm', ['todosList']),
+    ...mapState('demandsForm', ['myApproveList']),
+    ...mapState('userActionSaveHomePage/myUnitPage', [
+      'terms',
+      'approveType',
+      'visibleCols',
+      'currentTodoPage'
+    ])
+  },
+  filters: {
+    statusFilter(val) {
+      return devStatusColorMap[val];
+    },
+    approveStatusFilter(val) {
+      const obj2 = {
+        待审批:
+          'linear-gradient(270deg, rgba(36,200,249,0.50) 0%, #24C8F9 100%)',
+        通过: 'linear-gradient(270deg, rgba(77,187,89,0.50) 0%, #4DBB59 100%)',
+        拒绝: 'linear-gradient(270deg, rgba(176,190,197,0.50) 0%, #B0BEC5 100%)'
+      };
+      return obj2[val];
+    }
+  },
+  methods: {
+    ...mapActions('userForm', ['queryTodos', 'updateLabelById']),
+    ...mapActions('demandsForm', [
+      'queryMyApproveList',
+      'approvePass',
+      'approveReject'
+    ]),
+    ...mapMutations('userActionSaveHomePage/myUnitPage', [
+      'saveTerms',
+      'saveType',
+      'saveVisibleColumns',
+      'saveCurrentTodoPage'
+    ]),
+    //清空搜索条件
+    clearTerms() {
+      this.saveTerms('');
+      this.init();
+    },
+    devUnitStatus(special, normal) {
+      const obj1 = {
+        1: '评估中',
+        2: '待实施',
+        3: '开发中',
+        4: 'sit',
+        5: 'uat',
+        6: 'rel',
+        7: '已投产',
+        8: '已归档',
+        9: '已撤销'
+      };
+      let obj2 = {
+        1: '暂缓中',
+        2: '恢复中',
+        3: '恢复完成'
+      };
+      if (special && special !== 3) return obj2[special];
+      if (normal) return obj1[normal];
+    },
+    approveStatus(status) {
+      const obj1 = {
+        wait: '待审批',
+        pass: '通过',
+        reject: '拒绝'
+      };
+      return obj1[status];
+    },
+
+    async approveRejectsure() {
+      try {
+        this.btnloading = true;
+        await this.approveReject({
+          id: this.rejectId,
+          approveRejectReason: this.approveRejectReason
+        });
+        this.rejectOpen = false;
+        this.btnloading = false;
+        successNotify('审批拒绝成功!');
+        //刷新列表
+        this.init();
+      } catch (err) {
+        // this.rejectOpen = false;
+        this.btnloading = false;
+      }
+    },
+    //点击拒绝审批按钮
+    clickApproveReject(row) {
+      this.rejectOpen = true;
+      this.rejectId = row.id;
+    },
+    // 批量审批研发单元
+    allAprovePass() {
+      this.$q
+        .dialog({
+          title: `研发单元批量审批通过确认`,
+          message: `是否确认研发单元批量审批通过？`,
+          ok: '确定',
+          cancel: '取消'
+        })
+        .onOk(async () => {
+          try {
+            this.allAprovePassLoading = true;
+            await this.approvePass({
+              ids: this.rowSelected.map(item => item.id)
+            });
+            successNotify('批量审批通过!');
+            this.allAprovePassLoading = false;
+            //刷新列表
+            this.init();
+          } catch (er) {
+            this.allAprovePassLoading = false;
+          }
+        });
+    },
+    //研发单元审批通过
+    async clickApprovePass(row) {
+      this.$q
+        .dialog({
+          title: `研发单元审批通过确认`,
+          message: `是否确认研发单元审批通过？`,
+          ok: '确定',
+          cancel: '取消'
+        })
+        .onOk(async () => {
+          let rowId = [];
+          rowId.push(row.id);
+          await this.approvePass({ ids: rowId });
+          successNotify('审批通过!');
+          //刷新列表
+          this.init();
+        });
+    },
+    //查询全部跳转到研发单元审批列表
+    jumpToApproveList() {
+      this.$router.push('/rqrmn/rdUnitApprovalList');
+    },
+    findMyApproveList() {
+      this.init();
+    },
+    //翻页
+    pageTableRequest(props) {
+      let { page, rowsPerPage, rowsNumber } = props.pagination;
+      this.pagination.page = page; //页码
+      this.pagination.rowsPerPage = rowsPerPage; //每页数据大小
+      this.pagination.rowsNumber = rowsNumber; //数据库数据总条数
+      this.init();
+    },
+    async init() {
+      this.loading = true;
+      let params = {
+        pageSize: this.pagination.rowsPerPage,
+        pageNum: this.pagination.page,
+        keyword: this.terms,
+        code: 'wait',
+        type: this.approveType ? this.approveType.value : ''
+      };
+      await this.queryMyApproveList(params);
+      // 设置数据总条数
+      this.pagination.rowsNumber = this.myApproveList.count;
+      this.tableData = this.myApproveList.approveList;
+      this.eventNum.todo = this.myApproveList.waitCount
+        ? this.myApproveList.waitCount
+        : 0;
+      this.eventNum.done = this.myApproveList.doneCount
+        ? this.myApproveList.doneCount
+        : 0;
+      this.$emit('input', this.eventNum);
+      this.loading = false;
+    }
+  },
+  created() {
+    this.pagination = this.currentTodoPage;
+    this.init();
+  },
+
+  mounted() {
+    const tempVisibleColumns = this.visibleCols;
+    if (!this.visibleCols || this.visibleCols.length <= 1) {
+      this.saveVisibleColumns(tempVisibleColumns);
+    }
+  }
+};
+</script>
+
+<style lang="stylus" scoped>
+.border-right button:after
+  content: '';
+  border-right: 1px solid #DDDDDD;
+  display: inline-block;
+  height: 14px;
+  width: 1px;
+  position: absolute;
+  right: -5px;
+  top: 11px;
+.border-right .inline-block:last-child button:after
+  display:none !important
+</style>

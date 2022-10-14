@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.csii.com.cn/schema/pe"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.csii.com.cn/schema/pe http://www.csii.com.cn/schema/pe/pe.xsd">
+	<!-- 空责任链 -->
+    <chain id="emptyChain">
+        <commands>
+           <!-- <ref>validationCommand</ref>-->
+            <ref>delegateCommand</ref>
+        </commands>
+    </chain>
+    
+    <!-- 对输入域做基本的类型和长度等的校验 -->
+    <!--<command id="validationCommand" class="com.csii.pe.validation.ext.StyleValidationCommand">
+        <list name="validators">
+            <ref name="option">optionValidator</ref>
+            <ref name="length">lengthValidator</ref>
+            <ref name="pattern">patternValidator</ref>
+        </list>
+    </command>-->
+
+    <!-- 核心业务处理 -->
+    <command id="delegateCommand" class="com.csii.pe.chain.command.DelegateCommand"/>
+
+</config>

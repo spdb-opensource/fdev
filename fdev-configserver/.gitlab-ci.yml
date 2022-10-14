@@ -1,0 +1,42 @@
+image: mirrors.harbor.com/library/fdev-helper:latest
+
+services:
+  - xxx/library/docker:dind-spdb
+
+stages:
+  - maven-build
+  - deploy
+
+variables:
+  CI_REGISTRY: "xxx"
+  CI_REGISTRY_IMAGE: "xxx/library/fdev-configserver"
+  CI_REGISTRY_USER: "dockerimg"
+  CI_REGISTRY_PASSWORD: "xxx"
+
+
+maven-build:
+  image: xxx/library/maven:3-jdk-8
+  stage: maven-build
+  script:
+    - mvn clean package -U -Dmaven.test.skip=true
+    # - mvn sonar:sonar  -Dsonar.host.url=xxx -Dsonar.login=e6195643c4266cb57619e1cf4a62385ff61e49b9 -Dsonar.scm.provider=git
+  artifacts:
+          paths:
+            - target/*.jar
+  only:
+    - /^UAT.*$/
+    - /^SIT.*$/
+    - master
+
+
+ks8-deploy:
+  stage: deploy
+  script:
+    - build_fdev.py
+    - deploy_fdev.py
+  only:
+    - master
+    - /^UAT.*$/
+    - /^SIT.*$/
+#    variables:
+#      - $CI_DEPLOY == "deploy"

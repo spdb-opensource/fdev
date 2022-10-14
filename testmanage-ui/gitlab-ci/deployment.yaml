@@ -1,0 +1,58 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+  namespace: testmanage
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+    spec:
+      hostAliases:
+      - ip: "xxx"
+        hostnames:
+        - "fdev-user.uat.minikube"
+      containers:
+      - name: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+        image: $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
+        env:
+        - name: CI_PROJECT_NAME
+          value: $CI_PROJECT_NAME
+        - name: CI_ENVIRONMENT_SLUG
+          value: $CI_ENVIRONMENT_SLUG
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG-svc
+  namespace: testmanage
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG-ingress
+  namespace: testmanage
+spec:
+  rules:
+  - host: $CI_PROJECT_NAME.$CI_ENVIRONMENT_SLUG.minikube
+    http:
+      paths:
+      - backend:
+          serviceName: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG-svc
+          servicePort: 80
+        path: /

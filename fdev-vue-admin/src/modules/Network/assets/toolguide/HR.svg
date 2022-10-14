@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="66px" height="66px" viewBox="0 0 66 66" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>切片</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#0099C8" offset="0%"></stop>
+            <stop stop-color="#00B8C8" offset="99.523499%"></stop>
+        </linearGradient>
+        <path d="M45.5,0 L45.5,0 C51.2989873,0 56,4.7010127 56,10.5 L56,45.5 L56,45.5 C56,51.2989873 51.2989873,56 45.5,56 C45.5,56 45.5,56 45.5,56 L10.5,56 L10.5,56 C4.70101266,56 0,51.2989873 0,45.5 C0,45.5 0,45.5 0,45.5 L0,10.5 L0,10.5 C0,4.70101428 4.70100582,0 10.5,0 L45.5,0 L45.5,0 Z" id="path-2"></path>
+        <filter x="-9.8%" y="-6.2%" width="119.6%" height="119.6%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0235294118   0 0 0 0 0.388235294   0 0 0 0 0.745098039  0 0 0 0.1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组-3" transform="translate(5.000000, 5.000000)">
+            <g id="路径">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+            </g>
+            <image id="位图" x="8.58333333" y="18" width="38.3333333" height="20" xlink:href="data:image/png;base64,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"></image>
+        </g>
+    </g>
+</svg>

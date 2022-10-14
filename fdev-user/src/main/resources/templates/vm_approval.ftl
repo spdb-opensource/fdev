@@ -1,0 +1,31 @@
+<div>
+    <pre>
+各位老师好：
+     因开发测试需要，申请以下虚拟机切换到（10.112.81-82.0/24）网段，相应信息如下，烦请老师协助处理，谢谢！
+    <br><br>
+</pre>
+<table cellpadding="10" cellspacing="0" border="1">
+    <thead>
+        <tr>
+            <th>使用人</th>
+            <th>虚机用户名</th>
+            <th>虚机名</th>
+            <th>虚机IP</th>
+            <th>策略需求联系人</th>
+            <th>项目组</th>
+            <th>申请日期</th>
+        </tr>
+    </thead>
+    <#list approvalList as approval>
+        <tr>
+            <td>${approval.user.user_name_cn!}</td>
+            <td>dev\\${approval.vm_user_name!}</td>
+            <td>${approval.vm_name!}</td>
+            <td>${approval.vm_ip!}</td>
+            <td>${approval.applicant.user_name_cn!}</td>
+            <td>互联网条线</td>
+            <td>${approval.create_time!}</td>
+        </tr>
+    </#list>
+</table>
+</div>

@@ -1,0 +1,3472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mantis.dao.MantisDao">
+    <resultMap id="AllMantisIssue"
+               type="com.mantis.entity.MantisIssue">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="summary" jdbcType="VARCHAR" property="summary"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="project_id" jdbcType="VARCHAR" property="project_id"/>
+        <result column="project_name" jdbcType="VARCHAR" property="project_name"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="handler" jdbcType="VARCHAR" property="handler"/>
+        <result column="handler_en_name" jdbcType="VARCHAR" property="handler_en_name"/>
+        <result column="handler_id" jdbcType="VARCHAR" property="handler_id"/>
+        <result column="severity" jdbcType="VARCHAR" property="severity"/>
+        <result column="priority" jdbcType="VARCHAR" property="priority"/>
+        <result column="stage" jdbcType="VARCHAR" property="stage"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="flaw_source" jdbcType="VARCHAR" property="flaw_source"/>
+        <result column="system_version" jdbcType="VARCHAR" property="system_version"/>
+        <result column="system_name" jdbcType="VARCHAR" property="system_name"/>
+        <result column="developer" jdbcType="VARCHAR" property="developer"/>
+        <result column="developer_cn" jdbcType="VARCHAR" property="developer_cn"/>
+        <result column="plan_fix_date" jdbcType="VARCHAR" property="plan_fix_date"/>
+        <result column="flaw_type" jdbcType="VARCHAR" property="flaw_type"/>
+        <result column="function_module" jdbcType="VARCHAR" property="function_module"/>
+        <result column="redmine_id" jdbcType="VARCHAR" property="redmine_id"/>
+        <result column="workNo" jdbcType="VARCHAR" property="workNo"/>
+        <result column="reporter" jdbcType="VARCHAR" property="reporter"/>
+        <result column="date_submitted" jdbcType="VARCHAR" property="date_submitted"/>
+        <result column="reporter_en_name" jdbcType="VARCHAR" property="reporter_en_name"/>
+        <result column="planlist_testcase_id" jdbcType="VARCHAR" property="planlist_testcase_id"/>
+        <result column="task_no" jdbcType="VARCHAR" property="task_id"/>
+        <result column="app_name" jdbcType="VARCHAR" property="app_name"/>
+        <result column="num" jdbcType="VARCHAR" property="open_num"/>
+        <result column="solveTime" jdbcType="VARCHAR" property="solve_time"/>
+        <result column="reopen_reason" jdbcType="VARCHAR" property="reopen_reason"/>
+        <result column="audit_flag" jdbcType="VARCHAR" property="auditFlag"/>
+    </resultMap>
+
+    <resultMap id="countReporterMap" type="java.util.Map">
+        <result column="issue_sum" jdbcType="VARCHAR" property="issue_sum"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="workNo" jdbcType="VARCHAR" property="workNo"/>
+    </resultMap>
+
+    <resultMap id="fileMap" type="java.util.Map">
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="filename" jdbcType="VARCHAR" property="filename"/>
+        <result column="file_type" jdbcType="VARCHAR" property="file_type"/>
+        <result column="filesize" jdbcType="VARCHAR" property="filesize"/>
+    </resultMap>
+
+    <select id="queryALLissue" resultMap="AllMantisIssue">
+        select
+        kk.id,
+        kk.stage,
+        kk.reason,
+        tp.description,
+        kk.flaw_source,
+        kk.system_version,
+        kk.system_name,
+        kk.developer,
+        kk.developer_cn,
+        date_format(date_add(from_unixtime(kk.plan_fix_date), interval 1 day),'%Y-%m-%d') as plan_fix_date ,
+        kk.redmine_id,
+        kk.flaw_type,
+        kk.function_module,
+        kk.workNo,
+        kk.planlist_testcase_id,
+        kk.fdev_group_name,
+        kk.app_name,
+        kk.fdev_group_id,
+        bt.summary,
+        bt.priority,
+        bt.severity,
+        bt.status,
+        bt.project_id,
+        ur.realname as reporter,
+        ur.username as reporter_en_name,
+        uh.realname as handler,
+        bt.handler_id,
+        uh.username as handler_en_name,
+        p.name as project_name,
+        from_unixtime(bt.date_submitted,'%Y-%m-%d') as date_submitted,
+        kk.task_no,
+        kk.reopen_reason,
+        st.solveTime,
+        wn.num,
+        kk.audit_flag
+        from
+        (
+        select
+        tt.id,
+        max(case field_id when 3 then value else '' end)stage,
+        max(case field_id when 4 then value else '' end)reason,
+        max(case field_id when 5 then value else '' end)flaw_source,
+        max(case field_id when 6 then value else '' end)system_version,
+        max(case field_id when 7 then value else '' end)system_name,
+        max(case field_id when 65 then value else '' end)developer,
+        max(case field_id when 9 then value else '' end)plan_fix_date,
+        max(case field_id when 10 then value else '' end)redmine_id,
+        max(case field_id when 11 then value else '' end)flaw_type,
+        max(case field_id when 12 then value else '' end)function_module,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 14 then value else '' end)planlist_testcase_id,
+        max(case field_id when 8 then value else '' end)developer_cn,
+        max(case field_id when 21 then value else '' end)fdev_group_name,
+        max(case field_id when 72 then value else '' end)app_name,
+        max(case field_id when 73 then value else '' end)fdev_group_id,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 81 then value else '' end)reopen_reason,
+        tt.audit_flag
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value,
+        b.audit_flag
+        from
+        (select * from mantis_bug_table
+        <where>
+            <if test="env != null and env !=''">
+                and env = #{env}
+            </if>
+            <if test="project_name != null and project_name != ''">
+                and project_id = (select id from mantis_project_table where name = #{project_name})
+            </if>
+            <if test="status != null and status != '' ">
+                and status = #{status}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                AND from_unixtime(date_submitted,'%Y-%m-%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND from_unixtime(date_submitted,'%Y-%m-%d') &lt;= #{endDate}
+            </if>
+            <if test="includeCloseFlag == '1'.toString()">
+                and status != '30'
+                and status != '90'
+            </if>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="auditFlag != null and auditFlag != ''">
+                and audit_flag = #{auditFlag}
+            </if>
+        </where>
+        ) b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+            (s.field_id = p.field_id and b.id = s.bug_id)
+            <where>
+                <if test="workNo != null and workNo != '' ">
+                    AND b.id in (select bug_id from mantis_custom_field_string_table where field_id = 13 and value = #{workNo})
+                </if>
+                <if test="groupIds != null and groupIds.size() > 0">
+                    AND b.id in (select bug_id from mantis_custom_field_string_table where field_id = 73 and value in
+                        <foreach collection="groupIds" item="groupId" open="(" close=")" separator=",">
+                            #{groupId}
+                        </foreach>
+                    )
+                </if>
+                <if test="app_name != null and app_name != '' ">
+                    AND b.id in (select bug_id from mantis_custom_field_string_table where field_id = 72 and find_in_set(#{app_name}, value))
+                </if>
+                <if test="redmine_id != null and redmine_id != '' ">
+                    AND b.id in (select bug_id from mantis_custom_field_string_table where field_id = 10 and value = #{redmine_id})
+                </if>
+                <if test="task_no != null and task_no != ''">
+                    AND b.id in (select bug_id from mantis_custom_field_string_table where field_id = 19 and value = #{task_no})
+                </if>
+            </where>
+            ) tt
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_user_table uh
+        on
+        uh.id = bt.handler_id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        left join
+        (select a.id as id, (b.fixTime-a.openTime) as solveTime from
+            (select distinct id, date_submitted as openTime from mantis_bug_table
+            where id
+            in
+            (select id from mantis_bug_table where id
+            in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 90)
+            and id not in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 40))
+            ) a
+            join
+            (select distinct bug_id, max(date_modified) as fixTime from mantis_bug_history_table
+            where field_name = 'status' and new_value = 80 and bug_id
+            in
+            (select id from mantis_bug_table where id
+            in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 90)
+            and id not in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 40))
+            group by bug_id) b
+            on a.id = b.bug_id) st
+        on kk.id = st.id
+        left join
+            (select bt.id, ifnull(count(bt.id),0) as num from mantis_bug_table bt
+            left join mantis_bug_history_table h on bt.id = h.bug_id
+            where h.new_value = '50' group by bt.id
+            ) wn
+        on
+            wn.id = kk.id
+        <where>
+            <if test="reporter != null and reporter != '' ">
+                and ur.username = #{reporter}
+            </if>
+            <if test="handler != null and handler != '' ">
+                and uh.username = #{handler}
+            </if>
+            <if test="openTimes =='1'.toString()">
+                and wn.num = 1
+                and bt.status = 90
+            </if>
+            <if test="openTimes == '2'.toString()">
+                and wn.num &gt;=2
+            </if>
+        </where>
+        ORDER BY kk.id desc
+        <if test="page_size != 0">
+            limit #{start_page},#{page_size}
+        </if>
+    </select>
+
+
+    <select id="count" resultType="java.lang.Integer">
+        select
+        count(distinct bt.id)
+        from
+        (
+        select
+        tt.id,
+        max(case field_id when 3 then value else '' end)stage,
+        max(case field_id when 4 then value else '' end)reason,
+        max(case field_id when 5 then value else '' end)flaw_source,
+        max(case field_id when 6 then value else '' end)system_version,
+        max(case field_id when 7 then value else '' end)system_name,
+        max(case field_id when 65 then value else '' end)developer,
+        max(case field_id when 9 then value else '' end)plan_fix_date,
+        max(case field_id when 10 then value else '' end)redmine_id,
+        max(case field_id when 11 then value else '' end)flaw_type,
+        max(case field_id when 12 then value else '' end)function_module,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 14 then value else '' end)planlist_testcase_id,
+        max(case field_id when 8 then value else '' end)developer_cn,
+        max(case field_id when 21 then value else '' end)fdev_group_name,
+        max(case field_id when 72 then value else '' end)app_name,
+        max(case field_id when 73 then value else '' end)fdev_group_id,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 81 then value else '' end)reopen_reason
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        (select * from mantis_bug_table
+        <where>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                 and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+            <if test="project_name != null and project_name != ''">
+                and project_id = (select id from mantis_project_table where name = #{project_name})
+            </if>
+            <if test="status != null and status != '' ">
+                and status = #{status}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                AND from_unixtime(date_submitted,'%Y-%m-%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND from_unixtime(date_submitted,'%Y-%m-%d') &lt;= #{endDate}
+            </if>
+            <if test="includeCloseFlag == '1'.toString()">
+                and status != '30'
+                and status != '90'
+            </if>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="auditFlag != null and auditFlag != ''">
+                and audit_flag = #{auditFlag}
+            </if>
+        </where>
+        ) b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+        (s.field_id = p.field_id and b.id = s.bug_id)
+        <where>
+            <if test="workNo != null and workNo != '' ">
+                AND b.id in (select bug_id from mantis_custom_field_string_table where field_id = 13 and value = #{workNo})
+            </if>
+            <if test="groupIds != null and groupIds.size() > 0">
+                AND b.id in (select bug_id from mantis_custom_field_string_table where field_id = 73 and value in
+                <foreach collection="groupIds" item="groupId" open="(" close=")" separator=",">
+                    #{groupId}
+                </foreach>
+                )
+            </if>
+            <if test="app_name != null and app_name != '' ">
+                AND b.id in (select bug_id from mantis_custom_field_string_table where field_id = 72 and find_in_set(#{app_name}, value))
+            </if>
+            <if test="redmine_id != null and redmine_id != '' ">
+                AND b.id in (select bug_id from mantis_custom_field_string_table where field_id = 10 and value = #{redmine_id})
+            </if>
+            <if test="task_no != null and task_no != ''">
+                AND b.id in (select bug_id from mantis_custom_field_string_table where field_id = 19 and value = #{task_no})
+            </if>
+        </where>
+        ) tt
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_user_table uh
+        on
+        uh.id = bt.handler_id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        left join
+        (select a.id as id, (b.fixTime-a.openTime) as solveTime from
+        (select distinct id, date_submitted as openTime from mantis_bug_table
+        where id
+        in
+        (select id from mantis_bug_table where id
+        in
+        (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+        bt.id = h.bug_id and h.field_name='status' and h.new_value = 90)
+        and id not in
+        (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+        bt.id = h.bug_id and h.field_name='status' and h.new_value = 40))
+        ) a
+        join
+        (select distinct bug_id, max(date_modified) as fixTime from mantis_bug_history_table
+        where field_name = 'status' and new_value = 80 and bug_id
+        in
+        (select id from mantis_bug_table where id
+        in
+        (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+        bt.id = h.bug_id and h.field_name='status' and h.new_value = 90)
+        and id not in
+        (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+        bt.id = h.bug_id and h.field_name='status' and h.new_value = 40))
+        group by bug_id) b
+        on a.id = b.bug_id) st
+        on kk.id = st.id
+        left join
+            (select bt.id, ifnull(count(bt.id),0) as num from mantis_bug_table bt
+            left join mantis_bug_history_table h on bt.id = h.bug_id
+            where h.new_value = '50' group by bt.id
+            ) wn
+        on
+        wn.id = kk.id
+        <where>
+            <if test="reporter != null and reporter != '' ">
+                and ur.username = #{reporter}
+            </if>
+            <if test="handler != null and handler != '' ">
+                and uh.username = #{handler}
+            </if>
+            <if test="openTimes =='1'.toString()">
+                and wn.num = 1
+                and bt.status = 90
+            </if>
+            <if test="openTimes == '2'.toString()">
+                and wn.num &gt;=2
+            </if>
+        </where>
+    </select>
+
+
+    <select id="countReporterSum" resultMap="countReporterMap">
+        select
+        count(kk.id) as issue_sum
+        ,ur.username as username
+        from
+        (
+        select
+        tt.id,
+        max(case field_id when 5 then value else '' end)flaw_source
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        mantis_bug_table b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+        (s.field_id = p.field_id
+        and b.id = s.bug_id)
+        ) tt
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        <where>
+            <if test="startDate != null and startDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &lt;= #{endDate}
+            </if>
+            AND kk.flaw_source not in ('其他原因','环境问题','数据问题')
+            AND bt.status != 30
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+        </where>
+        group by ur.id;
+    </select>
+
+    <select id="queryIssueFiles" resultMap="fileMap">
+        SELECT
+        content,
+        filename,
+        file_type,
+        filesize
+        FROM
+        mantis_bug_file_table
+        where
+        bug_id = #{id};
+    </select>
+
+    <select id="queryIssueDetail" resultMap="AllMantisIssue">
+        select
+        kk.id,
+        kk.stage,
+        tp.description,
+        kk.reason,
+        kk.flaw_source,
+        kk.system_version,
+        kk.system_name,
+        kk.developer,
+        kk.developer_cn,
+        date_format(date_add(from_unixtime(kk.plan_fix_date), interval 1 day),'%Y-%m-%d') as plan_fix_date ,
+        kk.redmine_id,
+        kk.flaw_type,
+        kk.function_module,
+        kk.workNo,
+        kk.planlist_testcase_id,
+        kk.fdev_group_name,
+        kk.app_name,
+        bt.summary,
+        kk.task_no,
+        kk.reopen_reason,
+        bt.priority,
+        bt.severity,
+        bt.status,
+        bt.project_id,
+        ur.realname as reporter,
+        ur.username as reporter_en_name,
+        uh.realname as handler,
+        bt.handler_id,
+        uh.username as handler_en_name,
+        p.name as project_name,
+        from_unixtime(bt.date_submitted,'%Y-%m-%d') as date_submitted,
+        st.solveTime,
+        wn.num
+        from
+        (
+        select tt.id,
+        max(case field_id when 3 then value else '' end)stage,
+        max(case field_id when 4 then value else '' end)reason,
+        max(case field_id when 5 then value else '' end)flaw_source,
+        max(case field_id when 6 then value else '' end)system_version,
+        max(case field_id when 7 then value else '' end)system_name,
+        max(case field_id when 65 then value else '' end)developer,
+        max(case field_id when 9 then value else '' end)plan_fix_date,
+        max(case field_id when 10 then value else '' end)redmine_id,
+        max(case field_id when 11 then value else '' end)flaw_type,
+        max(case field_id when 12 then value else '' end)function_module,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 14 then value else '' end)planlist_testcase_id,
+        max(case field_id when 8 then value else '' end)developer_cn,
+        max(case field_id when 21 then value else '' end)fdev_group_name,
+        max(case field_id when 72 then value else '' end)app_name,
+        max(case field_id when 73 then value else '' end)fdev_group_id,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 81 then value else '' end)reopen_reason
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        (select * from mantis_bug_table where id = #{id}) b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+        (s.field_id = p.field_id
+        and b.id = s.bug_id)
+        ) tt
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_user_table uh
+        on
+        uh.id = bt.handler_id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        left join
+        (select a.id as id, (b.fixTime-a.openTime) as solveTime from
+            (select distinct id, date_submitted as openTime from mantis_bug_table
+            where id
+            in
+            (select id from mantis_bug_table where id
+            in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 90)
+            and id not in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 40))
+            ) a
+            join
+            (select distinct bug_id, max(date_modified) as fixTime from mantis_bug_history_table
+            where field_name = 'status' and new_value = 80 and bug_id
+            in
+            (select id from mantis_bug_table where id
+            in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 90)
+            and id not in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 40))
+            group by bug_id) b
+            on a.id = b.bug_id) st
+        on kk.id = st.id
+        left join
+        (SELECT
+        b.id, b.fdevGroupId, b.num
+        FROM
+        (
+        SELECT
+        count(a.id) as num, a.id, a.fdevGroupId
+        FROM
+        (
+        SELECT
+        g.id, g.fdevGroupId
+        FROM
+        (
+        SELECT
+        kk.id, kk.fdevGroupId
+        FROM
+        (
+        SELECT
+        tt.id,
+        max(case field_id when 73 then value else '' end) as fdevGroupId
+        FROM
+        (
+        SELECT
+        b.id,
+        p.field_id,
+        s.value
+        FROM
+        mantis_bug_table b
+        LEFT JOIN
+        mantis_custom_field_project_table p
+        ON
+        p.project_id = b.project_id
+        LEFT JOIN
+        mantis_custom_field_string_table s
+        ON
+        (
+        s.field_id = p.field_id
+        AND
+        b.id = s.bug_id
+        )
+        WHERE
+        s.value != ''
+        ) tt
+        GROUP BY
+        id
+        ) kk
+        LEFT JOIN
+        mantis_bug_table bt
+        ON
+        kk.id = bt.id
+        LEFT JOIN
+        mantis_project_table p
+        ON
+        bt.project_id = p.id
+        where
+        kk.fdevGroupId != ''
+        ) g
+        LEFT JOIN
+        mantis_bug_history_table h
+        ON
+        g.id = h.bug_id
+        WHERE
+        h.field_name = 'status'
+        AND
+        h.new_value = '50'
+        ) a
+        GROUP BY
+        a.id, a.fdevGroupId
+        ) b
+        ) wn
+        on
+        wn.id = kk.id
+    </select>
+    <select id="queryIssueByPlanResultId" resultMap="AllMantisIssue">
+        select
+        kk.id,
+        kk.stage,
+        kk.reason,
+        tp.description,
+        kk.flaw_source,
+        kk.system_version,
+        kk.system_name,
+        kk.developer,
+        kk.developer_cn,
+        date_format(date_add(from_unixtime(kk.plan_fix_date), interval 1 day),'%Y-%m-%d') as plan_fix_date ,
+        kk.redmine_id,
+        kk.flaw_type,
+        kk.function_module,
+        kk.workNo,
+        kk.planlist_testcase_id,
+        bt.summary,
+        bt.priority,
+        bt.severity,
+        bt.status,
+        bt.project_id,
+        ur.realname as reporter,
+        ur.username as reporter_en_name,
+        uh.realname as handler,
+        bt.handler_id,
+        uh.username as handler_en_name,
+        p.name as project_name,
+        from_unixtime(bt.date_submitted,'%Y-%m-%d') as date_submitted
+        from
+        (
+        select
+        tt.id,
+        max(case field_id when 3 then value else '' end)stage,
+        max(case field_id when 4 then value else '' end)reason,
+        max(case field_id when 5 then value else '' end)flaw_source,
+        max(case field_id when 6 then value else '' end)system_version,
+        max(case field_id when 7 then value else '' end)system_name,
+        max(case field_id when 65 then value else '' end)developer,
+        max(case field_id when 9 then value else '' end)plan_fix_date,
+        max(case field_id when 10 then value else '' end)redmine_id,
+        max(case field_id when 11 then value else '' end)flaw_type,
+        max(case field_id when 12 then value else '' end)function_module,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 14 then value else '' end)planlist_testcase_id,
+        max(case field_id when 8 then value else '' end)developer_cn
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        mantis_bug_table b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+        (s.field_id = p.field_id
+        and b.id = s.bug_id) where b.id in (select bug_id from mantis_custom_field_string_table where field_id = '14' and value = #{id})
+        ) tt
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_user_table uh
+        on
+        uh.id = bt.handler_id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        <where>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString()  ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+        </where>
+    </select>
+
+
+    <select id="exportMantis" resultMap="AllMantisIssue">
+        select
+        kk.id,
+        kk.stage,
+        kk.reason,
+        tp.description,
+        kk.flaw_source,
+        kk.system_version,
+        kk.system_name,
+        kk.developer,
+        kk.developer_cn,
+        date_format(date_add(from_unixtime(kk.plan_fix_date), interval 1 day),'%Y-%m-%d') as plan_fix_date ,
+        kk.redmine_id,
+        kk.flaw_type,
+        kk.function_module,
+        kk.workNo,
+        kk.reopen_reason,
+        kk.planlist_testcase_id,
+        kk.fdev_group_name,
+        kk.app_name,
+        bt.summary,
+        bt.priority,
+        bt.severity,
+        bt.status,
+        bt.project_id,
+        ur.realname as reporter,
+        ur.username as reporter_en_name,
+        uh.realname as handler,
+        bt.handler_id,
+        uh.username as handler_en_name,
+        p.name as project_name,
+        from_unixtime(bt.date_submitted,'%Y-%m-%d') as date_submitted
+        from
+        (
+        select tt.id,
+        max(case field_id when 3 then value else '' end)stage,
+        max(case field_id when 4 then value else '' end)reason,
+        max(case field_id when 5 then value else '' end)flaw_source,
+        max(case field_id when 6 then value else '' end)system_version,
+        max(case field_id when 7 then value else '' end)system_name,
+        max(case field_id when 65 then value else '' end)developer,
+        max(case field_id when 9 then value else '' end)plan_fix_date,
+        max(case field_id when 10 then value else '' end)redmine_id,
+        max(case field_id when 11 then value else '' end)flaw_type,
+        max(case field_id when 12 then value else '' end)function_module,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 14 then value else '' end)planlist_testcase_id,
+        max(case field_id when 8 then value else '' end)developer_cn,
+        max(case field_id when 21 then value else '' end)fdev_group_name,
+        max(case field_id when 72 then value else '' end)app_name,
+        max(case field_id when 73 then value else '' end)fdev_group_id,
+        max(case field_id when 81 then value else '' end)reopen_reason
+        from(
+            select
+                b.id,
+                p.field_id,
+                s.value
+            from
+            mantis_bug_table b
+            left join
+            mantis_custom_field_project_table p
+            on
+            p.project_id = b.project_id
+            left join
+            mantis_custom_field_string_table s
+            on
+            (s.field_id = p.field_id
+            and b.id = s.bug_id)
+            ) tt
+            group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_user_table uh
+        on
+        uh.id = bt.handler_id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        <where>
+            <if test="env != null and env !=''">
+                and bt.env = #{env}
+            </if>
+            <if test="reporter != null and reporter != '' ">
+                and ur.username = #{reporter}
+            </if>
+            <if test="handler != null and handler != '' ">
+                and uh.username = #{handler}
+            </if>
+            <if test="groupIds != null and groupIds.size() > 0">
+                and kk.fdev_group_id in
+                <foreach collection="groupIds" item="groupId" open="(" close=")" separator=",">
+                    #{groupId}
+                </foreach>
+            </if>
+            <if test="app_name != null and app_name != '' ">
+                and kk.app_name = #{app_name}
+            </if>
+            <if test="redmine_id != null and redmine_id != '' ">
+                and kk.redmine_id = #{redmine_id}
+            </if>
+            <if test="status != null and status != '' ">
+                and bt.status = #{status}
+            </if>
+            <if test="workNo != null and workNo != '' ">
+                and kk.workNo = #{workNo}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &lt;= #{endDate}
+            </if>
+            <if test="includeCloseFlag == '1'.toString()">
+                and bt.status != '30'
+                and bt.status != '90'
+            </if>
+            <if test="project_name != null and project_name != ''">
+                and p.name = #{project_name}
+            </if>
+            <if test="auditFlag != null and auditFlag != ''">
+                and bt.audit_flag = #{auditFlag}
+            </if>
+        </where>
+        ORDER BY kk.id desc
+    </select>
+
+    <!-- fdev 查询用 用户维度 查询用户缺陷信息  分页限制-->
+    <select id="queryFuserMantis" resultMap="AllMantisIssue">
+        select
+        kk.id,
+        kk.stage,
+        kk.reason,
+        tp.description,
+        kk.flaw_source,
+        kk.system_version,
+        kk.system_name,
+        kk.developer,
+        kk.developer_cn,
+        date_format(date_add(from_unixtime(kk.plan_fix_date), interval 1 day),'%Y-%m-%d') as plan_fix_date ,
+        kk.redmine_id,
+        kk.flaw_type,
+        kk.function_module,
+        kk.workNo,
+        kk.planlist_testcase_id,
+        bt.summary,
+        bt.priority,
+        bt.severity,
+        bt.status,
+        bt.project_id,
+        ur.realname as reporter,
+        ur.username as reporter_en_name,
+        uh.realname as handler,
+        bt.handler_id,
+        uh.username as handler_en_name,
+        p.name as project_name,
+        from_unixtime(bt.date_submitted,'%Y-%m-%d') as date_submitted
+        from
+        (
+        select
+        tt.id,
+        max(case field_id when 3 then value else '' end)stage,
+        max(case field_id when 4 then value else '' end)reason,
+        max(case field_id when 5 then value else '' end)flaw_source,
+        max(case field_id when 6 then value else '' end)system_version,
+        max(case field_id when 7 then value else '' end)system_name,
+        max(case field_id when 65 then value else '' end)developer,
+        max(case field_id when 9 then value else '' end)plan_fix_date,
+        max(case field_id when 10 then value else '' end)redmine_id,
+        max(case field_id when 11 then value else '' end)flaw_type,
+        max(case field_id when 12 then value else '' end)function_module,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 14 then value else '' end)planlist_testcase_id,
+        max(case field_id when 8 then value else '' end)developer_cn
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        mantis_bug_table b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+        (s.field_id = p.field_id
+        and b.id = s.bug_id)
+        ) tt
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_user_table uh
+        on
+        uh.id = bt.handler_id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        where
+        <if test="env == 'sit'.toString()">
+            and project_id = 22
+        </if>
+        <if test="env == 'sit-new'.toString() ">
+            and project_id = 28
+        </if>
+        <if test="env == 'rel'.toString() ">
+            and project_id = 23
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and project_id = 30
+        </if>
+        <if test="env == 'pro'.toString()">
+            and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+        </if>
+        <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+        AND
+        find_in_set(uh.username, #{handlers})
+        limit #{start_page},#{page_size}
+    </select>
+
+    <!--  用户维度 查询用户缺陷信息 总数分页用 -->
+    <select id="queryFuserMantisCount" resultType="Integer">
+        select
+        count(bt.id)
+        from
+        mantis_bug_table bt
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_user_table uh
+        on
+        uh.id = bt.handler_id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        <where>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                  and project_id = 30
+               </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+            AND
+            find_in_set(uh.username, #{handlers})
+        </where>
+    </select>
+
+    <!--用户维度 查询用户缺陷信息 全量数据-->
+    <select id="queryFuserMantisAll" resultMap="AllMantisIssue">
+        select
+        kk.id,
+        kk.stage,
+        kk.reason,
+        tp.description,
+        kk.flaw_source,
+        kk.system_version,
+        kk.system_name,
+        kk.developer,
+        kk.developer_cn,
+        date_format(date_add(from_unixtime(kk.plan_fix_date), interval 1 day),'%Y-%m-%d') as plan_fix_date ,
+        kk.redmine_id,
+        kk.app_name,
+        kk.flaw_type,
+        kk.function_module,
+        kk.workNo,
+        kk.task_no,
+        kk.reopen_reason,
+        kk.planlist_testcase_id,
+        bt.summary,
+        bt.priority,
+        bt.severity,
+        bt.status,
+        bt.audit_flag,
+        bt.project_id,
+        ur.realname as reporter,
+        ur.username as reporter_en_name,
+        uh.realname as handler,
+        bt.handler_id,
+        uh.username as handler_en_name,
+        p.name as project_name,
+        from_unixtime(bt.date_submitted,'%Y-%m-%d') as date_submitted,
+        st.solveTime,
+        wn.num
+        from
+        (
+        select
+        tt.id,
+        max(case field_id when 3 then value else '' end)stage,
+        max(case field_id when 4 then value else '' end)reason,
+        max(case field_id when 5 then value else '' end)flaw_source,
+        max(case field_id when 6 then value else '' end)system_version,
+        max(case field_id when 7 then value else '' end)system_name,
+        max(case field_id when 65 then value else '' end)developer,
+        max(case field_id when 9 then value else '' end)plan_fix_date,
+        max(case field_id when 10 then value else '' end)redmine_id,
+        max(case field_id when 11 then value else '' end)flaw_type,
+        max(case field_id when 12 then value else '' end)function_module,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 14 then value else '' end)planlist_testcase_id,
+        max(case field_id when 8 then value else '' end)developer_cn,
+        max(case field_id when 72 then value else '' end)app_name,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 81 then value else '' end)reopen_reason
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        (select * from mantis_bug_table
+        <where>
+            <if test="env != null">
+                and env = #{env}
+            </if>
+            <if test="includeCloseFlag == '1'.toString()">
+                and status != '30'
+                and status != '90'
+            </if>
+        </where>) b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+        (s.field_id = p.field_id
+        and b.id = s.bug_id)
+        WHERE
+        b.id
+        IN
+            (
+                SELECT bt.id FROM mantis_bug_table bt
+                LEFT JOIN mantis_user_table uh ON uh.id = bt.handler_id
+                WHERE find_in_set(uh.username, #{handlers})
+            UNION
+                SELECT bt.id FROM mantis_bug_table bt
+                LEFT JOIN mantis_custom_field_project_table p ON p.project_id = bt.project_id
+                LEFT JOIN mantis_custom_field_string_table s ON
+                (s.field_id = p.field_id
+                and bt.id = s.bug_id)
+                WHERE p.field_id = 65 AND s.value = #{handlers}
+            )
+        ) tt
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_user_table uh
+        on
+        uh.id = bt.handler_id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        left join
+        (select a.id as id, (b.fixTime-a.openTime) as solveTime from
+            (select distinct id, date_submitted as openTime from mantis_bug_table
+            where id
+            in
+            (select id from mantis_bug_table where id
+            in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 90)
+            and id not in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 40))
+            ) a
+            join
+            (select distinct bug_id, max(date_modified) as fixTime from mantis_bug_history_table
+            where field_name = 'status' and new_value = 80 and bug_id
+            in
+            (select id from mantis_bug_table where id
+            in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 90)
+            and id not in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 40))
+            group by bug_id) b
+            on a.id = b.bug_id) st
+        on kk.id = st.id
+        left join
+            (select bt.id, ifnull(count(bt.id),0) as num from mantis_bug_table bt
+            left join mantis_bug_history_table h on bt.id = h.bug_id
+            where h.new_value = '50' group by bt.id
+            ) wn
+        on wn.id = kk.id
+        order by kk.id desc
+    </select>
+
+    <select id="countWorkOrderSum" resultMap="countReporterMap">
+        select
+        count(bt.id) as issue_sum
+        ,kk.workNo as workNo
+        from mantis_bug_table bt,
+        (
+        select tt.id,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 5 then value else '' end)flaw_source
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        <if test="env == 'sit'.toString()">
+            and project_id = 22
+        </if>
+        <if test="env == 'sit-new'.toString() ">
+            and project_id = 28
+        </if>
+        <if test="env == 'rel'.toString() ">
+            and project_id = 23
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and project_id = 30
+        </if>
+        <if test="env == 'pro'.toString()">
+            and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+        </if>
+        <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+        and s.field_id = p.field_id
+        and b.id = s.bug_id) tt
+        group by id
+        ) kk
+        <where>
+            kk.id = bt.id
+            AND
+            kk.flaw_source not in ('其他原因','环境问题','数据问题')
+            <if test="startDate != null and startDate !='' ">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate !='' ">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &lt;= #{endDate}
+            </if>
+        </where>
+        group by kk.workNo;
+    </select>
+
+    <select id="queryWorkOrderIssues" resultType="java.util.Map">
+        select
+        sum(a.issueNum) as issueNum,
+        sum(a.solveIssue) as solveIssue,
+        sum(a.unSolveIssue) as unSolveIssue,
+        sum(a.developMantis) as developMantis,
+        sum(a.currentMantisSum) as currentMantisSum
+        from
+        (select
+        count(kk.id) as issueNum,
+        sum(if(bt.status in (30,90),1,0)) as solveIssue,
+        sum(if(bt.status in (10,20,50,80),1,0)) as unSolveIssue,
+        sum(if(
+        (from_unixtime(bt.date_submitted,'%Y-%m-%d') between #{startDate} and #{endDate} )
+        AND
+        (kk.flawSource = '需规问题'
+        OR
+        kk.flawSource = '功能实现不完整'
+        OR
+        kk.flawSource = '功能实现错误'),1,0)) as developMantis,
+        sum(if(
+        from_unixtime(bt.date_submitted,'%Y-%m-%d') between #{startDate} and #{endDate}
+        ,1,0)) as currentMantisSum
+        from
+        (
+        select
+        tt.id,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 5 then value else '' end)flawSource
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        mantis_bug_table b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+        (s.field_id = p.field_id
+        and b.id = s.bug_id)
+        ) tt
+        WHERE
+        tt.field_id is not null
+        AND
+        tt.value is not null
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        <where>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                  and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+            and
+            kk.workNo in (${workNo})
+        </where>
+        group by kk.workNo) a
+    </select>
+
+    <select id="queryOrderUnderwayIssues" resultType="java.util.Map">
+        select
+        count(bt.id) as issueNum
+        from
+        mantis_bug_table bt,
+        (
+        select tt.id,
+        max(case field_id when 13 then value else '' end)workNo
+        from(
+        select b.id,p.field_id,s.value
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id) tt
+        group by id
+        ) kk ,
+        mantis_project_table p,
+        mantis_bug_text_table tp
+        where
+        kk.id = bt.id
+        and
+        bt.project_id = p.id
+        and
+        p.id not in (1,5,20)
+        and
+        bt.id = tp.id
+        and
+        bt.status in (50,80,90)
+        and
+        kk.workNo = #{workNo}
+        group by kk.workNo
+    </select>
+
+    <resultMap id="countMantis" type="Map">
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="count" jdbcType="VARCHAR" property="count"/>
+    </resultMap>
+
+    <select id="countMantisByWorkNo" resultMap="countMantis">
+        select
+        bt.status as status,
+        count(*) as count
+        from
+        (
+        select
+        tt.id,
+        max(case field_id when 13 then value else '' end)workNo
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        mantis_bug_table b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+        (s.field_id = p.field_id
+        and b.id = s.bug_id)
+        where
+        b.id in (
+        select b.id
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id and s.field_id = 13 and s.value = #{workNo})
+        ) tt
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        <where>
+            kk.id = bt.id
+            AND
+            bt.project_id = p.id
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                  and project_id = 30
+               </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+            AND
+            kk.workNo = #{workNo}
+            GROUP BY
+            bt.status
+        </where>
+    </select>
+
+    <!--根据用户和选择时间查缺陷总数，未修复缺陷数，当前该用户新建缺陷数-->
+    <select id="queryIssueByTimeUser" resultType="Map">
+        SELECT
+        kk.dayIssueNum as issueNum,
+        kk.unSolveIssue,
+        kk.dayIssueNum
+        FROM
+        (
+        SELECT
+        #{workNo} as workNo,
+        count(kk.id) as dayIssueNum,
+        sum(if(bt.status in (10,20,50,80),1,0)) as unSolveIssue
+        FROM
+        (
+        SELECT
+        tt.id,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 5 then value else '' end)flaw_source
+        FROM(
+        SELECT
+        b.id,
+        p.field_id,
+        s.value
+        FROM
+        mantis_bug_table b
+        LEFT JOIN
+        mantis_custom_field_project_table p
+        ON
+        p.project_id = b.project_id
+        LEFT JOIN
+        mantis_custom_field_string_table s
+        ON
+        (
+        s.field_id = p.field_id
+        AND
+        b.id = s.bug_id
+        )
+        ) tt
+        GROUP BY
+        id
+        ) kk
+        LEFT JOIN
+        mantis_bug_table bt
+        ON
+        kk.id = bt.id
+        LEFT JOIN
+        mantis_project_table p
+        ON
+        bt.project_id = p.id
+        LEFT JOIN
+        mantis_user_table u
+        ON
+        bt.reporter_id = u.id
+        <where>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                  and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+            AND
+            kk.flaw_source not in ('其他原因','环境问题','数据问题')
+            AND
+            kk.workNo = #{workNo}
+            AND
+            u.username = #{userEnName}
+            AND
+            from_unixtime(bt.date_submitted,'%Y-%m-%d') between #{startDate} and #{endDate}
+        </where>
+        GROUP BY
+        kk.workNo
+        ) kk
+    </select>
+
+
+    <!--根据工单号列表查缺陷详情-->
+    <select id="countIssueDetailByOrderNos" resultType="Map">
+        SELECT
+        workNo,
+        sum(if(find_in_set('需规问题', i.issue_flaw),1,0)) as rqrRuleNum,
+        sum(if(find_in_set('功能实现不完整', i.issue_flaw),1,0)) as funcLackNum,
+        sum(if(find_in_set('功能实现错误', i.issue_flaw),1,0)) as funcErrNum,
+        sum(if(find_in_set('业务需求问题', i.issue_flaw),1,0)) as rqrNum,
+        sum(if(find_in_set('历史遗留问题', i.issue_flaw),1,0)) as historyNum,
+        sum(if(find_in_set('优化建议', i.issue_flaw),1,0)) as optimizeNum,
+        sum(if(find_in_set('后台问题', i.issue_flaw),1,0)) as backNum,
+        sum(if(find_in_set('打包问题', i.issue_flaw),1,0)) as packageNum,
+        sum(if(find_in_set('兼容性异常', i.issue_flaw),1,0)) as compatibilityNum,
+        sum(if(find_in_set('数据问题', i.issue_flaw),1,0)) as dataNum,
+        sum(if(find_in_set('环境问题', i.issue_flaw),1,0)) as envNum,
+        sum(if(find_in_set('其他原因', i.issue_flaw),1,0)) as otherNum,
+        sum(if(i.status in (30,40,90),1,0)) as solveIssue,
+        sum(if(i.status in (10,20,50,80),1,0)) as unSolveIssue,
+        group_concat(distinct i.developer_cn) as developer_cn
+        FROM
+        (
+        SELECT
+        kk.id, kk.workNo, kk.issue_flaw, bt.status, kk.developer_cn, kk.groupId
+        FROM
+        (
+            select * from (
+                SELECT
+                    tt.id,
+                    max(case field_id when 13 then value else '' end) as workNo,
+                    max(case field_id when 5 then value else '' end) as issue_flaw,
+                    max(case field_id when 8 then value else '' end) as developer_cn,
+                    max(case field_id when 73 then value else '' end) as groupId
+                FROM(
+                    SELECT
+                        b.id,
+                        p.field_id,
+                        s.value
+                    FROM
+                    mantis_bug_table b
+                    LEFT JOIN
+                    mantis_custom_field_project_table p
+                    ON
+                    p.project_id = b.project_id
+                    LEFT JOIN
+                    mantis_custom_field_string_table s
+                    ON
+                    (
+                        s.field_id = p.field_id
+                        AND
+                        b.id = s.bug_id
+                    )
+                    where b.id in
+                    (
+                        select id from mantis_bug_table
+                        where env = #{env}
+                        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+                            and from_unixtime(date_submitted,'%Y-%m-%d') between #{startDate} and #{endDate}
+                        </if>
+                    )
+                ) tt
+                GROUP BY id
+            ) d
+            where d.workNo is not null and d.workNo !=''
+            <if test="groupIds !=null and groupIds.size() > 0">
+                and d.groupId in
+                <foreach collection="groupIds" item="group" open="(" close=")" separator=",">
+                    #{group}
+                </foreach>
+            </if>
+            <if test="workNos != null and workNos !=''">
+                and d.workNo in (${workNos})
+            </if>
+        ) kk
+        LEFT JOIN
+        mantis_bug_table bt
+        ON
+        kk.id = bt.id
+        ) i
+        GROUP BY
+        workNo
+    </select>
+
+    <select id="queryGroupIssueInfo" resultType="Map">
+        SELECT
+        b.fdev_group_id as fdev_group_id,
+        a.id as validCountMantis,
+        b.id as countMantis
+        FROM
+        (
+        SELECT
+        IFNULL(count(kk.id), 0) as id, kk.fdev_group_id
+        FROM
+        (
+        SELECT
+        tt.id,
+        max(case field_id when 5 then value else '' end) as flaw_source,
+        max(case field_id when 73 then value else '' end)as fdev_group_id
+        FROM(
+        SELECT
+        b.id,
+        p.field_id,
+        s.value
+        FROM
+        mantis_bug_table b
+        LEFT JOIN
+        mantis_custom_field_project_table p
+        ON
+        p.project_id = b.project_id
+        LEFT JOIN
+        mantis_custom_field_string_table s
+        ON
+        (
+        s.field_id = p.field_id
+        AND
+        b.id = s.bug_id
+        )) tt
+        GROUP BY
+        id) kk
+        LEFT JOIN
+        mantis_bug_table bt
+        ON
+        kk.id = bt.id
+        LEFT JOIN
+        mantis_project_table p
+        ON
+        bt.project_id = p.id
+        <where>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+            AND
+            kk.flaw_source not in ('其他原因','环境问题','数据问题')
+            <if test="groupIds !=null and groupIds.size() > 0">
+                and kk.fdev_group_id in
+                <foreach collection="groupIds" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY kk.fdev_group_id
+        ) a,
+        (
+        SELECT
+        IFNULL(count(kk.id), 0)as id, kk.fdev_group_id
+        FROM
+        (
+        SELECT
+        tt.id,
+        max(case field_id when 5 then value else '' end) as flaw_source,
+        max(case field_id when 73 then value else '' end)as fdev_group_id
+        FROM(
+        SELECT
+        b.id,
+        p.field_id,
+        s.value
+        FROM
+        mantis_bug_table b
+        LEFT JOIN
+        mantis_custom_field_project_table p
+        ON
+        p.project_id = b.project_id
+        LEFT JOIN
+        mantis_custom_field_string_table s
+        ON
+        (
+        s.field_id = p.field_id
+        AND
+        b.id = s.bug_id
+        )) tt
+        GROUP BY
+        id) kk
+        LEFT JOIN
+        mantis_bug_table bt
+        ON
+        kk.id = bt.id
+        LEFT JOIN
+        mantis_project_table p
+        ON
+        bt.project_id = p.id
+        <where>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+            <if test="groupIds !=null and groupIds.size() > 0">
+                and kk.fdev_group_id in
+                <foreach collection="groupIds" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY kk.fdev_group_id
+        )b
+        where a.fdev_group_id= b.fdev_group_id
+    </select>
+
+    <select id="qualityReport" resultType="Map">
+        SELECT
+        a.fdevGroupId as fdevGroupId, count(a.id) as effectiveIssue
+        FROM
+        (
+        SELECT
+        i.id, i.issue_flaw, i.fdevGroupId
+        FROM
+        (
+        SELECT
+        kk.id, kk.issue_flaw, kk.fdevGroupId
+        FROM
+        (
+        SELECT
+        tt.id,
+        max(case field_id when 5 then value else '' end) as issue_flaw,
+        max(case field_id when 73 then value else '' end) as fdevGroupId
+        FROM(
+        SELECT
+        b.id,
+        p.field_id,
+        s.value
+        FROM
+        mantis_bug_table b
+        LEFT JOIN
+        mantis_custom_field_project_table p
+        ON
+        p.project_id = b.project_id
+        LEFT JOIN
+        mantis_custom_field_string_table s
+        ON
+        (
+        s.field_id = p.field_id
+        AND
+        b.id = s.bug_id
+        )
+        WHERE
+        s.value != ''
+        AND
+        s.value in (${fdevGroupId})
+        ) tt
+        GROUP BY
+        id
+        ) kk
+        LEFT JOIN
+        mantis_bug_table bt
+        ON
+        kk.id = bt.id
+        LEFT JOIN
+        mantis_project_table p
+        ON
+        bt.project_id = p.id
+        <where>
+            kk.fdevGroupId != ''
+            <if test="startDate != null and startDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &lt;= #{endDate}
+            </if>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+        </where>
+        ) i
+        WHERE
+        i.issue_flaw NOT IN ('数据问题','环境问题','其他原因')
+        AND
+        i.fdevGroupId IN (${fdevGroupId})
+        ) a
+        GROUP BY
+        a.fdevGroupId
+    </select>
+
+    <select id="reopenIssue" resultType="Map">
+        SELECT
+        t.fdevGroupId, t.total, ifnull(r.reopenNum, 0) as reopenNum
+        FROM
+        (
+        SELECT
+        a.fdevGroupId, ifnull(count(a.id), 0) as total
+        FROM
+        (SELECT
+        i.id, i.fdevGroupId
+        FROM
+        (
+        SELECT
+        kk.id,kk.fdevGroupId
+        FROM
+        (
+        SELECT
+        tt.id,
+        max(case field_id when 73 then value else '' end) as fdevGroupId
+        FROM
+        (
+        SELECT
+        b.id,
+        p.field_id,
+        s.value
+        FROM
+        mantis_bug_table b
+        LEFT JOIN
+        mantis_custom_field_project_table p
+        ON
+        p.project_id = b.project_id
+        LEFT JOIN
+        mantis_custom_field_string_table s
+        ON
+        (
+        s.field_id = p.field_id
+        AND
+        b.id = s.bug_id
+        )
+        WHERE
+        s.value != ''
+        AND
+        s.value in (${fdevGroupId})
+        ) tt
+        GROUP BY
+        id
+        ) kk
+        LEFT JOIN
+        mantis_bug_table bt
+        ON
+        kk.id = bt.id
+        LEFT JOIN
+        mantis_project_table p
+        ON
+        bt.project_id = p.id
+        <where>
+            kk.fdevGroupId != ''
+            <if test="startDate != null and startDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &lt;= #{endDate}
+            </if>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+        </where>
+        ) i
+        WHERE
+        i.fdevGroupId in (${fdevGroupId})
+        ) a
+        GROUP BY
+        a.fdevGroupId
+        )  t
+        LEFT JOIN
+        (
+        SELECT
+        b.fdevGroupId, count(b.id) as reopenNum
+        FROM
+        (
+        SELECT
+        count(a.id) as num, a.id, a.fdevGroupId
+        FROM
+        (
+        SELECT
+        g.id, g.fdevGroupId
+        FROM
+        (
+        SELECT
+        kk.id, kk.fdevGroupId
+        FROM
+        (
+        SELECT
+        tt.id,
+        max(case field_id when 73 then value else '' end) as fdevGroupId
+        FROM
+        (
+        SELECT
+        b.id,
+        p.field_id,
+        s.value
+        FROM
+        mantis_bug_table b
+        LEFT JOIN
+        mantis_custom_field_project_table p
+        ON
+        p.project_id = b.project_id
+        LEFT JOIN
+        mantis_custom_field_string_table s
+        ON
+        (
+        s.field_id = p.field_id
+        AND
+        b.id = s.bug_id
+        )
+        WHERE
+        s.value != ''
+        AND
+        s.value in (${fdevGroupId})
+        ) tt
+        GROUP BY
+        id
+        ) kk
+        LEFT JOIN
+        mantis_bug_table bt
+        ON
+        kk.id = bt.id
+        LEFT JOIN
+        mantis_project_table p
+        ON
+        bt.project_id = p.id
+        <where>
+            kk.fdevGroupId != ''
+            AND
+            kk.fdevGroupId in (${fdevGroupId})
+            <if test="startDate != null and startDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &lt;= #{endDate}
+            </if>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+        </where>
+        ) g
+        LEFT JOIN
+        mantis_bug_history_table h
+        ON
+        g.id = h.bug_id
+        WHERE
+        h.field_name = 'status'
+        AND
+        h.new_value = '50'
+        ) a
+        GROUP BY
+        a.id, a.fdevGroupId
+        ) b
+        WHERE
+        b.num !=1
+        GROUP BY
+        b.fdevGroupId
+        ) r
+        ON
+        t.fdevGroupId = r.fdevGroupId
+    </select>
+
+    <select id="solveTime" resultType="Map">
+        SELECT
+        normal.fdevGroupId, normal.normalSpendTime, normal.normalNum,
+        ifnull(sev.sevSpendTime, 0) as sevSpendTime, ifnull(sev.sevNum, 0) as sevNum
+        FROM
+        (
+        SELECT
+        k.fdevGroupId,
+        sum(k.spendTime)as normalSpendTime,
+        count(k.id)as normalNum
+        FROM
+        (
+        SELECT
+        a.id, a.fdevGroupId, (h.date_modified-b.date_submitted)as spendTime
+        FROM
+        (
+        SELECT
+        i.id,i.fdevGroupId
+        FROM
+        (
+        SELECT
+        kk.id,kk.fdevGroupId
+        FROM
+        (
+        SELECT
+        tt.id,
+        max(case field_id when 73 then value else '' end) as fdevGroupId
+        FROM(
+        SELECT
+        b.id,
+        p.field_id,
+        s.value
+        FROM
+        mantis_bug_table b
+        LEFT JOIN
+        mantis_custom_field_project_table p
+        ON
+        p.project_id = b.project_id
+        LEFT JOIN
+        mantis_custom_field_string_table s
+        ON
+        (
+        s.field_id = p.field_id
+        AND
+        b.id = s.bug_id
+        )
+        WHERE
+        s.value != ''
+        AND
+        s.value in (${fdevGroupId})
+        ) tt
+        GROUP BY
+        id
+        ) kk
+        LEFT JOIN
+        mantis_bug_table bt
+        ON
+        kk.id = bt.id
+        LEFT JOIN
+        mantis_project_table p
+        ON
+        bt.project_id = p.id
+        <where>
+            kk.fdevGroupId != ''
+            <if test="startDate != null and startDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &lt;= #{endDate}
+            </if>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+        </where>
+        ) i
+        where i.fdevGroupId in (${fdevGroupId})
+        ) a
+        LEFT JOIN
+        mantis_bug_table b
+        ON
+        a.id = b.id
+        JOIN
+        (
+        SELECT
+        bug_id, date_modified
+        FROM
+        mantis_bug_history_table
+        WHERE
+        field_name = 'status'
+        AND
+        new_value = 90
+        AND
+        date_modified is not null
+        ) h
+        ON
+        a.id = h.bug_id
+        )k
+        GROUP BY
+        k.fdevGroupId
+        ) normal
+        LEFT JOIN
+        (
+        select k.fdevGroupId, sum(k.spendTime)as sevSpendTime, count(k.id)as sevNum from
+        (select a.id, a.fdevGroupId, (h.date_modified-a.date_submitted)as spendTime
+        from (
+        SELECT
+        kk.id,kk.fdevGroupId,bt.date_submitted
+        FROM
+        (
+        SELECT
+        tt.id,
+        max(case field_id when 73 then value else '' end) as fdevGroupId
+        FROM(
+        SELECT
+        b.id,
+        p.field_id,
+        s.value
+        FROM
+        mantis_bug_table b
+        LEFT JOIN
+        mantis_custom_field_project_table p
+        ON
+        p.project_id = b.project_id
+        LEFT JOIN
+        mantis_custom_field_string_table s
+        ON
+        (
+        s.field_id = p.field_id
+        AND
+        b.id = s.bug_id
+        ) where s.value != ''
+        AND
+        s.value in (${fdevGroupId})
+        ) tt
+        GROUP BY
+        id) kk
+        LEFT JOIN
+        mantis_bug_table bt
+        ON
+        kk.id = bt.id
+        LEFT JOIN
+        mantis_project_table p
+        ON
+        bt.project_id = p.id
+        <where>
+            kk.fdevGroupId != ''
+            and kk.fdevGroupId in (${fdevGroupId})
+            and (bt.priority in (60,70,80) or bt.severity in (40,50,60))
+            <if test="startDate != null and startDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND from_unixtime(bt.date_submitted,'%Y-%m-%d') &lt;= #{endDate}
+            </if>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+        </where>
+        ) a
+        JOIN
+        (select bug_id, date_modified from mantis_bug_history_table where field_name = 'status' and new_value in (30,90) and date_modified is not null
+        )
+        h on a.id = h.bug_id )k group by k.fdevGroupId  ) sev
+        ON
+        normal.fdevGroupId = sev.fdevGroupId
+    </select>
+    
+    <!--任务维度 查询任务缺陷信息  全量数据-->
+    <select id="queryTasksMantis" resultMap="AllMantisIssue">
+        select
+        kk.id,
+        kk.stage,
+        kk.reason,
+        tp.description,
+        kk.flaw_source,
+        kk.system_version,
+        kk.system_name,
+        kk.developer,
+        kk.developer_cn,
+        date_format(date_add(from_unixtime(kk.plan_fix_date), interval 1 day),'%Y-%m-%d') as plan_fix_date ,
+        kk.redmine_id,
+        kk.flaw_type,
+        kk.function_module,
+        kk.workNo,
+        kk.planlist_testcase_id,
+        bt.summary,
+        bt.priority,
+        bt.severity,
+        bt.status,
+        bt.audit_flag,
+        bt.project_id,
+        ur.realname as reporter,
+        ur.username as reporter_en_name,
+        uh.realname as handler,
+        bt.handler_id,
+        uh.username as handler_en_name,
+        p.name as project_name,
+        from_unixtime(bt.date_submitted,'%Y-%m-%d') as date_submitted,
+        kk.task_no as main_task_no,
+        kk.task_no as task_no,
+        kk.app_name as app_name,
+        kk.reopen_reason,
+        st.solveTime,
+        wn.num
+        from
+        (
+        select tt.id,
+        max(case field_id when 3 then value else '' end)stage,
+        max(case field_id when 4 then value else '' end)reason,
+        max(case field_id when 5 then value else '' end)flaw_source,
+        max(case field_id when 6 then value else '' end)system_version,
+        max(case field_id when 7 then value else '' end)system_name,
+        max(case field_id when 65 then value else '' end)developer,
+        max(case field_id when 9 then value else '' end)plan_fix_date,
+        max(case field_id when 10 then value else '' end)redmine_id,
+        max(case field_id when 11 then value else '' end)flaw_type,
+        max(case field_id when 12 then value else '' end)function_module,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 14 then value else '' end)planlist_testcase_id,
+        max(case field_id when 8 then value else '' end)developer_cn,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 72 then value else '' end)app_name,
+        max(case field_id when 81 then value else '' end)reopen_reason
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        (select * from mantis_bug_table
+            <where>
+                <if test="env == 'sit'.toString()">
+                    and project_id = 22
+                </if>
+                <if test="env == 'sit-new'.toString() ">
+                    and project_id = 28
+                </if>
+                <if test="env == 'rel'.toString() ">
+                    and project_id = 23
+                </if>
+                <if test="env == 'rel-new'.toString() ">
+                    and project_id = 30
+                </if>
+                <if test="env == 'pro'.toString()">
+                    and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+                </if>
+                <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+            </where>
+        ) b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+        (s.field_id = p.field_id
+        and b.id = s.bug_id)
+        WHERE
+        b.id
+        IN
+        (
+        SELECT
+        b.id
+        FROM
+        mantis_bug_table b
+        LEFT JOIN
+        mantis_custom_field_project_table p
+        ON
+        p.project_id = b.project_id
+        LEFT JOIN
+        mantis_custom_field_string_table s
+        ON
+        (s.field_id = p.field_id
+        and b.id = s.bug_id)
+        WHERE
+        if(p.field_id = 19, find_in_set(s.value, #{taskId}), 1=1)
+        AND
+        p.field_id = 19
+        )
+        ) tt
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_user_table uh
+        on
+        uh.id = bt.handler_id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        left join
+        (select a.id as id, (b.fixTime-a.openTime) as solveTime from
+            (select distinct id, date_submitted as openTime from mantis_bug_table
+            where id
+            in
+            (select id from mantis_bug_table where id
+            in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 90)
+            and id not in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 40))
+            ) a
+            join
+            (select distinct bug_id, max(date_modified) as fixTime from mantis_bug_history_table
+            where field_name = 'status' and new_value = 80 and bug_id
+            in
+            (select id from mantis_bug_table where id
+            in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 90)
+            and id not in
+            (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+            bt.id = h.bug_id and h.field_name='status' and h.new_value = 40))
+            group by bug_id) b
+            on a.id = b.bug_id) st
+        on kk.id = st.id
+        left join
+            (select bt.id, ifnull(count(bt.id),0) as num from mantis_bug_table bt
+            left join mantis_bug_history_table h on bt.id = h.bug_id
+            where h.new_value = '50' group by bt.id
+            ) wn
+        on
+        wn.id = kk.id
+        order by kk.id
+    </select>
+
+    <!-- 任务维度 查询任务缺陷信息  分页-->
+    <select id="queryTasksMantisPage" resultMap="AllMantisIssue">
+        select
+        kk.id,
+        kk.stage,
+        kk.reason,
+        tp.description,
+        kk.flaw_source,
+        kk.system_version,
+        kk.system_name,
+        kk.developer,
+        kk.developer_cn,
+        date_format(date_add(from_unixtime(kk.plan_fix_date), interval 1 day),'%Y-%m-%d') as plan_fix_date ,
+        kk.redmine_id,
+        kk.flaw_type,
+        kk.function_module,
+        kk.workNo,
+        kk.reopen_reason,
+        kk.planlist_testcase_id,
+        bt.summary,
+        bt.priority,
+        bt.severity,
+        bt.status,
+        bt.project_id,
+        ur.realname as reporter,
+        ur.username as reporter_en_name,
+        uh.realname as handler,
+        bt.handler_id,
+        uh.username as handler_en_name,
+        p.name as project_name,
+        from_unixtime(bt.date_submitted,'%Y-%m-%d') as date_submitted
+        from
+        (
+        select tt.id,
+        max(case field_id when 3 then value else '' end)stage,
+        max(case field_id when 4 then value else '' end)reason,
+        max(case field_id when 5 then value else '' end)flaw_source,
+        max(case field_id when 6 then value else '' end)system_version,
+        max(case field_id when 7 then value else '' end)system_name,
+        max(case field_id when 65 then value else '' end)developer,
+        max(case field_id when 9 then value else '' end)plan_fix_date,
+        max(case field_id when 10 then value else '' end)redmine_id,
+        max(case field_id when 11 then value else '' end)flaw_type,
+        max(case field_id when 12 then value else '' end)function_module,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 14 then value else '' end)planlist_testcase_id,
+        max(case field_id when 8 then value else '' end)developer_cn,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 81 then value else '' end)reopen_reason
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        mantis_bug_table b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+        (s.field_id = p.field_id
+        and b.id = s.bug_id)
+        WHERE
+        b.id
+        IN
+        (
+        SELECT
+        b.id
+        FROM
+        mantis_bug_table b
+        LEFT JOIN
+        mantis_custom_field_project_table p
+        ON
+        p.project_id = b.project_id
+        LEFT JOIN
+        mantis_custom_field_string_table s
+        ON
+        (s.field_id = p.field_id
+        and b.id = s.bug_id)
+        WHERE
+        if(p.field_id = 19, find_in_set(s.value, #{taskId}), 1=1)
+        AND
+        p.field_id = 19
+        )
+        ) tt
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_user_table uh
+        on
+        uh.id = bt.handler_id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        <where>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+            AND
+            find_in_set(kk.task_no, #{taskId})
+        </where>
+        order by kk.id
+        limit #{start_page},#{page_size}
+    </select>
+
+    <!--任务维度 查询任务缺陷信息  分页查询-->
+    <select id="countTasksMantisPage" resultType="java.lang.Integer">
+        select
+        count(kk.id)
+        from
+        (
+        select tt.id,
+        max(case field_id when 19 then value else '' end)task_no
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        mantis_bug_table b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+        (s.field_id = p.field_id
+        and b.id = s.bug_id)
+        WHERE
+        b.id
+        IN
+        (
+        SELECT
+        b.id
+        FROM
+        mantis_bug_table b
+        LEFT JOIN
+        mantis_custom_field_project_table p
+        ON
+        p.project_id = b.project_id
+        LEFT JOIN
+        mantis_custom_field_string_table s
+        ON
+        (s.field_id = p.field_id
+        and b.id = s.bug_id)
+        WHERE
+        if(p.field_id = 19,
+        find_in_set(s.value, #{taskId}), 1=1)
+        AND
+        p.field_id = 19
+        )
+        ) tt
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_user_table uh
+        on
+        uh.id = bt.handler_id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        <where>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+            AND
+            find_in_set(kk.task_no, #{taskId})
+        </where>
+        order by kk.id
+    </select>
+
+    <select id="qualityReportAll" resultType="Map">
+        SELECT
+            o.id,
+            o.fdevGroupId,
+            replace(left(o.createTime, 10),'-','') as createTime,
+            ifnull(p.num, 1) as openTimes,
+            o.priority,
+            o.severity,
+            ifnull(q.solveTime, 0) as solveTime,
+            o.developer,
+            o.taskNo,
+            o.summary,
+            o.status,
+            o.workNo,
+            u.realname as reporterName,
+            uu.realname as handlerName ,
+            ifnull(if(o.status=90,replace(left(from_unixtime(m.date_modified),10),'-',''),null), 0) as closeTime
+        FROM
+        (
+            SELECT
+                kk.id, kk.fdevGroupId, from_unixtime(date_submitted) as createTime, kk.developer, kk.taskNo,kk.workNo, bt.priority, bt.severity, bt.summary, bt.status, bt.reporter_id, bt.handler_id
+            FROM
+            (
+                SELECT
+                    tt.id,
+                    max(case field_id when 73 then value else '' end) as fdevGroupId,
+                    max(case field_id when 5 then value else '' end) as issue_flaw,
+                    max(case field_id when 8 then value else '' end) as developer,
+                    max(case field_id when 19 then value else '' end) as taskNo ,
+                    max(case field_id when 13 then value else '' end) as workNo
+                FROM(
+                    SELECT
+                        b.id,
+                        p.field_id,
+                        s.value
+                    FROM
+                    mantis_bug_table b
+                    LEFT JOIN
+                    mantis_custom_field_project_table p
+                    ON
+                    p.project_id = b.project_id
+                    LEFT JOIN
+                    mantis_custom_field_string_table s
+                    ON
+                    (
+                        s.field_id = p.field_id
+                        AND
+                        b.id = s.bug_id
+                    ) where s.value != ''
+                    <if test="env != null and env != ''">
+                        and b.env = #{env}
+                    </if>
+                ) tt
+                GROUP BY id
+            ) kk
+            LEFT JOIN
+            mantis_bug_table bt
+            ON
+            kk.id = bt.id
+            LEFT JOIN
+            mantis_project_table p
+            ON
+            bt.project_id = p.id
+            where kk.fdevGroupId != ''
+            and kk.issue_flaw NOT IN ('数据问题','环境问题','其他原因')
+        ) o
+        LEFT JOIN
+        (
+            SELECT
+                b.id, b.fdevGroupId, b.num
+            FROM
+            (
+                SELECT
+                    count(a.id) as num, a.id, a.fdevGroupId
+                FROM
+                (
+                    SELECT
+                        g.id, g.fdevGroupId
+                    FROM
+                    (
+                        SELECT
+                            kk.id, kk.fdevGroupId
+                        FROM
+                        (
+                            SELECT
+                                tt.id,
+                                max(case field_id when 73 then value else '' end) as fdevGroupId
+                            FROM
+                            (
+                                SELECT
+                                    b.id,
+                                    p.field_id,
+                                    s.value
+                                FROM
+                                mantis_bug_table b
+                                LEFT JOIN
+                                mantis_custom_field_project_table p
+                                ON
+                                p.project_id = b.project_id
+                                LEFT JOIN
+                                mantis_custom_field_string_table s
+                                ON
+                                (
+                                    s.field_id = p.field_id
+                                    AND
+                                    b.id = s.bug_id
+                                )
+                                WHERE
+                                s.value != ''
+                                <if test="env != null and env != ''">
+                                    and b.env = #{env}
+                                </if>
+                            ) tt
+                            GROUP BY id
+                        ) kk
+                        LEFT JOIN
+                        mantis_bug_table bt
+                        ON
+                        kk.id = bt.id
+                        LEFT JOIN
+                        mantis_project_table p
+                        ON
+                        bt.project_id = p.id
+                        where
+                        kk.fdevGroupId != ''
+                    ) g
+                    LEFT JOIN
+                    mantis_bug_history_table h
+                    ON
+                    g.id = h.bug_id
+                    WHERE
+                    h.field_name = 'status'
+                    AND
+                    h.new_value = '50'
+                ) a
+                GROUP BY a.id, a.fdevGroupId
+            ) b
+            WHERE
+            b.num !=1
+        ) p
+        ON
+        o.id = p.id
+        LEFT JOIN
+            (
+                select
+                    a.id as id, (b.fixTime-a.openTime) as solveTime
+                from
+                    (
+                        select distinct id, date_submitted as openTime from mantis_bug_table
+                        where id
+                        in
+                        (
+                            select id from mantis_bug_table
+                            where id in
+                            (
+                                select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+                                bt.id = h.bug_id and h.field_name='status' and h.new_value = 90
+                            )
+                            and id not in
+                            (
+                                select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+                                bt.id = h.bug_id and h.field_name='status' and h.new_value = 40
+                            )
+                        )
+                    ) a
+                    join
+                    (
+                        select distinct bug_id, max(date_modified) as fixTime from mantis_bug_history_table
+                        where field_name = 'status' and new_value = 80 and bug_id
+                        in
+                        (
+                            select id from mantis_bug_table where id
+                            in
+                            (
+                                select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+                                bt.id = h.bug_id and h.field_name='status' and h.new_value = 90
+                            )
+                            and id not in
+                            (
+                                select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+                                bt.id = h.bug_id and h.field_name='status' and h.new_value = 40
+                            )
+                        )
+                        group by bug_id
+                    ) b
+                    on a.id = b.bug_id
+                ) q
+                ON
+                o.id = q.id
+        left join mantis_user_table u on o.reporter_id = u.id
+        left join mantis_user_table uu on o.handler_id = uu.id
+        left join (select distinct bug_id, date_modified from mantis_bug_history_table where new_value = 90) m on m.bug_id=o.id
+        </select>
+
+    <select id="queryMantis" resultMap="AllMantisIssue">
+        select
+        kk.id,
+        kk.stage,
+        kk.reason,
+        tp.description,
+        kk.flaw_source,
+        kk.system_version,
+        kk.system_name,
+        kk.developer,
+        kk.developer_cn,
+        date_format(date_add(from_unixtime(kk.plan_fix_date), interval 1 day),'%Y-%m-%d') as plan_fix_date ,
+        kk.redmine_id,
+        kk.flaw_type,
+        kk.function_module,
+        kk.workNo,
+        kk.planlist_testcase_id,
+        kk.fdev_group_name,
+        kk.app_name,
+        kk.fdev_group_id,
+        bt.summary,
+        bt.priority,
+        bt.severity,
+        bt.status,
+        bt.project_id,
+        ur.realname as reporter,
+        ur.username as reporter_en_name,
+        uh.realname as handler,
+        bt.handler_id,
+        uh.username as handler_en_name,
+        p.name as project_name,
+        from_unixtime(bt.date_submitted,'%Y-%m-%d') as date_submitted,
+        kk.task_no,
+        kk.reopen_reason,
+        st.solveTime,
+        wn.num
+        from
+        (
+        select
+        tt.id,
+        max(case field_id when 3 then value else '' end)stage,
+        max(case field_id when 4 then value else '' end)reason,
+        max(case field_id when 5 then value else '' end)flaw_source,
+        max(case field_id when 6 then value else '' end)system_version,
+        max(case field_id when 7 then value else '' end)system_name,
+        max(case field_id when 65 then value else '' end)developer,
+        max(case field_id when 9 then value else '' end)plan_fix_date,
+        max(case field_id when 10 then value else '' end)redmine_id,
+        max(case field_id when 11 then value else '' end)flaw_type,
+        max(case field_id when 12 then value else '' end)function_module,
+        max(case field_id when 13 then value else '' end)workNo,
+        max(case field_id when 14 then value else '' end)planlist_testcase_id,
+        max(case field_id when 8 then value else '' end)developer_cn,
+        max(case field_id when 21 then value else '' end)fdev_group_name,
+        max(case field_id when 72 then value else '' end)app_name,
+        max(case field_id when 73 then value else '' end)fdev_group_id,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 81 then value else '' end)reopen_reason
+        from(
+        select
+        b.id,
+        p.field_id,
+        s.value
+        from
+        (select * from mantis_bug_table
+        <where>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+            <if test="status != null and status != '' ">
+                and status = #{status}
+            </if>
+        </where>
+        ) b
+        left join
+        mantis_custom_field_project_table p
+        on
+        p.project_id = b.project_id
+        left join
+        mantis_custom_field_string_table s
+        on
+        (s.field_id = p.field_id and b.id = s.bug_id)
+        <where>
+            <if test="workNo != null and workNo != '' ">
+                AND b.id in (select bug_id from mantis_custom_field_string_table where field_id = 13 and value in (${workNo}))
+            </if>
+        </where>
+        ) tt
+        group by id
+        ) kk
+        left join
+        mantis_bug_table bt
+        on
+        kk.id = bt.id
+        left join
+        mantis_user_table ur
+        on
+        ur.id = bt.reporter_id
+        left join
+        mantis_user_table uh
+        on
+        uh.id = bt.handler_id
+        left join
+        mantis_project_table p
+        on
+        bt.project_id = p.id
+        left join
+        mantis_bug_text_table tp
+        on
+        bt.id = tp.id
+        left join
+        (select a.id as id, (b.fixTime-a.openTime) as solveTime from
+        (select distinct id, date_submitted as openTime from mantis_bug_table
+        where id
+        in
+        (select id from mantis_bug_table where id
+        in
+        (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+        bt.id = h.bug_id and h.field_name='status' and h.new_value = 90)
+        and id not in
+        (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+        bt.id = h.bug_id and h.field_name='status' and h.new_value = 40))
+        ) a
+        join
+        (select distinct bug_id, max(date_modified) as fixTime from mantis_bug_history_table
+        where field_name = 'status' and new_value = 80 and bug_id
+        in
+        (select id from mantis_bug_table where id
+        in
+        (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+        bt.id = h.bug_id and h.field_name='status' and h.new_value = 90)
+        and id not in
+        (select bt.id from mantis_bug_table bt, mantis_bug_history_table h where
+        bt.id = h.bug_id and h.field_name='status' and h.new_value = 40))
+        group by bug_id) b
+        on a.id = b.bug_id) st
+        on kk.id = st.id
+        left join
+        (select bt.id, ifnull(count(bt.id),0) as num from mantis_bug_table bt
+        left join mantis_bug_history_table h on bt.id = h.bug_id
+        where h.new_value = '50' group by bt.id
+        ) wn
+        on
+        wn.id = kk.id
+        <where>
+            <if test="userNameEn != null and userNameEn!= '' ">
+                and ur.username = #{userNameEn}
+                or uh.username = #{userNameEn}
+                or   kk.developer= #{userNameEn}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryMantisByWorkNos" resultMap="AllMantisIssue">
+        select
+        bt.id,
+        bt.status
+        from
+          mantis_bug_table bt
+        <where>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+        </where>
+        and
+        bt.id
+        in
+        ( select  bug_id FROM mantis_custom_field_string_table where field_id=13 and value in(${workNo}))
+    </select>
+
+    <update id="updateMantisStatus">
+        update mantis_bug_table
+        set
+        status=90
+        where id in (${ids})
+    </update>
+
+    <update id="updateMantisByTaskIds">
+        update
+        mantis_bug_table  bt
+        set
+        status=90
+        <where>
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+        </where>
+        and
+        bt.id
+        in (
+        SELECT bug_id FROM  mantis_custom_field_string_table where field_id=19 and value in (${taskId}));
+    </update>
+
+    <select id="queryMantisIdByTaskNo" resultType="Integer">
+        select id from mantis_bug_table t
+        left join mantis_custom_field_string_table s
+        on t.id = s.bug_id
+        <where>
+            field_id = 19 and value = #{taskNo}
+            <if test="env == 'sit'.toString()">
+                and project_id = 22
+            </if>
+            <if test="env == 'sit-new'.toString() ">
+                and project_id = 28
+            </if>
+            <if test="env == 'rel'.toString() ">
+                and project_id = 23
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and project_id = 30
+            </if>
+            <if test="env == 'pro'.toString()">
+                and project_id  in (7,8,9,10,11,12,13,14,15,16,17,18,19,25,26,27)
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and project_id = 33
+            </if>
+        </where>
+    </select>
+
+    <select id="queryIssueById" resultType="java.util.Map">
+        select
+            b.status as status,
+            u1.username as reporter_en_name,
+            u2.username as handler_en_name,
+            s.value as workNo
+        from mantis_bug_table b
+        left join mantis_user_table u1
+        on b.reporter_id=u1.id
+        left join mantis_user_table u2
+        on b.handler_id=u2.id
+        left join mantis_custom_field_string_table s
+        on b.id=s.bug_id
+        where s.field_id='13' and b.id=#{id}
+    </select>
+
+    <update id="updateMantisAudit">
+        update mantis_bug_table
+        set audit_flag = #{auditFlag}
+        where id = #{id}
+    </update>
+
+    <select id="queryFieldString" resultType="java.lang.Integer">
+        select count(field_id)
+        from mantis_custom_field_string_table
+        where bug_id = #{id} and field_id in
+        <foreach collection="fieldIds" item="fieldId" open="(" close=")" separator=",">
+            #{fieldId}
+        </foreach>
+    </select>
+
+    <insert id="addFieldString">
+        insert into mantis_custom_field_string_table
+        values(82,#{id},#{wantStatus},null),(83,#{id},#{auditReason},null),(84,#{id},#{wantFlawSource},null);
+    </insert>
+
+    <update id="updateFieldString">
+        update mantis_custom_field_string_table
+        set value = #{wantStatus}
+        where bug_id = #{id} and field_id = 82;
+        update mantis_custom_field_string_table
+        set value = #{auditReason}
+        where bug_id = #{id} and field_id = 83;
+        update mantis_custom_field_string_table
+        set value = #{wantFlawSource}
+        where bug_id = #{id} and field_id = 84;
+    </update>
+
+    <delete id="deleteFieldString">
+        delete from mantis_custom_field_string_table
+        where bug_id = #{id} and field_id in
+        <foreach collection="fieldIds" item="fieldId" open="(" close=")" separator=",">
+            #{fieldId}
+        </foreach>
+    </delete>
+
+    <select id="queryMantisAuditInfo" resultType="java.util.Map">
+        select
+            t.id,
+            t.auditFlag,
+            t.status,
+            t.handler,
+            max(case field_id when 4 then value else '' end)reason,
+            max(case field_id when 82 then value else '' end)wantStatus,
+            max(case field_id when 83 then value else '' end)auditReason,
+            max(case field_id when 84 then value else '' end)wantFlawSource
+        from (
+            select
+                b.id,
+                b.audit_flag as auditFlag,
+                b.status as status,
+                b.handler_id handler,
+                s.field_id,
+                s.value
+            from mantis_bug_table b
+            left join mantis_custom_field_string_table s
+            on b.id = s.bug_id
+            where b.id = #{id}
+        ) t
+        limit 1
+    </select>
+
+    <select id="queryReportNameAndSummary" resultType="java.util.Map">
+        select
+            b.summary as summary,
+            u.username as reporterEnName
+        from mantis_bug_table b
+        left join
+            mantis_user_table u
+        on
+            b.reporter_id = u.id
+        where
+            b.id=#{id}
+    </select>
+
+    <update id="updateMantisByAudit" >
+        update mantis_bug_table
+        set status = #{status}
+        where id = #{id};
+        update mantis_custom_field_string_table
+        set value = #{reason}
+        where bug_id = #{id} and field_id = 4;
+        update mantis_custom_field_string_table
+        set value = #{flawSource}
+        where bug_id = #{id} and field_id = 5;
+    </update>
+
+    <insert id="addMantisHistory" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into mantis_bug_history_table
+        (
+            user_id,bug_id,field_name,old_value,new_value,type,date_modified
+        )
+        values
+        <foreach collection="historyList" item="history" separator=",">
+            (#{history.user_id}, #{history.bug_id}, #{history.field_name}, #{history.old_value}, #{history.new_value}, #{history.type}, #{history.date_modified})
+        </foreach>
+    </insert>
+
+    <update id="setMantisEnv">
+        update mantis_bug_table
+        set env = #{env}
+        where id = #{id}
+    </update>
+
+    <select id="queryMantisLastYear" resultType="java.util.Map">
+        select
+            t.id,
+            max(case field_id when 13 then value else '' end)workNo
+        from (
+            select
+                b.id,
+                s.field_id,
+                s.value
+            from mantis_bug_table b
+            left join mantis_custom_field_string_table s
+            on b.id = s.bug_id
+            where b.env = #{env} and b.date_submitted > #{time}
+        ) t
+        group by id
+    </select>
+
+    <insert id="updateMantisGroup">
+        replace into mantis_custom_field_string_table (field_id,bug_id,value)
+        values (73,#{id},#{fdevGroupId});
+        replace into mantis_custom_field_string_table (field_id,bug_id,value)
+        values (21,#{id},#{fdevGroupName});
+    </insert>
+
+    <select id="countMantisByGroup" resultType="java.util.Map">
+        select
+            groupId,
+            count(id) as countMantis
+        from (
+            select
+                t.id,
+                max(case field_id when 73 then value else '' end) as groupId
+            from (
+                select
+                    b.id,
+                    s.field_id,
+                    s.value
+                from mantis_bug_table b
+                left join mantis_custom_field_string_table s
+                on b.id = s.bug_id
+                where env = #{env} and date_submitted between #{startTime} and #{endTime}
+            ) t
+            group by id
+        ) m
+        where m.groupId is not null and m.groupId != ''
+        <if test="groupIds != null and groupIds.size() > 0">
+            and m.groupId in
+            <foreach collection="groupIds" item="groupId" open="(" close=")" separator=",">
+                #{groupId}
+            </foreach>
+        </if>
+        group by groupId
+    </select>
+
+    <select id="countReporterSumNew" resultType="Map">
+        select
+            *
+        from (
+            select
+                t.id,
+                max(case field_id when 5 then value else '' end)flaw_source,
+                max(case field_id when 13 then value else '' end)workNo,
+                t.username
+            from (
+                select
+                    b.id,
+                    s.field_id,
+                    s.value,
+                    u.username
+                from (
+                    select
+                            id,
+                            reporter_id
+                    from mantis_bug_table
+                    where from_unixtime(date_submitted,'%Y-%m-%d') between #{startDate} and #{endDate}
+                    and status != 30
+                    and env = #{env}
+                    and reporter_id in (
+                        select id from mantis_user_table
+                        <if test="userNameEnList != null and userNameEnList.size() > 0">
+                            where username in
+                            <foreach collection="userNameEnList" item="username" open="(" close=")" separator=",">
+                                #{username}
+                            </foreach>
+                        </if>
+                    )
+                ) b
+                left join mantis_custom_field_string_table s
+                on b.id = s.bug_id
+                left join mantis_user_table u
+                on b.reporter_id = u.id
+            ) t
+            group by t.id
+        ) tt
+        where flaw_source not in ('其他原因','环境问题','数据问题')
+    </select>
+
+    <select id="queryIssueByTimeUserNew" resultType="Map">
+        SELECT
+            kk.workNo,
+            kk.dayIssueNum as issueNum,
+            kk.unSolveIssue,
+            kk.dayIssueNum
+        FROM
+        (
+            select
+                workNo,
+                count(tt.id) as dayIssueNum,
+                sum(if(tt.status in (10,20,50,80),1,0)) as unSolveIssue
+            from (
+                select
+                t.id,
+                t.status,
+                max(case field_id when 5 then value else '' end)flaw_source,
+                max(case field_id when 13 then value else '' end)workNo
+                from (
+                    select
+                        b.id,
+                        b.status,
+                        s.field_id,
+                        s.value
+                    from (
+                        select
+                            id,
+                            reporter_id,
+                            status
+                        from mantis_bug_table
+                        where from_unixtime(date_submitted,'%Y-%m-%d') between #{startDate} and #{endDate}
+                        and status != 30
+                        and env = #{env}
+                        and reporter_id in (
+                            select id from mantis_user_table
+                            where username = #{userEnName}
+                        )
+                    ) b
+                    left join mantis_custom_field_string_table s
+                    on b.id = s.bug_id
+                ) t
+                group by t.id
+            ) tt
+            where flaw_source not in ('其他原因','环境问题','数据问题')
+            <if test="workNoList != null and workNoList.size() > 0">
+                and workNo in
+                <foreach collection="workNoList" item="workNo" open="(" close=")" separator=",">
+                    #{workNo}
+                </foreach>
+            </if>
+            group by workNo
+        ) kk
+    </select>
+
+    <select id="queryMantisByWorkNo" resultType="java.lang.Long">
+        select
+            bug_id
+        FROM
+            mantis_custom_field_string_table
+        where field_id = 13
+        and value = #{workNo}
+    </select>
+</mapper>

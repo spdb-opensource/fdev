@@ -1,0 +1,58 @@
+.DS_Store
+node_modules
+/dist
+.storee
+yapiMock
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+
+/interface
+
+# Compiled class file
+*.class
+#XSL transformation
+*.out.xml
+# Log file
+*.log
+*.out
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+# virtual machine crash logs
+hs_err_pid*
+# Eclipse Project files
+*/.classpath
+.classpath
+*/.project
+.project
+*/.settings/
+.settings/
+# IDEA files
+*/.idea/
+.idea/
+*.iml
+*.ipr
+*.iws
+# maven files
+/target/*
+/target/
+*/target/*
+# MAC system files
+*/.DS_Store

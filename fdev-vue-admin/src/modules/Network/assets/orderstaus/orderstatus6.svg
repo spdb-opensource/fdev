@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>实施中</title>
+    <defs>
+        <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#0378EA" offset="0%"></stop>
+            <stop stop-color="#76B6F3" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="组件库" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2.0_DataDisplay_数据展示2" transform="translate(-1180.000000, -3804.000000)">
+            <g id="编组-5" transform="translate(210.000000, 3775.000000)">
+                <g id="实施中" transform="translate(970.000000, 29.000000)">
+                    <g id="编组-15" fill="#CDE4FB">
+                        <rect id="矩形" x="0" y="0" width="32" height="32" rx="8"></rect>
+                    </g>
+                    <g id="jinxing" transform="translate(6.000000, 6.000000)">
+                        <path d="M10,0.5 C12.6199219,0.5 14.9948211,1.56520917 16.714806,3.28519402 C18.4347908,5.00517886 19.5,7.38007812 19.5,10 C19.5,12.6254605 18.4365146,14.9989588 16.7186463,16.7168271 C14.9983231,18.4371503 12.6217998,19.5 10,19.5 C7.37453948,19.5 5.00104121,18.4365146 3.28317286,16.7186463 C1.5628497,14.9983231 0.5,12.6217998 0.5,10 C0.5,7.38007812 1.56520917,5.00517886 3.28519402,3.28519402 C5.00517886,1.56520917 7.38007813,0.5 10,0.5 Z" id="路径" stroke="#FFFFFF" fill="url(#linearGradient-1)"></path>
+                        <g id="编组-8" transform="translate(4.666667, 6.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                            <polygon id="路径" points="0 1.94642857 1.30357143 1.94642857 1.30357143 5.83928571 0 5.83928571 0 1.94642857"></polygon>
+                            <polygon id="路径" points="1.92857143 1.94642857 3.23214286 1.94642857 3.23214286 5.83928571 1.92857143 5.83928571 1.92857143 1.94642857"></polygon>
+                            <polygon id="路径" points="6.48214286 1.94642857 3.875 1.94642857 3.875 5.83928571 6.48214286 5.83928571 6.48214286 7.76785714 10.3571429 3.89285714 6.48214286 -1.35341473e-15"></polygon>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+</head>
+<body>
+<form action="/fapp/api/file/pre_upload" method="post" enctype="multipart/form-data">
+
+    需求类:<input type="radio" name="type" value="1"/>
+    设计类:<input type="radio" name="type" value="2"/>
+    开发类:<input type="radio" name="type" value="3"/>
+    测试类:<input type="radio" name="type" value="4"/>
+    投产类:<input type="radio" name="type" value="5"/>
+    <br>
+    <br>
+    file:<input type="file" name="file" multiple="multiple"/>
+    <input type="submit" name="提交">
+</form>
+
+<form action="/fapp/api/file/upload" method="post" enctype="multipart/form-data">
+
+    需求类:<input type="radio" name="type" value="1"/>
+    设计类:<input type="radio" name="type" value="2"/>
+    开发类:<input type="radio" name="type" value="3"/>
+    测试类:<input type="radio" name="type" value="4"/>
+    投产类:<input type="radio" name="type" value="5"/>
+    <br>
+    <br>
+    file:<input type="file" name="file" multiple="multiple"/>
+    task_id:<input type="text" name="task_id">
+    <input type="submit" name="提交2">
+</form>
+
+
+<form action="/fapp/api/file/test" method="post" enctype="multipart/form-data">
+
+    需求类:<input type="radio" name="type" value="1"/>
+    设计类:<input type="radio" name="type" value="2"/>
+    开发类:<input type="radio" name="type" value="3"/>
+    测试类:<input type="radio" name="type" value="4"/>
+    投产类:<input type="radio" name="type" value="5"/>
+    <br>
+    <br>
+    file:<input type="file" name="file" multiple="multiple"/>
+    用户:<input type="text" name="user">
+    <input type="submit" name="提交3">
+</form>
+</body>
+</html>

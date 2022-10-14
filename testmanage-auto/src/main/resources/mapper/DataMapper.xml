@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.auto.dao.DataMapper">
+
+    <resultMap id="Data" type="com.auto.entity.Data">
+        <id column="DATA_ID" jdbcType="INTEGER" property="dataId"/>
+        <result column="LABEL" jdbcType="VARCHAR" property="label"/>
+        <result column="CASE1" jdbcType="VARCHAR" property="case1"/>
+        <result column="CASE2" jdbcType="VARCHAR" property="case2"/>
+        <result column="CASE3" jdbcType="VARCHAR" property="case3"/>
+        <result column="CASE4" jdbcType="VARCHAR" property="case4"/>
+        <result column="CASE5" jdbcType="VARCHAR" property="case5"/>
+        <result column="CASE6" jdbcType="VARCHAR" property="case6"/>
+        <result column="CASE7" jdbcType="VARCHAR" property="case7"/>
+        <result column="CASE8" jdbcType="VARCHAR" property="case8"/>
+        <result column="CASE9" jdbcType="VARCHAR" property="case9"/>
+        <result column="CASE10" jdbcType="VARCHAR" property="case10"/>
+        <result column="CASE11" jdbcType="VARCHAR" property="case11"/>
+        <result column="CASE12" jdbcType="VARCHAR" property="case12"/>
+        <result column="CASE13" jdbcType="VARCHAR" property="case13"/>
+        <result column="CASE14" jdbcType="VARCHAR" property="case14"/>
+        <result column="CASE15" jdbcType="VARCHAR" property="case15"/>
+        <result column="CASE16" jdbcType="VARCHAR" property="case16"/>
+        <result column="CASE17" jdbcType="VARCHAR" property="case17"/>
+        <result column="CASE18" jdbcType="VARCHAR" property="case18"/>
+        <result column="CASE19" jdbcType="VARCHAR" property="case19"/>
+        <result column="CASE20" jdbcType="VARCHAR" property="case20"/>
+        <result column="CASE21" jdbcType="VARCHAR" property="case21"/>
+        <result column="CASE22" jdbcType="VARCHAR" property="case22"/>
+        <result column="CASE23" jdbcType="VARCHAR" property="case23"/>
+        <result column="CASE24" jdbcType="VARCHAR" property="case24"/>
+        <result column="CASE25" jdbcType="VARCHAR" property="case25"/>
+        <result column="CASE26" jdbcType="VARCHAR" property="case26"/>
+        <result column="CASE27" jdbcType="VARCHAR" property="case27"/>
+        <result column="CASE28" jdbcType="VARCHAR" property="case28"/>
+        <result column="CASE29" jdbcType="VARCHAR" property="case29"/>
+        <result column="CASE30" jdbcType="VARCHAR" property="case30"/>
+        <result column="CASE31" jdbcType="VARCHAR" property="case31"/>
+        <result column="CASE32" jdbcType="VARCHAR" property="case32"/>
+        <result column="CASE33" jdbcType="VARCHAR" property="case33"/>
+        <result column="CASE34" jdbcType="VARCHAR" property="case34"/>
+        <result column="CASE35" jdbcType="VARCHAR" property="case35"/>
+        <result column="CASE36" jdbcType="VARCHAR" property="case36"/>
+        <result column="CASE37" jdbcType="VARCHAR" property="case37"/>
+        <result column="CASE38" jdbcType="VARCHAR" property="case38"/>
+        <result column="CASE39" jdbcType="VARCHAR" property="case39"/>
+        <result column="CASE40" jdbcType="VARCHAR" property="case40"/>
+        <result column="CASE41" jdbcType="VARCHAR" property="case41"/>
+        <result column="CASE42" jdbcType="VARCHAR" property="case42"/>
+        <result column="CASE43" jdbcType="VARCHAR" property="case43"/>
+        <result column="CASE44" jdbcType="VARCHAR" property="case44"/>
+        <result column="CASE45" jdbcType="VARCHAR" property="case45"/>
+        <result column="CASE46" jdbcType="VARCHAR" property="case46"/>
+        <result column="CASE47" jdbcType="VARCHAR" property="case47"/>
+        <result column="CASE48" jdbcType="VARCHAR" property="case48"/>
+        <result column="CASE49" jdbcType="VARCHAR" property="case49"/>
+        <result column="CASE50" jdbcType="VARCHAR" property="case50"/>
+        <result column="DELETED" jdbcType="VARCHAR" property="deleted"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="VARCHAR" property="modifyTime"/>
+        <result column="LAST_OPR" jdbcType="VARCHAR" property="lastOpr"/>
+    </resultMap>
+
+    <sql id = "Data_Column_List" >
+        DATA_ID as dataId,
+        LABEL as label,
+        CASE1, CASE2, CASE3, CASE4, CASE5, CASE6, CASE7, CASE8, CASE9, CASE10,
+        CASE11, CASE12, CASE13, CASE14, CASE15, CASE16, CASE17, CASE18, CASE19, CASE20,
+        CASE21, CASE22, CASE23, CASE24, CASE25, CASE26, CASE27, CASE28, CASE29, CASE30,
+        CASE31, CASE32, CASE33, CASE34, CASE35, CASE36, CASE37, CASE38, CASE39, CASE40,
+        CASE41, CASE42, CASE43, CASE44, CASE45, CASE46, CASE47, CASE48, CASE49, CASE50,
+        DELETED as deleted,
+        CREATE_TIME as createTime,
+        MODIFY_TIME as modifyTime,
+        LAST_OPR as lastOpr
+    </sql>
+
+    <insert id="addData" parameterType="com.auto.entity.Testcase" >
+        INSERT INTO
+            AUTO_CASE_DATA
+            (
+            LABEL, CASE1, CASE2, CASE3, CASE4, CASE5, CASE6, CASE7, CASE8, CASE9, CASE10,
+            CASE11, CASE12, CASE13, CASE14, CASE15, CASE16, CASE17, CASE18, CASE19, CASE20,
+            CASE21, CASE22, CASE23, CASE24, CASE25, CASE26, CASE27, CASE28, CASE29, CASE30,
+            CASE31, CASE32, CASE33, CASE34, CASE35, CASE36, CASE37, CASE38, CASE39, CASE40,
+            CASE41, CASE42, CASE43, CASE44, CASE45, CASE46, CASE47, CASE48, CASE49, CASE50,
+            DELETED, CREATE_TIME, MODIFY_TIME, LAST_OPR)
+        VALUES
+            (#{label,jdbcType=VARCHAR}, #{case1,jdbcType=VARCHAR}, #{case2,jdbcType=VARCHAR},
+            #{case3,jdbcType=VARCHAR}, #{case4,jdbcType=VARCHAR}, #{case5,jdbcType=VARCHAR},
+            #{case6,jdbcType=VARCHAR}, #{case7,jdbcType=VARCHAR}, #{case8,jdbcType=VARCHAR},
+            #{case9,jdbcType=VARCHAR}, #{case10,jdbcType=VARCHAR}, #{case11,jdbcType=VARCHAR},
+            #{case12,jdbcType=VARCHAR}, #{case13,jdbcType=VARCHAR}, #{case14,jdbcType=VARCHAR},
+            #{case15,jdbcType=VARCHAR}, #{case16,jdbcType=VARCHAR}, #{case17,jdbcType=VARCHAR},
+            #{case18,jdbcType=VARCHAR}, #{case19,jdbcType=VARCHAR}, #{case20,jdbcType=VARCHAR},
+            #{case21,jdbcType=VARCHAR}, #{case22,jdbcType=VARCHAR}, #{case23,jdbcType=VARCHAR},
+            #{case24,jdbcType=VARCHAR}, #{case25,jdbcType=VARCHAR}, #{case26,jdbcType=VARCHAR},
+            #{case27,jdbcType=VARCHAR}, #{case28,jdbcType=VARCHAR}, #{case29,jdbcType=VARCHAR},
+            #{case30,jdbcType=VARCHAR}, #{case31,jdbcType=VARCHAR}, #{case32,jdbcType=VARCHAR},
+            #{case33,jdbcType=VARCHAR}, #{case34,jdbcType=VARCHAR}, #{case35,jdbcType=VARCHAR},
+            #{case36,jdbcType=VARCHAR}, #{case37,jdbcType=VARCHAR}, #{case38,jdbcType=VARCHAR},
+            #{case39,jdbcType=VARCHAR}, #{case40,jdbcType=VARCHAR}, #{case41,jdbcType=VARCHAR},
+            #{case42,jdbcType=VARCHAR}, #{case43,jdbcType=VARCHAR}, #{case44,jdbcType=VARCHAR},
+            #{case45,jdbcType=VARCHAR}, #{case46,jdbcType=VARCHAR}, #{case47,jdbcType=VARCHAR},
+            #{case48,jdbcType=VARCHAR}, #{case49,jdbcType=VARCHAR}, #{case50,jdbcType=VARCHAR},
+            #{deleted,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR},
+            #{modifyTime,jdbcType=VARCHAR}, #{lastOpr,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="queryData" resultType="Map">
+        SELECT
+            <include refid="Data_Column_List" />
+        FROM
+            AUTO_CASE_DATA
+        <where>
+            <if test="search != '' and search != null">
+                AND
+                    LABEL like concat('%', #{search}, '%')
+            </if>
+            <if test="valid != '' and valid != null">
+                AND
+                    DELETED = #{valid}
+            </if>
+        </where>
+    </select>
+    
+    <select id="queryDataByLabel" resultType="Map">
+        SELECT
+            <include refid="Data_Column_List" />
+        FROM
+            AUTO_CASE_DATA
+		WHERE 
+			DELETED = '0'
+            <if test="label != '' and label != null">
+                AND LABEL = #{label}
+            </if>
+            <if test="dataId != '' and dataId != null">
+                AND DATA_ID != #{dataId}
+            </if>
+
+    </select>
+    
+    <select id="queryDataByTestCaseNo" resultType="Map">
+        SELECT
+            cd.CASE1,cd.CASE2,cd.CASE3,cd.CASE4,cd.CASE5,cd.CASE6,cd.CASE7,cd.CASE8,cd.CASE9,cd.CASE10,
+			cd.CASE11,cd.CASE12,cd.CASE13,cd.CASE14,cd.CASE15,cd.CASE16,cd.CASE17,cd.CASE18,cd.CASE19,cd.CASE20,
+			cd.CASE21,cd.CASE22,cd.CASE23,cd.CASE24,cd.CASE25,cd.CASE26,cd.CASE27,cd.CASE28,cd.CASE29,cd.CASE30,
+			cd.CASE31,cd.CASE32,cd.CASE33,cd.CASE34,cd.CASE35,cd.CASE36,cd.CASE37,cd.CASE38,cd.CASE39,cd.CASE40,
+			cd.CASE41,cd.CASE42,cd.CASE43,cd.CASE44,cd.CASE45,cd.CASE46,cd.CASE47,cd.CASE48,cd.CASE49,cd.CASE50
+        FROM AUTO_CASE c
+			LEFT JOIN AUTO_CASE_DATA cd 
+			ON c.DATA_ID = cd.DATA_ID 
+		WHERE 
+			cd.DELETED = '0'
+            <if test="testcaseNo != '' and testcaseNo != null">
+                AND c.TESTCASE_NO = #{testcaseNo}
+            </if>
+    </select>
+        
+    <select id="queryDataByModuleId" resultType="Map">
+        SELECT distinct d.DATA_ID,d.CASE1,d.CASE2,d.CASE3,d.CASE4,d.CASE5,d.CASE6,d.CASE7,d.CASE8,d.CASE9,d.CASE10,
+			d.CASE11,d.CASE12,d.CASE13,d.CASE14,d.CASE15,d.CASE16,d.CASE17,d.CASE18,d.CASE19,d.CASE20,
+			d.CASE21,d.CASE22,d.CASE23,d.CASE24,d.CASE25,d.CASE26,d.CASE27,d.CASE28,d.CASE29,d.CASE30,
+			d.CASE31,d.CASE32,d.CASE33,d.CASE34,d.CASE35,d.CASE36,d.CASE37,d.CASE38,d.CASE39,d.CASE40,
+			d.CASE41,d.CASE42,d.CASE43,d.CASE44,d.CASE45,d.CASE46,d.CASE47,d.CASE48,d.CASE49,d.CASE50
+		FROM AUTO_CASE_DETAIL cd
+			left join AUTO_MODULE m on cd.MODULE_ID = m.MODULE_ID
+			left join AUTO_CASE c on c.TESTCASE_NO = cd.TESTCASE_NO
+			left join AUTO_CASE_DATA d on d.DATA_ID = c.DATA_ID
+		WHERE 
+			d.DELETED = '0'
+            <if test="moduleId != '' and moduleId != null">
+                AND m.MODULE_ID = #{moduleId}
+            </if>
+    </select>
+    
+    <update id="deleteData" parameterType="String">
+        UPDATE
+            AUTO_CASE_DATA
+        SET
+            DELETED = '1',
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            DATA_ID in (${dataId})
+    </update>
+
+    <update id="updateData">
+        UPDATE
+            AUTO_CASE_DATA
+        SET
+        <if test="label != null and label != '' ">
+            LABEL  = #{label},
+        </if>
+        <if test="map.size() > 0">
+            <foreach collection="map" item="value" index="key">
+                ${key} = #{value},
+            </foreach>
+        </if>
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            DATA_ID = #{dataId}
+    </update>
+
+    <update id="clearData">
+        UPDATE
+            AUTO_CASE_DATA
+        SET
+            <foreach collection="blankMap" item="value" index="key" separator=",">
+                ${key} = #{value}
+            </foreach>
+        WHERE
+            DATA_ID = #{dataId}
+    </update>
+</mapper>

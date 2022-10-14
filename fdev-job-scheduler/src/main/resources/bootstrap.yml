@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    config:
+    #快速失败响应
+      fail-fast: true
+      label: master
+      uri: xxx/fdev-configserver
+      name: fjobschedule
+      profile: ${SPRING_PROFILE_ACTIVE}
+    bus:
+      refresh:
+        enabled: true
+
+configUrl : ${spring.cloud.config.uri}/myapp/default/master/scheduler-config-${SPRING_PROFILE_ACTIVE}.xml

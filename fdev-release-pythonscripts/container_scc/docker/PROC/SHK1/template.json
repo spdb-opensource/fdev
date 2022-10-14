@@ -1,0 +1,76 @@
+{
+    "kind": "Deployment",
+    "metadata": {
+        "name": "name",
+        "namespace": "namespace",
+        "dceuser": "dceuser",
+        "dcepwd": "dcepwd",
+        "imageuser": "imageuser",
+        "imagepwd": "imagepwd",
+        "imagespaceip": "imagespaceip"
+    },
+    "spec": {
+        "yamlPath": "scctest01.yml",
+        "replicas": 2,
+        "gatewayTime": 15,
+        "template": {
+            "spec": {
+                "scalingTime": 15,
+                "containers": [
+                    {
+                        "name": "Autofill",
+                        "image": "tag",
+                        "imagespacename": "imagespacename",
+                        "imagename": "imagename",
+                        "lifecycle": {
+                            "mSvcStatus": {
+                                "exec": "curl --fail --silent xxx/getstatus"
+                            },
+                            "mSvcDown": {
+                                "exec": "curl --fail --silent xxx/down"
+                            },
+                            "mSvcUp": {
+                                "exec": "curl --fail --silent xxx/up"
+                            }
+                        },
+                        "creatingTime": 10
+                    }
+                ]
+            }
+        }
+    },
+    "procedure": {
+        "checkAndDown": 0,
+        "zeroReplica": 0,
+        "applyYAML": 0,
+        "updateImage": 0,
+        "scaleReplicas": 0,
+        "checkAndUp": 0,
+        "deletePo": 0,
+        "check_namespace": 0,
+        "check_deploymentname": 0,
+        "check_metadatalabels": 0,
+        "check_matchlabels": 0,
+        "check_templatemetadatalabels": 0,
+        "check_replicas": 0,
+        "check_volumes": 0,
+        "check_hostaliases": 0,
+        "check_imagepullsecrets": 0,
+        "check_dnspolicy": 0,
+        "check_nameservers": 0,
+        "check_strategy": 0,
+        "check_matchexpressionskey": 0,
+        "check_matchexpressionsvalues": 0,
+        "check_containersname": 0,
+        "check_limitscpu": 0,
+        "check_limitsmemory": 0,
+        "check_requestscpu": 0,
+        "check_requestsmemory": 0,
+        "check_ports": 0,
+        "check_envfrom": 0,
+        "check_env": 0,
+        "check_prestop": 0,
+        "check_image": 0,
+        "check_volumemounts": 0
+    }
+}

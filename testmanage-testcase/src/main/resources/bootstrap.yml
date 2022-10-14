@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: tcase
+  cloud:
+    config:
+    #快速失败响应
+      fail-fast: true
+      label: master
+      uri: xxx/fdev-configserver
+      name: tcase
+      profile: ${SPRING_PROFILE_ACTIVE}
+    bus:
+      refresh:
+        enabled: true
+
+toalarmemail:
+  fdevAppDownAlert:
+    - xxx
+    - xxx
+  fdevTaskAlert:
+    - xxx
+    - xxx
+  fdevReleaseAlert:
+    - xxx
+    - xxx
+  fdevInterfaceAlert:
+    - xxx
+    - xxx
+  fdevEnvConfigAlert:
+    - xxx
+    - xxx
+  others:
+    - xxx
+    - xxx
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh

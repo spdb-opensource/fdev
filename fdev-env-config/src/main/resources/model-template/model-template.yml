@@ -1,0 +1,12 @@
+template:
+  deploy:
+    - dce
+    - config
+    - yaml
+  linux-deploy:
+    - linux
+  scc-deploy:
+    - scc
+    - config
+    - sccyaml
+    - baseimage

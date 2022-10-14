@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.auto.dao.ElementMapper">
+
+    <resultMap id="Element" type="com.auto.entity.Element">
+        <id column="ELEMENT_ID" jdbcType="INTEGER" property="elementId"/>
+        <result column="ELEMENT_TYPE" jdbcType="VARCHAR" property="elementType"/>
+        <result column="ELEMENT_CONTENT" jdbcType="VARCHAR" property="elementContent"/>
+        <result column="ELEMENT_NAME" jdbcType="VARCHAR" property="elementName"/>
+        <result column="ELEMENT_DIR" jdbcType="VARCHAR" property="elementDir"/>
+        <result column="DELETED" jdbcType="VARCHAR" property="deleted"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="VARCHAR" property="modifyTime"/>
+        <result column="LAST_OPR" jdbcType="VARCHAR" property="lastOpr"/>
+    </resultMap>
+
+    <sql id = "Element_Column_List" >
+        ELEMENT_ID,
+        ELEMENT_TYPE,
+        ELEMENT_CONTENT,
+        ELEMENT_NAME,
+        ELEMENT_DIR,
+        DELETED,
+        CREATE_TIME,
+        MODIFY_TIME,
+        LAST_OPR
+    </sql>
+
+    <insert id="addElement" parameterType="com.auto.entity.Element" >
+        INSERT INTO
+            AUTO_ELEMENT
+            (ELEMENT_TYPE, ELEMENT_CONTENT, ELEMENT_NAME, ELEMENT_DIR, DELETED, CREATE_TIME, MODIFY_TIME,LAST_OPR)
+        VALUES
+            (#{elementType,jdbcType=VARCHAR},
+            #{elementContent,jdbcType=VARCHAR}, 
+            #{elementName,jdbcType=VARCHAR},  
+            #{elementDir,jdbcType=VARCHAR}, 
+            #{deleted,jdbcType=VARCHAR},
+            #{createTime,jdbcType=VARCHAR}, 
+            #{modifyTime,jdbcType=VARCHAR},
+            #{lastOpr,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="queryElement" resultMap="Element">
+        SELECT
+            <include refid="Element_Column_List"/>
+        FROM
+            AUTO_ELEMENT
+        <where>
+            <if test="search != '' and search != null">
+				AND (
+                    ELEMENT_NAME like concat('%', #{search}, '%') OR
+                    ELEMENT_DIR like concat('%', #{search}, '%')
+                )
+            </if>
+            <if test="valid != '' and valid != null">
+                AND
+                    DELETED = #{valid}
+            </if>
+        </where>
+    </select>
+    
+    <select id="queryElementByName" resultMap="Element">
+        SELECT
+            <include refid="Element_Column_List"/>
+        FROM
+            AUTO_ELEMENT
+        WHERE
+        	DELETED = '0'
+            <if test="elementName != '' and elementName != null">
+				AND ELEMENT_NAME = #{elementName}
+            </if>
+            <if test="elementId != '' and elementId != null">
+                AND ELEMENT_ID != #{elementId}
+            </if>
+    </select>
+
+    <update id="deleteElement" parameterType="String">
+        UPDATE
+            AUTO_ELEMENT
+        SET
+            DELETED = '1',
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            ELEMENT_ID in (${elementId})
+    </update>
+
+    <update id="updateElement" parameterType="String">
+        UPDATE
+            AUTO_ELEMENT
+        SET
+            ELEMENT_TYPE = #{elementType},
+            ELEMENT_CONTENT = #{elementContent},
+        <if test="elementName != null and elementName != '' ">
+            ELEMENT_NAME = #{elementName},
+        </if>
+            ELEMENT_DIR = #{elementDir},
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            ELEMENT_ID = #{elementId}
+    </update>
+</mapper>

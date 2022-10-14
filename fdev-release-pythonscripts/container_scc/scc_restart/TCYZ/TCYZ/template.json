@@ -1,0 +1,50 @@
+{
+    "kind": "Deployment",
+    "metadata": {
+        "name": "name",
+        "namespace": "namespace",
+        "cluster": "cluster",
+        "harboruri": "harboruri",
+        "harboruser": "harboruser",
+        "harborpwd": "harborpwd",
+        "group": "group"
+    },
+    "spec": {
+        "yamlPath": "scctest01.yml",
+        "replicas": 2,
+        "gatewayTime": 15,
+        "template": {
+            "spec": {
+                "scalingTime": 15,
+                "containers": [
+                    {
+                        "name": "Autofill",
+                        "image": "tag",
+                        "imagespacename": "imagespacename",
+                        "imagename": "imagename",
+                        "lifecycle": {
+                            "mSvcStatus": {
+                                "exec": "curl --fail --silent xxx/getstatus"
+                            },
+                            "mSvcDown": {
+                                "exec": "curl --fail --silent xxx/down"
+                            },
+                            "mSvcUp": {
+                                "exec": "curl --fail --silent xxx/up"
+                            }
+                        },
+                        "creatingTime": 10
+                    }
+                ]
+            }
+        }
+    },
+    "procedure": {
+        "checkAndDown": 0,
+        "stopWorkload": 0,
+        "applyYAML": 0,
+        "updateImage": 0,
+        "scaleReplicas": 0,
+        "checkAndUp": 0
+    }
+}

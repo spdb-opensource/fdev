@@ -1,0 +1,33 @@
+{
+  "name": "$SONAR_NAME",
+  "timeout": 3600,
+  "timestamp": "$TIMESTAMP",
+  "command": "$SONAR_COMMAND",
+  "image": {
+    "name": "$SONAR_IMAGE_NAME"
+  },
+  "kubernetes": {
+    "volumes": {
+      "host_paths": [
+        {
+          "name": "maven",
+          "mount_path": "/root/.m2",
+          "read_only": false,
+          "host_path": "/home/ebank/spdb/maven/.m2"
+        },
+        {
+          "name": "fwebhook-log",
+          "mount_path": "/fwebhook",
+          "read_only": false,
+          "host_path": "/home/ebank/spdb/fdev/log/fwebhook/$SONAR_ENVIRONMENT_SLUG"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "project_id": "$PROIECT_ID",
+    "project_name": "$PROJECT_NAME",
+    "project_branch": "$BRANCH",
+    "trigger": "sonar"
+  }
+}

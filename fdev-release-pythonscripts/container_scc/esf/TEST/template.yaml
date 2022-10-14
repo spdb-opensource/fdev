@@ -1,0 +1,8 @@
+spec:
+  template:
+    spec:
+      containers:
+      - env:
+        - name: SDK-GK
+          value: Il9JZHUqJC9TYjxbKyM1RQ==
+  

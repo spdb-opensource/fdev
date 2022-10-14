@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.WorkConfigDao">
+	<resultMap id="queryWorkConfig" type="com.test.entity.WorkConfig">
+		<id column="id" jdbcType="INTEGER" property="id"/>
+		<result column="ftms_group_id" jdbcType="INTEGER" property="ftms_group_id"/>
+		<result column="work_leader" jdbcType="INTEGER" property="work_leader"/>
+        <result column="group_leader" jdbcType="VARCHAR" property="group_leader"/>
+        <result column="group_name" jdbcType="INTEGER" property="group_name"/>
+		<result column="groupManager" jdbcType="INTEGER" property="groupManager"/>
+        <result column="groupLeaders" jdbcType="VARCHAR" property="groupLeaders"/>
+		<result column="UAT_CONTACT" jdbcType="VARCHAR" property="uatContact"/>
+		<result column="uatContactName" jdbcType="VARCHAR" property="uatContactName"/>
+	</resultMap>
+
+    <select id="queryWorkLeader"  parameterType="java.lang.String" resultMap="queryWorkConfig">
+    	SELECT work_leader from FTMS_WORK_CONFIG where ftms_group_id = #{group_id}
+    </select>
+     <select id="queryGroupLeader"  parameterType="java.lang.String" resultMap="queryWorkConfig">
+    	SELECT group_leader from FTMS_WORK_CONFIG where ftms_group_id = #{group_id}
+    </select>
+    <update id="updateWorkConfig">
+    	UPDATE
+			FTMS_WORK_CONFIG
+		SET
+			work_leader = #{work_leader},
+			group_leader = #{group_leader},
+			uat_contact = #{uatContact},
+			security_leader = #{securityLeader}
+    	WHERE ftms_group_id = #{ftms_group_id}
+    </update>
+    <insert id="insertWorkConfig">
+    	INSERT INTO
+			FTMS_WORK_CONFIG (ftms_group_id, work_leader, group_leader, uat_contact, security_leader)
+        VALUES
+        	(#{group_id,jdbcType=INTEGER}, #{work_leader,jdbcType=INTEGER},
+			#{group_leader,jdbcType=VARCHAR}, #{uatContactId}, #{securityLeader})
+    </insert>
+
+	<select id="queryCurrentUatContact" resultMap="queryWorkConfig">
+		SELECT uat_contact from FTMS_WORK_CONFIG where ftms_group_id = #{group_id}
+	</select>
+
+	<update id="batchWorkLeader">
+		UPDATE
+			FTMS_WORK_CONFIG g, FTMS_USER u
+		SET
+			g.WORK_LEADER = u.USER_CODE
+		WHERE
+			g.WORK_LEADER = u.id
+	</update>
+
+	<update id="batchUatContact">
+		UPDATE
+			FTMS_WORK_CONFIG g, FTMS_USER u
+		SET
+			g.UAT_CONTACT = u.USER_CODE
+		WHERE
+			g.UAT_CONTACT = u.id
+	</update>
+
+	<select id="queryGroupLeaderAll" resultType="Map">
+		SELECT
+			FTMS_GROUP_ID as groupId, GROUP_LEADER as groupleader
+		FROM
+			FTMS_WORK_CONFIG
+	</select>
+
+	<select id="ftmsUserIdAndCode" resultType="Map">
+		SELECT
+			ID as id, USER_CODE as username
+		FROM
+			FTMS_USER;
+	</select>
+
+	<update id="setNameEn">
+		UPDATE
+			FTMS_WORK_CONFIG
+		SET
+			GROUP_LEADER = #{nameEn}
+		WHERE
+			FTMS_GROUP_ID = #{fdevGroupId}
+	</update>
+	
+	<select id="queryAlreadyAllocated" resultType="Map">
+		SELECT
+			FTMS_GROUP_ID as groupId, WORK_LEADER as work_leader,
+			GROUP_LEADER as groupleader, UAT_CONTACT as uatContact,
+			SECURITY_LEADER as security_leader
+		FROM
+			FTMS_WORK_CONFIG
+	</select>
+	
+	<select id="getUserRoleLevelMantisToken" resultType="Map">
+		SELECT
+			USER_CODE as user_name_en, ifnull(LEVEL, '') as level, USER_ROLE_CODE as role, ifnull(MANTIS_TOKEN, '') as token
+		FROM
+			FTMS_USER
+		WHERE
+			USER_ROLE_CODE != 'visitor'
+		AND
+			USER_ROLE_CODE != 'support'
+		AND
+			IS_LEAVE = 0;
+	</select>
+</mapper>

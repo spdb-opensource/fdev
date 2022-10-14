@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gotest.dao.GroupMapper" >
+
+    <select id="queryAutoWorkOrder" resultType="Map">
+        SELECT
+            WORK_LEADER as workManager,
+            GROUP_LEADER as groupLeader,
+            FTMS_GROUP_ID as groupId,
+            security_leader as securityLeader
+        FROM
+            FTMS_WORK_CONFIG
+        WHERE
+            FTMS_GROUP_ID = #{groupId}
+    </select>
+
+    <select id="queryUatContact" resultType="String">
+        SELECT
+            UAT_CONTACT as user_name_en
+        FROM
+            FTMS_WORK_CONFIG
+        WHERE
+            FTMS_GROUP_ID = #{groupId}
+    </select>
+</mapper>

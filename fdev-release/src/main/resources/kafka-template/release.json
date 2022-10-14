@@ -1,0 +1,20 @@
+{
+  "name": "$RELEASE_NAME",
+  "timeout": 3600,
+  "timestamp": "$TIMESTAMP",
+  "command": "$RELEASE_COMMAND",
+  "image": {
+    "name": "$RELEASE_IMAGE_NAME"
+  },
+  "metadata": {
+    "CI_PROJECT_NAME": "$CI_PROJECT_NAME",
+    "CI_PROJECT_URL": "$CI_PROJECT_URL",
+    "CI_PROJECT_NAMESPACE": "ebank_fdev/devops",
+    "CI_PROJECT_BRANCH": "$CI_PROJECT_BRANCH",
+    "CI_BUILD_STATE": "check",
+    "CI_PROJECT_DIR": "$CI_PROJECT_DIR",
+    "CI_API_V4_URL": "$CI_API_V4_URL",
+    "CI_PROJECT_ID": "$CI_PROJECT_ID",
+    "CI_ENVIRONMENT_SLUG": "$CI_ENVIRONMENT_SLUG"
+  }
+}

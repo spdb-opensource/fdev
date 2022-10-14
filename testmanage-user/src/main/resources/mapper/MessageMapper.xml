@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.MessageDao">
+	<resultMap id="MessageResultMap" type="com.test.entity.Message">
+		<id column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="CONTENT" jdbcType="VARCHAR" property="content"/>
+        <result column="TYPE" jdbcType="VARCHAR" property="type"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="create_time"/>
+        <result column="EXPIRY_TIME" jdbcType="VARCHAR" property="expiry_time"/>
+		<result column="STATE" jdbcType="VARCHAR" property="state"/>
+		<result column="LINK_URI" jdbcType="VARCHAR" property="linkUri"/>
+	</resultMap>
+	
+     <insert id="addMessage" parameterType="com.test.entity.Message">
+       	INSERT INTO
+       	FTMS_MESSAGE(ID,CONTENT,TYPE,CREATE_TIME,EXPIRY_TIME) 
+       	VALUES(#{id},#{content},#{type},#{create_time},#{expiry_time})
+     </insert>
+     
+    <select id="queryMessage" resultMap="MessageResultMap">
+    	SELECT  ID,
+			CONTENT, TYPE,
+			LEFT(CREATE_TIME,19) CREATE_TIME,
+			LEFT(EXPIRY_TIME,19) EXPIRY_TIME
+    	FROM
+			FTMS_MESSAGE WHERE TYPE LIKE CONCAT ('announce','%')
+    	ORDER BY
+			CREATE_TIME desc
+    </select>
+    
+    <select id="queryMessageUser" parameterType="java.lang.String" resultMap="MessageResultMap">
+    	SELECT
+			ID, CONTENT, TYPE, LEFT(CREATE_TIME,19) CREATE_TIME,  LEFT(EXPIRY_TIME,19) EXPIRY_TIME, TARGET, STATE,LINK_URI
+    	FROM
+			FTMS_MESSAGE
+		WHERE
+			TARGET = #{target}
+			AND
+			MESSAGE_TYPE = 'user_message'
+		<if test="type !='' and type != null">
+			AND
+			TYPE = #{type}
+		</if>
+    	ORDER BY CREATE_TIME desc
+    </select>
+    
+    <update id="updateNotifyStatus" parameterType="java.lang.String">
+    	UPDATE FTMS_MESSAGE SET STATE = '1' WHERE ID = #{id}
+    </update>
+    
+    <insert id="addUserMessage" parameterType="com.test.entity.Message">
+       	INSERT INTO
+       	FTMS_MESSAGE(ID,CONTENT,TYPE,CREATE_TIME,TARGET,MESSAGE_TYPE,LINK_URI)
+       	VALUES(#{id},#{content},#{type},#{create_time},#{target},'user_message',#{linkUri})
+     </insert>
+     
+     <select id="queryNewMessage" resultMap="MessageResultMap">
+    	SELECT  ID, CONTENT, TYPE, LEFT(CREATE_TIME,19) CREATE_TIME,  LEFT(EXPIRY_TIME,19) EXPIRY_TIME, TARGET, STATE, LINK_URI
+    	FROM FTMS_MESSAGE WHERE TYPE = 'version-refresh'
+    	ORDER BY CREATE_TIME
+    </select>
+</mapper>

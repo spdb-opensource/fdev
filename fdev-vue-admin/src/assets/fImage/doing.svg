@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>doing</title>
+    <defs>
+        <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#38D686" offset="0%"></stop>
+            <stop stop-color="#65E9A7" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon" transform="translate(-14.000000, -377.000000)" fill-rule="nonzero">
+            <g id="doing" transform="translate(14.000000, 377.000000)">
+                <g id="编组-15" fill="#C8F4DE">
+                    <rect id="矩形" x="0" y="0" width="48" height="48" rx="8"></rect>
+                </g>
+                <g id="jinxing" transform="translate(9.500000, 9.500000)">
+                    <path d="M14.5,0 C18.4988281,0 22.1237274,1.62575605 24.7489857,4.25101433 C27.374244,6.87627261 29,10.5011719 29,14.5 C29,18.5072951 27.3767603,22.1300032 24.7547461,24.7520174 C22.1289973,27.3777662 18.5016812,29 14.5,29 C10.4927049,29 6.86999681,27.3767603 4.24798259,24.7547461 C1.62223382,22.1289973 0,18.5016812 0,14.5 C0,10.5011719 1.62575605,6.87627261 4.25101433,4.25101433 C6.87627261,1.62575605 10.5011719,0 14.5,0 Z" id="路径" stroke="#FFFFFF" fill="url(#linearGradient-1)"></path>
+                    <g id="编组-8" transform="translate(6.500000, 8.500000)" fill="#FFFFFF">
+                        <polygon id="路径" points="0 2.91964286 1.95535714 2.91964286 1.95535714 8.75892857 0 8.75892857"></polygon>
+                        <polygon id="路径" points="2.89285714 2.91964286 4.84821429 2.91964286 4.84821429 8.75892857 2.89285714 8.75892857"></polygon>
+                        <polygon id="路径" points="9.72321429 2.91964286 5.8125 2.91964286 5.8125 8.75892857 9.72321429 8.75892857 9.72321429 11.6517857 15.5357143 5.83928571 9.72321429 -2.53765261e-16"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

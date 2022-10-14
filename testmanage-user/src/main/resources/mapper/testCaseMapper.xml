@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.TestCaseDao">
+
+     <resultMap id="countTestCase" type="java.util.Map">
+        <result column="id" jdbcType="VARCHAR" property="user_id"/>
+        <result column="user_code" jdbcType="VARCHAR" property="user_en_name"/>
+        <result column="user_name" jdbcType="VARCHAR" property="user_name"/>
+        <result column="group_name" jdbcType="VARCHAR" property="group_name"/>
+        <result column="exe_num" jdbcType="VARCHAR" property="exe_num"/>
+        <result column="add_num" jdbcType="VARCHAR" property="add_num"/>
+        <result column="delete_num" jdbcType="VARCHAR" property="delete_num"/>
+        <result column="modify_num" jdbcType="VARCHAR" property="modify_num"/>
+        <result column="block_num" jdbcType="VARCHAR" property="block_num"/>
+        <result column="fail_num" jdbcType="VARCHAR" property="fail_num"/>
+    </resultMap>
+    <resultMap id="countGroupTestCase" type="java.util.Map">
+        <result column="id" jdbcType="VARCHAR" property="user_id"/>
+        <result column="user_code" jdbcType="VARCHAR" property="user_en_name"/>
+        <result column="user_name" jdbcType="VARCHAR" property="user_name"/>
+        <result column="group_id" jdbcType="VARCHAR" property="group_id"/>
+        <result column="add_sum" jdbcType="VARCHAR" property="add_sum"/>
+        <result column="execute_sum" jdbcType="VARCHAR" property="execute_sum"/>
+    </resultMap>
+    <select id="countUserTestCaseByTime" resultMap="countTestCase">
+        select
+            a.user_name,
+            a.exe_num,
+            b.add_num,
+            a.delete_num,
+            a.modify_num,
+            a.block_num,
+            a.fail_num
+        FROM (
+            SELECT
+                e.OPR as user_name,
+                sum(if(e.STATUS != '4' and e.OPR_TYPE = '0',1,0)) as exe_num,
+                sum(if(e.OPR_TYPE = '1',1,0)) as delete_num,
+                sum(if(e.OPR_TYPE = '2',1,0)) as modify_num,
+                sum(if(e.STATUS = '2',1,0)) as block_num,
+                sum(if(e.STATUS = '3',1,0)) as fail_num
+            FROM
+                FTMS_TESTCASE_EXE_RECORD e
+            WHERE
+                e.date between #{startDate} and #{endDate}
+            AND
+                e.opr in
+                <foreach collection="userName" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            GROUP BY e.OPR
+        ) a
+        left join (
+            SELECT
+                fpr.CREATE_OPR as user_name,
+                count(fpr.id) as add_num
+            FROM
+                FTMS_PLAN_RESULT fpr
+            WHERE
+                fpr.CREATE_TM between #{startDate} and #{endDate}
+            AND
+                fpr.CREATE_OPR in
+                <foreach collection="userName" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            GROUP BY fpr.CREATE_OPR
+        ) b
+        on a.user_name = b.user_name
+    </select>
+</mapper>

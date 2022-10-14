@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ExecutionPlan">
+    <resultMap id="selectJobOperationRecord" type="HashMap">
+        <result property="id" column="ID"/>
+        <result property="schedName" column="SCHED_NAME"/>
+        <result property="instanceName" column="INSTANCE_NAME"/>
+        <result property="identificationId" column="IDENTIFICATION_ID"/>
+        <result property="triggerName" column="TRIGGER_NAME"/>
+        <result property="triggerGroup" column="TRIGGER_GROUP"/>
+        <result property="jobName" column="JOB_NAME"/>
+        <result property="jobGroup" column="JOB_GROUP"/>
+        <result property="schedTime" column="SCHED_TIME"/>
+        <result property="acquiredTime" column="ACQUIRED_TIME"/>
+        <result property="firedTime" column="FIRED_TIME"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="jobData" column="JOB_DATA"/>
+        <result property="jobState" column="JOB_STATE"/>
+        <result property="transType" column="TRANS_TYPE"/>
+        <result property="createDate" column="CREATE_DATE"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="schedulerSeqNo" column="SCHEDULER_SEQ_NO"/>
+    </resultMap>
+    <select id="selectJobOperationRecord" parameterType="HashMap" resultMap="selectJobOperationRecord">
+        SELECT
+        ID,SPDB_EXECUTION_PLAN.SCHED_NAME,INSTANCE_NAME,IDENTIFICATION_ID,SPDB_EXECUTION_PLAN.TRIGGER_NAME,SPDB_EXECUTION_PLAN.TRIGGER_GROUP,
+        SPDB_EXECUTION_PLAN.JOB_NAME,SPDB_EXECUTION_PLAN.JOB_GROUP,SCHED_TIME,ACQUIRED_TIME,FIRED_TIME,
+        END_TIME,SPDB_EXECUTION_PLAN.JOB_DATA,JOB_STATE,TRANS_TYPE,CREATE_DATE,DESCRIPTION,SPDB_EXECUTION_PLAN.SCHEDULER_SEQ_NO
+        FROM
+        SPDB_EXECUTION_PLAN LEFT JOIN QRTZ_JOB_DETAILS
+        ON SPDB_EXECUTION_PLAN.JOB_NAME = QRTZ_JOB_DETAILS.JOB_NAME
+        AND SPDB_EXECUTION_PLAN.SCHED_NAME = QRTZ_JOB_DETAILS.SCHED_NAME
+        AND SPDB_EXECUTION_PLAN.JOB_GROUP = QRTZ_JOB_DETAILS.JOB_GROUP
+        WHERE SPDB_EXECUTION_PLAN.SCHED_NAME = #{schedName}
+        <if test="triggerName != null and triggerName != ''">AND SPDB_EXECUTION_PLAN.TRIGGER_NAME = #{triggerName}</if>
+        <if test="triggerGroup != null and triggerGroup != ''">AND SPDB_EXECUTION_PLAN.TRIGGER_GROUP = #{triggerGroup}</if>
+        <if test="jobName != null and jobName != ''">AND SPDB_EXECUTION_PLAN.JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND SPDB_EXECUTION_PLAN.JOB_GROUP = #{jobGroup}</if>
+        <if test="jobState != null and jobState != ''">AND JOB_STATE = #{jobState}</if>
+        <if test="id != null and id != ''">AND ID = #{id}</if>
+        <if test="description != null and description != ''">
+            AND (DESCRIPTION like concat(concat('%',#{description}),'%')
+            OR SPDB_EXECUTION_PLAN.JOB_NAME like concat(concat('%',#{description}),'%'))
+        </if>
+        <if test="startDateTime != null and startDateTime != ''">AND SCHED_TIME <![CDATA[ >= ]]>#{startDateTime}</if>
+        <if test="endDateTime != null and endDateTime != ''">AND SCHED_TIME <![CDATA[ <= ]]>#{endDateTime}</if>
+        <if test="serialNum != null and serialNum != ''">AND SCHEDULER_SEQ_NO = #{serialNum}</if>
+        ORDER BY SCHED_TIME ASC
+    </select>
+
+    <select id="selectJobOperationRecordOne" parameterType="HashMap" resultMap="selectJobOperationRecord">
+        SELECT
+        ID,SCHED_NAME,INSTANCE_NAME,IDENTIFICATION_ID,TRIGGER_NAME,TRIGGER_GROUP,JOB_NAME,JOB_GROUP,SCHED_TIME,ACQUIRED_TIME,FIRED_TIME,
+        START_TIME,END_TIME,JOB_DATA,JOB_STATE,TRANS_TYPE,CREATE_DATE
+        FROM
+        SPDB_EXECUTION_PLAN
+        WHERE SCHED_NAME = #{schedName}
+        <if test="id != null">AND ID = #{id}</if>
+        <if test="jobName != null and jobName != ''">AND JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+        <if test="triggerName != null and triggerName != ''">AND TRIGGER_NAME = #{triggerName}</if>
+        <if test="triggerGroup != null and triggerGroup != ''">AND TRIGGER_GROUP = #{triggerGroup}</if>
+        <if test="jobState != null and jobState != ''">AND JOB_STATE = #{jobState}</if>
+        <if test="schedTime != null and schedTime != ''">AND SCHED_TIME = #{schedTime}</if>
+        <if test="schedulerSeqNo != null and schedulerSeqNo != ''">AND SCHEDULER_SEQ_NO = #{schedulerSeqNo}</if>
+    </select>
+
+    <select id="selectOperationRecordLessTimeByJobNum" parameterType="HashMap" resultMap="selectJobOperationRecord">
+        SELECT
+        ID,SCHED_NAME,INSTANCE_NAME,IDENTIFICATION_ID,TRIGGER_NAME,TRIGGER_GROUP,JOB_NAME,JOB_GROUP,SCHED_TIME,ACQUIRED_TIME,FIRED_TIME,
+        END_TIME,JOB_DATA,JOB_STATE,TRANS_TYPE,CREATE_DATE
+        FROM
+        SPDB_EXECUTION_PLAN
+        WHERE SCHED_NAME = #{schedName}
+        <if test="jobName != null and jobName != ''">AND JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+        <if test="triggerName != null and triggerName != ''">AND TRIGGER_NAME = #{triggerName}</if>
+        <if test="triggerGroup != null and triggerGroup != ''">AND TRIGGER_GROUP = #{triggerGroup}</if>
+        <if test="jobState != null and jobState != ''">AND JOB_STATE = #{jobState}</if>
+        <if test="schedTime != null and schedTime != ''">AND SCHED_TIME <![CDATA[ < ]]> #{schedTime}</if>
+        <if test="nowTime != null and nowTime != ''">AND SCHED_TIME <![CDATA[ >= ]]> #{nowTime}</if>
+    </select>
+
+    <resultMap id="selectExecutorPlanDetail" type="HashMap">
+        <result property="id" column="ID"/>
+        <result property="schedName" column="SCHED_NAME"/>
+        <result property="instanceName" column="INSTANCE_NAME"/>
+        <result property="identificationId" column="IDENTIFICATION_ID"/>
+        <result property="triggerName" column="TRIGGER_NAME"/>
+        <result property="triggerGroup" column="TRIGGER_GROUP"/>
+        <result property="jobName" column="JOB_NAME"/>
+        <result property="jobGroup" column="JOB_GROUP"/>
+        <result property="schedTime" column="SCHED_TIME"/>
+        <result property="acquiredTime" column="ACQUIRED_TIME"/>
+        <result property="firedTime" column="FIRED_TIME"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="jobData" column="JOB_DATA"/>
+        <result property="jobState" column="JOB_STATE"/>
+        <result property="transType" column="TRANS_TYPE"/>
+        <result property="createDate" column="CREATE_DATE"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="operationRecordId" column="OPERATION_RECORD_ID"/>
+        <result property="schedulerSeqNo" column="SCHEDULER_SEQ_NO"/>
+        <result property="schedulerIp" column="SCHEDULER_IP"/>
+        <result property="schedulerDate" column="SCHEDULER_DATE"/>
+        <result property="schedulerResult" column="SCHEDULER_RESULT"/>
+        <result property="executorIp" column="EXECUTOR_IP"/>
+        <result property="executorDate" column="EXECUTOR_DATE"/>
+        <result property="executorResult" column="EXECUTOR_RESULT"/>
+    </resultMap>
+    <select id="selectExecutorPlanDetail" parameterType="HashMap" resultMap="selectExecutorPlanDetail">
+        SELECT
+        ID,SPDB_EXECUTION_PLAN.SCHED_NAME,INSTANCE_NAME,SPDB_EXECUTION_PLAN.IDENTIFICATION_ID,SPDB_EXECUTION_PLAN.TRIGGER_NAME,
+        SPDB_EXECUTION_PLAN.TRIGGER_GROUP,SPDB_EXECUTION_PLAN.JOB_NAME,SPDB_EXECUTION_PLAN.JOB_GROUP,SCHED_TIME,ACQUIRED_TIME,FIRED_TIME,
+        START_TIME,END_TIME,SPDB_EXECUTION_PLAN.JOB_DATA,JOB_STATE,TRANS_TYPE,CREATE_DATE,DESCRIPTION,SCHEDULER_SEQ_NO,SCHEDULER_IP,
+        SCHEDULER_RESULT,EXECUTOR_IP,EXECUTOR_RESULT
+        FROM
+        SPDB_EXECUTION_PLAN LEFT JOIN QRTZ_JOB_DETAILS
+        ON SPDB_EXECUTION_PLAN.JOB_NAME = QRTZ_JOB_DETAILS.JOB_NAME
+        AND SPDB_EXECUTION_PLAN.SCHED_NAME = QRTZ_JOB_DETAILS.SCHED_NAME
+        AND SPDB_EXECUTION_PLAN.JOB_GROUP = QRTZ_JOB_DETAILS.JOB_GROUP
+        WHERE SPDB_EXECUTION_PLAN.SCHED_NAME = #{schedName}
+        <if test="id != null and id != ''">AND ID = #{id}</if>
+    </select>
+
+    <!--标签set自动识别并去掉最后一个，-->
+    <update id="updateJobOperationRecord" parameterType="HashMap">
+        UPDATE SPDB_EXECUTION_PLAN
+        <set>
+            <if test="identificationId != null and identificationId != ''">IDENTIFICATION_ID =#{identificationId},</if>
+            <if test="schedTime != null and schedTime != ''">SCHED_TIME = #{schedTime},</if>
+            <if test="acquiredTime != null and acquiredTime != ''">ACQUIRED_TIME = #{acquiredTime},</if>
+            <if test="firedTime != null and firedTime != ''">FIRED_TIME = #{firedTime},</if>
+            <if test="startTime != null and startTime != ''">START_TIME = #{startTime},</if>
+            <if test="endTime != null and endTime != ''">END_TIME = #{endTime},</if>
+            <if test="jobState != null and jobState != ''">JOB_STATE = #{jobState},</if>
+            <if test="instanceName != null and instanceName != ''">INSTANCE_NAME = #{instanceName},</if>
+            <if test="transType != null">TRANS_TYPE = #{transType},</if>
+            <if test="schedulerSeqNo != null and schedulerSeqNo != ''">SCHEDULER_SEQ_NO = #{schedulerSeqNo},</if>
+            <if test="schedulerIp != null and schedulerIp != ''">SCHEDULER_IP = #{schedulerIp},</if>
+            <if test="schedulerResult != null and schedulerResult != ''">SCHEDULER_RESULT = #{schedulerResult},</if>
+            <if test="executorHandler != null and executorHandler != ''">EXECUTOR_HANDLER = #{executorHandler},</if>
+            <if test="executorParam != null and executorParam != ''">EXECUTOR_PARAM = #{executorParam},</if>
+            <if test="executorIp != null and executorIp != ''">EXECUTOR_IP = #{executorIp},</if>
+            <if test="executorResult != null and executorResult != ''">EXECUTOR_RESULT = #{executorResult},</if>
+        </set>
+        WHERE SCHED_NAME = #{schedName}
+        <if test="jobName != null and jobName != ''">AND JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+        <if test="triggerName != null and triggerName != ''">AND TRIGGER_NAME = #{triggerName}</if>
+        <if test="triggerGroup != null and triggerGroup != ''">AND TRIGGER_GROUP = #{triggerGroup}</if>
+        <if test="id != null and id != ''">AND ID = #{id}</if>
+        <if test="jobStateOld != null and jobStateOld != ''">AND JOB_STATE = #{jobStateOld}</if>
+        <if test="transTypeOld != null">AND TRANS_TYPE NOT IN (#{transTypeOld})</if>
+    </update>
+
+    <resultMap id="selectExecutorLog" type="HashMap">
+        <result property="operationRecordId" column="OPERATION_RECORD_ID"/>
+        <result property="schedulerSeqNo" column="SCHEDULER_SEQ_NO"/>
+        <result property="schedulerIp" column="SCHEDULER_IP"/>
+        <result property="schedulerDate" column="SCHEDULER_DATE"/>
+        <result property="schedulerResult" column="SCHEDULER_RESULT"/>
+        <result property="executorIp" column="EXECUTOR_IP"/>
+        <result property="executorDate" column="EXECUTOR_DATE"/>
+        <result property="executorResult" column="EXECUTOR_RESULT"/>
+        <result property="executorHandler" column="EXECUTOR_HANDLER"/>
+        <result property="executorParam" column="EXECUTOR_PARAM"/>
+        <result property="schedName" column="SCHED_NAME"/>
+    </resultMap>
+
+    <insert id="insertJobOperationRecord" parameterType="HashMap">
+        INSERT INTO SPDB_EXECUTION_PLAN
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="schedName != null and schedName != ''">SCHED_NAME,</if>
+            <if test="instanceName != null and instanceName != ''">INSTANCE_NAME,</if>
+            <if test="identificationId != null and identificationId != ''">IDENTIFICATION_ID,</if>
+            <if test="triggerName != null and triggerName != ''">TRIGGER_NAME,</if>
+            <if test="triggerGroup != null and triggerGroup != ''">TRIGGER_GROUP,</if>
+            <if test="jobName != null and jobName != ''">JOB_NAME,</if>
+            <if test="jobGroup != null and jobGroup != ''">JOB_GROUP,</if>
+            <if test="schedTime != null and schedTime != ''">SCHED_TIME,</if>
+            <if test="acquiredTime != null and acquiredTime != ''">ACQUIRED_TIME,</if>
+            <if test="firedTime != null and firedTime != ''">FIRED_TIME,</if>
+            <if test="startTime != null and startTime != ''">START_TIME,</if>
+            <if test="endTime != null and endTime != ''">END_TIME,</if>
+            <if test="jobData != null and jobData != ''">JOB_DATA,</if>
+            <if test="jobState != null and jobState != ''">JOB_STATE,</if>
+            <if test="transType != null">TRANS_TYPE,</if>
+            <if test="createDate != null and createDate != ''">CREATE_DATE,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="schedName != null and schedName != ''">#{schedName},</if>
+            <if test="instanceName != null and instanceName != ''">#{instanceName},</if>
+            <if test="identificationId != null and identificationId != ''">#{identificationId},</if>
+            <if test="triggerName != null and triggerName != ''">#{triggerName},</if>
+            <if test="triggerGroup != null and triggerGroup != ''">#{triggerGroup},</if>
+            <if test="jobName != null and jobName != ''">#{jobName},</if>
+            <if test="jobGroup != null and jobGroup != ''">#{jobGroup},</if>
+            <if test="schedTime != null and schedTime != ''">#{schedTime},</if>
+            <if test="acquiredTime != null and acquiredTime != ''">#{acquiredTime},</if>
+            <if test="firedTime != null and firedTime != ''">#{firedTime},</if>
+            <if test="startTime != null and startTime != ''">#{startTime},</if>
+            <if test="endTime != null and endTime != ''">#{endTime},</if>
+            <if test="jobData != null and jobData != ''">#{jobData},</if>
+            <if test="jobState != null and jobState != ''">#{jobState},</if>
+            <if test="transType != null">#{transType},</if>
+            <if test="createDate != null and createDate != ''">#{createDate},</if>
+        </trim>
+    </insert>
+
+    <delete id="deleteJobOperationRecord" parameterType="HashMap">
+        DELETE FROM SPDB_EXECUTION_PLAN
+        WHERE SCHED_NAME = #{schedName}
+        <if test="jobState != null and jobState != ''">AND JOB_STATE = #{jobState}</if>
+        <if test="transType != null">AND TRANS_TYPE = #{transType}</if>
+        <if test="startTime != null and startTime != ''">AND SCHED_TIME <![CDATA[ >= ]]> #{startTime}</if>
+        <if test="endTime != null and endTime != ''">AND SCHED_TIME <![CDATA[ <= ]]> #{endTime}</if>
+        <if test="id != null and id != ''">AND ID = #{id}</if>
+        <if test="triggerName != null and triggerName != ''">AND TRIGGER_NAME = #{triggerName}</if>
+        <if test="triggerGroup != null and triggerGroup != ''">AND TRIGGER_GROUP = #{triggerGroup}</if>
+        <if test="jobName != null and jobName != ''">AND JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+    </delete>
+
+    <delete id="deleteTrigger" parameterType="HashMap">
+        DELETE FROM QRTZ_TRIGGERS
+        WHERE SCHED_NAME = #{schedName}
+        <if test="triggerName != null and triggerName != ''">AND TRIGGER_NAME = #{triggerName}</if>
+        <if test="triggerGroup != null and triggerGroup != ''">AND TRIGGER_GROUP = #{triggerGroup}</if>
+        <if test="jobName != null and jobName != ''">AND JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+        <if test="nextFireTime != null and nextFireTime != ''">AND NEXT_FIRE_TIME = #{nextFireTime}</if>
+    </delete>
+
+    <delete id="deleteSimpleTrigger" parameterType="HashMap">
+        DELETE FROM QRTZ_SIMPLE_TRIGGERS
+        WHERE SCHED_NAME = #{schedName}
+        <if test="triggerName != null and triggerName != ''">AND TRIGGER_NAME = #{triggerName}</if>
+        <if test="triggerGroup != null and triggerGroup != ''">AND TRIGGER_GROUP = #{triggerGroup}</if>
+    </delete>
+
+    <update id="updateTrigger" parameterType="HashMap">
+        UPDATE QRTZ_TRIGGERS
+        <set>
+            <if test="nextFireTime != null and nextFireTime != ''">NEXT_FIRE_TIME =#{nextFireTime},</if>
+            <if test="prevFireTime != null and prevFireTime != ''">PREV_FIRE_TIME = #{prevFireTime},</if>
+            <if test="jobId != null">JOB_ID = #{jobId},</if>
+        </set>
+        WHERE SCHED_NAME = #{schedName}
+        <if test="triggerName != null and triggerName != ''">AND TRIGGER_NAME = #{triggerName}</if>
+        <if test="triggerGroup != null and triggerGroup != ''">AND TRIGGER_GROUP = #{triggerGroup}</if>
+        <if test="jobName != null and jobName != ''">AND JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+    </update>
+
+    <resultMap id="selectTriggerByCronTrigger" type="HashMap">
+        <result property="schedName" column="SCHED_NAME"/>
+        <result property="triggerName" column="TRIGGER_NAME"/>
+        <result property="triggerGroup" column="TRIGGER_GROUP"/>
+        <result property="jobName" column="JOB_NAME"/>
+        <result property="jobGroup" column="JOB_GROUP"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="nextFireTime" column="NEXT_FIRE_TIME"/>
+        <result property="prevFireTime" column="PREV_FIRE_TIME"/>
+        <result property="priority" column="PRIORITY"/>
+        <result property="triggerState" column="TRIGGER_STATE"/>
+        <result property="triggerType" column="TRIGGER_TYPE"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="calendarName" column="CALENDAR_NAME"/>
+        <result property="misfireInstr" column="MISFIRE_INSTR"/>
+        <result property="jobData" column="JOB_DATA"/>
+        <result property="cronExpression" column="CRON_EXPRESSION"/>
+        <result property="timeZoneId" column="TIME_ZONE_ID"/>
+    </resultMap>
+    <select id="selectTriggerByCronTrigger" parameterType="HashMap" resultMap="selectTriggerByCronTrigger">
+        SELECT
+        triggers.SCHED_NAME,triggers.TRIGGER_NAME,triggers.TRIGGER_GROUP,triggers.JOB_NAME,triggers.JOB_GROUP,
+        triggers.DESCRIPTION,triggers.NEXT_FIRE_TIME,triggers.PREV_FIRE_TIME,triggers.PRIORITY,
+        triggers.TRIGGER_STATE,triggers.TRIGGER_TYPE,triggers.START_TIME,triggers.END_TIME,triggers.CALENDAR_NAME,
+        triggers.MISFIRE_INSTR,triggers.JOB_DATA,cronTriggers.CRON_EXPRESSION,cronTriggers.TIME_ZONE_ID
+        FROM
+        QRTZ_TRIGGERS triggers
+        INNER JOIN QRTZ_CRON_TRIGGERS cronTriggers
+        ON triggers.TRIGGER_NAME = cronTriggers.TRIGGER_NAME
+        AND triggers.TRIGGER_GROUP = cronTriggers.TRIGGER_GROUP
+        AND triggers.SCHED_NAME = cronTriggers.SCHED_NAME
+        WHERE triggers.SCHED_NAME = #{schedName}
+        AND triggers.TRIGGER_STATE = #{triggerState}
+        AND triggers.TRIGGER_TYPE = #{triggerType}
+    </select>
+
+    <resultMap id="selectlockByLockName" type="HashMap">
+        <result property="schedName" column="SCHED_NAME"/>
+        <result property="lockName" column="LOCK_NAME"/>
+    </resultMap>
+    <select id="selectlockByLockName" parameterType="HashMap" resultMap="selectlockByLockName">
+        SELECT SCHED_NAME,LOCK_NAME
+        FROM QRTZ_LOCKS
+        WHERE SCHED_NAME = #{schedName}
+        AND LOCK_NAME = #{lockName}
+        FOR UPDATE
+    </select>
+</mapper>

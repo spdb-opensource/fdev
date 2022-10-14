@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gotest.dao.FdevSitMsgMapper" >
+
+    <resultMap id="ResultMap" type="com.gotest.domain.FdevSitMsg" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="task_no" property="taskNo" jdbcType="VARCHAR" />
+        <result column="test_reason" property="testReason" jdbcType="VARCHAR" />
+        <result column="repair_desc" property="repairDesc" jdbcType="VARCHAR" />
+        <result column="jira_no" property="jiraNo" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="REGRESSION_TEST_SCOPE" property="regressionTestScope" jdbcType="VARCHAR" />
+        <result column="INTERFACE_CHANGE" property="interfaceChange" jdbcType="VARCHAR" />
+        <result column="DATABASE_CHANGE" property="databaseChange" jdbcType="VARCHAR" />
+        <result column="OTHER_SYSTEM_CHANGE" property="otherSystemChange" jdbcType="VARCHAR" />
+        <result column="DEVELOPER" property="developer" jdbcType="VARCHAR" />
+        <result column="TEST_ENV" property="testEnv" jdbcType="VARCHAR" />
+        <result column="APP_NAME" property="appName" jdbcType="VARCHAR" />
+        <result column="CLIENT_VERSION" property="clientVersion" jdbcType="VARCHAR" />
+        <result column="WORK_NO" property="workNo" jdbcType="VARCHAR" />
+        <result column="main_task_name" property="taskName" jdbcType="VARCHAR" />
+        <result column="product_date" property="planProductDate" jdbcType="VARCHAR" />
+        <result column="uat_date" property="planStartUatDate" jdbcType="VARCHAR" />
+        <result column="RQR_NO" property="rqrNo" jdbcType="VARCHAR" />
+        <result column="testers" property="testers" jdbcType="VARCHAR" />
+        <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+        <result column="fdev_group_id" property="orderGroupId" jdbcType="VARCHAR" />
+        <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+        <result column="work_stage" property="stage" jdbcType="VARCHAR" />
+        <result column="fdev_new" property="fdev_new" jdbcType="VARCHAR" />
+        <result column="COPY_TO" property="copyTo" jdbcType="VARCHAR" />
+        <result column="TRANS_FILE_PATH" property="transFilePath" jdbcType="VARCHAR" />
+        <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="FdevSitMsg_Column_List_Insert">
+        task_no,
+        test_reason,
+        repair_desc,
+        jira_no,
+        create_time,
+        REGRESSION_TEST_SCOPE,
+        INTERFACE_CHANGE,
+        DATABASE_CHANGE,
+        OTHER_SYSTEM_CHANGE,
+        DEVELOPER,
+        TEST_ENV,
+        APP_NAME,
+        CLIENT_VERSION,
+        WORK_NO,
+        RQR_NO,
+        GROUP_ID,
+        COPY_TO,
+        CORRELATION_SYSTEM,
+        CORRELATION_INTERFACE,
+        INTERFACE_FILE_PATH,
+        TRANS_FILE_PATH
+    </sql>
+
+    <sql id="FdevSitMsg_Column_List">
+        id,
+        task_no,
+        test_reason,
+        repair_desc,
+        jira_no,
+        create_time,
+        REGRESSION_TEST_SCOPE,
+        INTERFACE_CHANGE,
+        DATABASE_CHANGE,
+        OTHER_SYSTEM_CHANGE,
+        DEVELOPER,
+        TEST_ENV,
+        APP_NAME,
+        CLIENT_VERSION,
+        WORK_NO,
+        RQR_NO,
+        CORRELATION_SYSTEM,
+        CORRELATION_INTERFACE,
+        INTERFACE_FILE_PATH,
+        TRANS_FILE_PATH
+    </sql>
+
+    <!-- 新增fdev提测记录-->
+    <insert id = "addFdevSitMsg" parameterType="com.gotest.domain.FdevSitMsg" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
+        INSERT INTO
+            FTMS_SUBMIT_SIT_RECORD
+        (<include refid="FdevSitMsg_Column_List_Insert"/>)
+        values
+        (
+            #{taskNo,jdbcType=VARCHAR},
+            #{testReason,jdbcType=VARCHAR},
+            #{repairDesc,jdbcType=VARCHAR},
+            #{jiraNo,jdbcType=VARCHAR},
+            #{createTime,jdbcType=VARCHAR},
+            #{regressionTestScope,jdbcType=VARCHAR},
+            #{interfaceChange,jdbcType=VARCHAR},
+            #{databaseChange,jdbcType=VARCHAR},
+            #{otherSystemChange,jdbcType=VARCHAR},
+            #{developer,jdbcType=VARCHAR},
+            #{testEnv,jdbcType=VARCHAR},
+            #{appName,jdbcType=VARCHAR},
+            #{clientVersion,jdbcType=VARCHAR},
+            #{workNo,jdbcType=VARCHAR},
+            #{rqrNo,jdbcType=VARCHAR},
+            #{groupId,jdbcType=VARCHAR},
+            #{copyTo,jdbcType=VARCHAR},
+            #{correlationSystem,jdbcType=VARCHAR},
+            #{correlationInterface,jdbcType=VARCHAR},
+            #{interfaceFilePath,jdbcType=VARCHAR},
+            #{transFilePath,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <select id="querySitMsgDetail" resultMap="ResultMap">
+        SELECT
+            f.id,
+            f.task_no,
+            f.test_reason,
+            f.repair_desc,
+            f.jira_no,
+            f.create_time,
+            f.REGRESSION_TEST_SCOPE,
+            f.INTERFACE_CHANGE,
+            f.DATABASE_CHANGE,
+            f.OTHER_SYSTEM_CHANGE,
+            f.DEVELOPER,
+            f.TEST_ENV,
+            f.APP_NAME,
+            f.CLIENT_VERSION,
+            f.WORK_NO,
+            f.RQR_NO,
+            w.main_task_name,
+            w.product_date,
+            w.uat_date,
+            w.testers
+        FROM
+            FTMS_SUBMIT_SIT_RECORD f
+        LEFT JOIN
+            work_order w
+        ON
+            f.work_no = w.work_no
+        WHERE
+            f.id = #{id}
+
+    </select>
+
+    <select id="querySitMsgList" resultMap="ResultMap">
+        SELECT
+            distinct
+            f.id,
+            f.task_no,
+            f.test_reason,
+            f.repair_desc,
+            f.jira_no,
+            f.create_time,
+            f.REGRESSION_TEST_SCOPE,
+            f.INTERFACE_CHANGE,
+            f.DATABASE_CHANGE,
+            f.OTHER_SYSTEM_CHANGE,
+            f.DEVELOPER,
+            f.TEST_ENV,
+            f.APP_NAME,
+            f.CLIENT_VERSION,
+            f.WORK_NO,
+            f.RQR_NO,
+            f.group_id,
+            w.main_task_name,
+            w.product_date,
+            w.uat_date,
+            w.testers,
+            w.fdev_group_id,
+            w.work_stage,
+            w.fdev_new,
+            w.order_type
+        FROM
+            (
+            SELECT * FROM FTMS_SUBMIT_SIT_RECORD
+            <where>
+                <if test="startDate != '' and startDate != null and endDate != '' and endDate != null">
+                    AND
+                    LEFT(FTMS_SUBMIT_SIT_RECORD.CREATE_TIME, 10) between #{startDate} and #{endDate}
+                </if>
+                <if test="sitGroupIds != null and sitGroupIds.size() >0 ">
+                    and group_id in
+                    <foreach collection="sitGroupIds" item="group" open="(" close=")" separator=",">
+                        #{group}
+                    </foreach>
+                </if>
+            </where>
+            ) f
+        JOIN
+            (
+            SELECT * FROM work_order WHERE work_stage != 11
+            <if test="workNo != '%%' ">
+                And work_no IN
+                ( SELECT wt.work_no FROM (
+                SELECT work_no FROM work_order WHERE
+                main_task_name like concat('%', #{workNo}, '%') OR main_task_no like concat('%', #{workNo}, '%') OR
+                demand_name like concat('%', #{workNo}, '%') OR
+                work_unit like concat('%', #{workNo}, '%') OR demand_no like concat('%', #{workNo}, '%')
+                UNION
+                SELECT work_no FROM task_list WHERE task_name like concat('%', #{workNo}, '%') ) wt )
+            </if>
+            <if test="tester != '' and tester != null">
+                AND
+                    FIND_IN_SET(#{tester},testers)
+            </if>
+            <if test="stage != '' and stage != null">
+                AND
+                    work_stage = #{stage}
+            </if>
+            <if test="orderType != 'all'">
+                <choose>
+                    <when test="orderType != null and orderType != ''">
+                        AND
+                        order_type = #{orderType}
+                    </when>
+                    <otherwise>
+                        AND
+                        order_type = 'function'
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="orderGroupIds != null and orderGroupIds.size() > 0">
+                and fdev_group_id in
+                <foreach collection="orderGroupIds" item="group" open="(" close=")" separator=",">
+                    #{group}
+                </foreach>
+            </if>
+            ) w
+        ON
+            f.work_no = w.work_no
+        ORDER BY f.ID DESC
+        LIMIT #{startPage},#{pageSize}
+    </select>
+
+
+    <select id="countSitMsgList" resultType="INTEGER">
+        SELECT
+            count(distinct f.id)
+        FROM
+            (
+            SELECT * FROM FTMS_SUBMIT_SIT_RECORD
+            <where>
+                <if test="startDate != '' and startDate != null and endDate != '' and endDate != null">
+                    AND
+                    LEFT(FTMS_SUBMIT_SIT_RECORD.CREATE_TIME, 10) between #{startDate} and #{endDate}
+                </if>
+                <if test="sitGroupIds != null and sitGroupIds.size() >0 ">
+                    and group_id in
+                    <foreach collection="sitGroupIds" item="group" open="(" close=")" separator=",">
+                        #{group}
+                    </foreach>
+                </if>
+            </where>
+            ) f
+        JOIN
+            (
+            SELECT * FROM work_order WHERE work_stage != 11
+            <if test="workNo != '%%' ">
+                And work_no IN
+                ( SELECT wt.work_no FROM (
+                SELECT work_no FROM work_order WHERE
+                main_task_name like concat('%', #{workNo}, '%') OR main_task_no like concat('%', #{workNo}, '%') OR
+                demand_name like concat('%', #{workNo}, '%') OR
+                work_unit like concat('%', #{workNo}, '%') OR demand_no like concat('%', #{workNo}, '%')
+                UNION
+                SELECT work_no FROM task_list WHERE task_name like concat('%', #{workNo}, '%') ) wt )
+            </if>
+            <if test="tester != '' and tester != null">
+                AND
+                FIND_IN_SET(#{tester},testers)
+            </if>
+            <if test="stage != '' and stage != null">
+                AND
+                work_stage = #{stage}
+            </if>
+            <if test="orderType != 'all'">
+                <choose>
+                    <when test="orderType != null and orderType != ''">
+                        AND
+                        order_type = #{orderType}
+                    </when>
+                    <otherwise>
+                        AND
+                        order_type = 'function'
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="orderGroupIds != null and orderGroupIds.size() > 0">
+                and fdev_group_id in
+                <foreach collection="orderGroupIds" item="group" open="(" close=")" separator=",">
+                    #{group}
+                </foreach>
+            </if>
+            ) w
+        ON
+            f.work_no = w.work_no
+    </select>
+
+    <!-- 根据任务编号查询fdev提测记录-->
+    <select id="queryFdevSitMsg" resultMap="ResultMap">
+        SELECT
+            <include refid="FdevSitMsg_Column_List"/>
+        FROM
+            FTMS_SUBMIT_SIT_RECORD
+        WHERE
+            task_no = #{taskNo}
+        ORDER BY
+            create_time
+        LIMIT
+            0,1
+    </select>
+
+    <!-- 根据任务编号查询最后一次fdev提测记录-->
+    <select id="queryLastFdevSitMsg" resultMap="ResultMap">
+        SELECT
+        <include refid="FdevSitMsg_Column_List"/>
+        FROM
+            FTMS_SUBMIT_SIT_RECORD
+        WHERE
+            WORK_NO = #{workNo}
+        <if test="taskNo != null and taskNo != ''">
+            AND
+            TASK_NO = #{taskNo}
+        </if>
+        ORDER BY
+            create_time desc
+        LIMIT
+            0,1
+    </select>
+    
+    <select id="queryTaskNoByOrder" resultType="String">
+        SELECT
+            distinct TASK_NO
+        FROM
+            FTMS_SUBMIT_SIT_RECORD
+        WHERE
+            WORK_NO = #{workNo}
+    </select>
+
+    <select id="queryAllCopyToByTaskIds" parameterType="java.util.List" resultMap="ResultMap">
+        SELECT DISTINCT
+        COPY_TO
+        FROM
+        FTMS_SUBMIT_SIT_RECORD
+        WHERE
+        COPY_TO is not null
+        <foreach collection="list" open=" and TASK_NO in (" close=")" item="taskId" separator=",">
+            #{taskId}
+        </foreach>
+    </select>
+
+    <!-- 根据任务编号查询fdev任务提测记录-->
+    <select id="queryTaskSitMsg" resultMap="ResultMap">
+        SELECT
+            f.id,
+            f.task_no,
+            f.test_reason,
+            f.repair_desc,
+            f.jira_no,
+            f.create_time,
+            f.REGRESSION_TEST_SCOPE,
+            f.INTERFACE_CHANGE,
+            f.DATABASE_CHANGE,
+            f.OTHER_SYSTEM_CHANGE,
+            f.DEVELOPER,
+            f.TEST_ENV,
+            f.APP_NAME,
+            f.CLIENT_VERSION,
+            f.WORK_NO,
+            f.RQR_NO,
+            f.CORRELATION_SYSTEM,
+            f.CORRELATION_INTERFACE,
+            f.INTERFACE_FILE_PATH,
+            f.TRANS_FILE_PATH
+        FROM
+            FTMS_SUBMIT_SIT_RECORD f
+        left join work_order w
+        on f.work_no=w.work_no
+        WHERE
+            f.task_no = #{taskNo}
+        <if test="orderType != 'all'">
+            <choose>
+                <when test="orderType != null and orderType != ''">
+                    AND
+                    w.order_type = #{orderType}
+                </when>
+                <otherwise>
+                    AND
+                    w.order_type = 'function'
+                </otherwise>
+            </choose>
+        </if>
+        ORDER BY
+            create_time desc
+    </select>
+
+    <!--根据id修改工单编号-->
+    <update id="updateWorkNoById">
+        UPDATE
+            FTMS_SUBMIT_SIT_RECORD
+        SET
+            WORK_NO = #{workNo}
+        WHERE
+            id = #{id}
+    </update>
+
+    <select id="queryTaskNoByWorkNo" resultType="String">
+        SELECT DISTINCT
+            TASK_NO
+        FROM
+            FTMS_SUBMIT_SIT_RECORD
+        WHERE
+            WORK_NO = #{workNo}
+    </select>
+
+    <select id="querySitMsgCount" resultType="INTEGER">
+        SELECT
+            count(id)
+        FROM
+            FTMS_SUBMIT_SIT_RECORD
+        WHERE
+            TASK_NO = #{taskNo}
+    </select>
+
+    <update id="updateWorkNoByTaskNos">
+        UPDATE
+            FTMS_SUBMIT_SIT_RECORD
+        SET
+            WORK_NO = #{newWorkNo}
+        WHERE
+            trans_file_path is null
+            and
+            TASK_NO in
+        <foreach collection="taskIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="queryTaskNoAll" resultType="String">
+        SELECT
+            TASK_NO
+        FROM
+            FTMS_SUBMIT_SIT_RECORD
+        WHERE
+            GROUP_ID is null
+    </select>
+
+    <update id="updateGroupIdByTaskId">
+        UPDATE
+            FTMS_SUBMIT_SIT_RECORD
+        SET
+            GROUP_ID = #{groupId}
+        WHERE
+            TASK_NO = #{taskNo}
+    </update>
+    <!-- 添加交易清单表数据 -->
+    <insert id = "addSecurityTestTrans" parameterType="com.gotest.domain.SecurityTestTrans" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into
+        security_test_trans
+        (submit_sit_id, trans_index, trans_name, trans_desc, function_menu)
+        values
+        (
+        #{submitSitId,jdbcType=INTEGER},
+        #{transIndex,jdbcType=VARCHAR},
+        #{transName,jdbcType=VARCHAR},
+        #{transDesc,jdbcType=VARCHAR},
+        #{functionMenu,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="updateByWorkNo">
+        UPDATE
+            FTMS_SUBMIT_SIT_RECORD
+        SET
+            rqr_no = #{rqrNo}
+        WHERE
+            work_no = #{workOrderNo}
+    </update>
+
+    <select id="querySubmitTime" resultType="Map">
+        select
+            s.taskNo,
+            s.realSitTime,
+            w.sit_date as planSitDate,
+            w.fdev_group_id as groupId
+        from (
+            SELECT
+                TASK_NO as taskNo,
+                left(min(CREATE_TIME),10) as realSitTime,
+                min(work_no) as workNo
+            FROM FTMS_SUBMIT_SIT_RECORD
+            where left(CREATE_TIME,10) between #{startDate} and #{endDate}
+            group by TASK_NO
+        ) s
+        left join work_order w
+        on s.workNo = w.work_no
+        where w.fdev_group_id in
+        <foreach collection="groupIds" item="groupId" open="(" close=")" separator=",">
+            #{groupId}
+        </foreach>
+    </select>
+</mapper>

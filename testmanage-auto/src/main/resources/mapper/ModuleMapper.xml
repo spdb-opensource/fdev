@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.auto.dao.ModuleMapper">
+
+    <resultMap id="Module" type="com.auto.entity.Module">
+        <id column="MODULE_ID" jdbcType="INTEGER" property="moduleId"/>
+        <result column="MODULE_NO" jdbcType="VARCHAR" property="moduleNo"/>
+        <result column="MODULE_GROUP" jdbcType="VARCHAR" property="moduleGroup"/>
+        <result column="MODULE_NAME" jdbcType="VARCHAR" property="moduleName"/>
+        <result column="MODULE_NAME_CN" jdbcType="VARCHAR" property="moduleNameCn"/>
+        <result column="DELETED" jdbcType="VARCHAR" property="deleted"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="VARCHAR" property="modifyTime"/>
+        <result column="LAST_OPR" jdbcType="VARCHAR" property="lastOpr"/>
+    </resultMap>
+
+    <sql id = "Module_Column_List" >
+        MODULE_ID,
+        MODULE_NO,
+        MODULE_GROUP,
+        MODULE_NAME,
+        MODULE_NAME_CN,
+        DELETED,
+        CREATE_TIME,
+        MODIFY_TIME,
+        LAST_OPR
+    </sql>
+
+    <insert id="addModule" parameterType="com.auto.entity.Module" >
+        INSERT INTO
+            AUTO_MODULE
+            (MODULE_NO, MODULE_GROUP, MODULE_NAME, MODULE_NAME_CN,
+            DELETED, CREATE_TIME, MODIFY_TIME,LAST_OPR)
+        VALUES
+            (#{moduleNo,jdbcType=VARCHAR},
+            #{moduleGroup,jdbcType=VARCHAR}, #{moduleName,jdbcType=VARCHAR},
+            #{moduleNameCn,jdbcType=VARCHAR},  #{deleted,jdbcType=VARCHAR},
+            #{createTime,jdbcType=VARCHAR}, #{modifyTime,jdbcType=VARCHAR},
+            #{lastOpr,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="queryModule" resultMap="Module">
+        SELECT
+            <include refid="Module_Column_List"/>
+        FROM
+            AUTO_MODULE
+        <where>
+            <if test="search != '' and search != null">
+                AND (
+                    MODULE_GROUP like concat('%', #{search}, '%') OR
+                    MODULE_NAME_CN like concat('%', #{search}, '%')
+                )
+            </if>
+            <if test="valid != '' and valid != null">
+                AND
+                    DELETED = #{valid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryModuleByNo" resultMap="Module">
+        SELECT
+            <include refid="Module_Column_List"/>
+        FROM
+            AUTO_MODULE
+        WHERE 
+        	DELETED = '0'
+            <if test="moduleNo != '' and moduleNo != null">
+                AND MODULE_NO = #{moduleNo}
+            </if>
+            <if test="moduleGroup != '' and moduleGroup != null">
+                AND MODULE_GROUP = #{moduleGroup}
+            </if>
+            <if test="moduleName != '' and moduleName != null">
+                AND MODULE_NAME = #{moduleName}
+            </if>
+            <if test="moduleId != '' and moduleId != null">
+                AND MODULE_ID != #{moduleId}
+            </if>
+    </select>
+
+    <update id="deleteModule" parameterType="String">
+        UPDATE
+            AUTO_MODULE
+        SET
+            DELETED = '1',
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            MODULE_ID in (${module})
+    </update>
+
+    <update id="updateModule" parameterType="String">
+        UPDATE
+            AUTO_MODULE
+        SET
+            MODULE_NO = #{moduleNo},
+            MODULE_GROUP = #{moduleGroup},
+            MODULE_NAME = #{moduleName},
+            MODULE_NAME_CN = #{moduleNameCn},
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            MODULE_ID = #{moduleId}
+    </update>
+</mapper>

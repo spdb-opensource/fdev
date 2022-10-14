@@ -1,0 +1,21 @@
+.q-btn-toggle
+  position: relative
+  border-radius 2px !important
+  box-shadow none
+  .q-no-leftborder
+    .q-btn__wrapper:before
+      border-left none !important
+  .q-no-rightborder
+    .q-btn__wrapper:before
+      border-right none !important
+  .q-btn--standard
+    min-width 0px
+    font-weight 400
+  //.q-btn--normal
+    //min-width 94px
+  .q-btn--normal-hoverClass
+    &:hover
+      background none !important
+      .q-btn__wrapper:before
+        border-color: $grey-2 !important
+  

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <property name="APP_NAME">fdev-pipeline-new</property>
+        <property name="LOG_HOME">/fdev/log</property>
+        <property name="springAppName">${env:CI_PROJECT_NAME}</property>
+    </Properties>
+
+    <Appenders>
+        <RollingFile
+                name="FILE"
+                fileName="${LOG_HOME}/${APP_NAME}_${env:HOSTNAME}.log"
+                filePattern="${LOG_HOME}/${APP_NAME}_${env:HOSTNAME}.%d{yyyy-MM-dd}-%i.log.crn"
+                ignoreExceptions="false">
+            <PatternLayout>
+                <!-- 日志格式定义 -->
+                <Pattern>%-5p %d{yyyy-MM-dd HH:mm:ss:SSS} [${springAppName},%X{X-B3-TraceId},%X{X-B3-SpanId}] [%thread] %X{currentUser} %c{0} %m %n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <!-- 按日期切分 -->
+                <TimeBasedTriggeringPolicy interval="1" />
+            </Policies>
+            <!-- 最大切分次数 -->
+            <DefaultRolloverStrategy>
+                <Delete basePath="${LOG_HOME}" maxDepth="2">
+                    <IfFileName glob="*.log.crn" />
+                    <IfLastModified age="7d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%-5p %d{yyyy-MM-dd HH:mm:ss:SSS} [${springAppName},%X{X-B3-TraceId},%X{X-B3-SpanId}] [%thread] %X{currentUser} %c{0} %m %n</Pattern>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <AsyncRoot level="INFO">
+            <AppenderRef ref="FILE"/>
+            <!--<AppenderRef ref="CONSOLE"/>-->
+        </AsyncRoot>
+    </Loggers>
+</Configuration>

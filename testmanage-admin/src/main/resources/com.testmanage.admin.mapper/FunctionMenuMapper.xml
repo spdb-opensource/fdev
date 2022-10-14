@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.testmanage.admin.mapper.FunctionMenuMapper">
+    <resultMap id="BaseResultMap" type="com.testmanage.admin.entity.FunctionMenu">
+        <id column="func_id" property="func_id"/>
+        <result column="level" property="level"/>
+        <result column="func_model_name" property="func_model_name"/>
+        <result column="parent_id" property="parent_id"/>
+        <result column="sys_func_id" property="sys_func_id"/>
+        <result column="field1" property="field1"/>
+        <result column="field2" property="field2"/>
+        <result column="is_del" property="is_del"/>
+        <result column="field4" property="field4"/>
+        <result column="field5" property="field5"/>
+    </resultMap>
+
+    <insert id="insert" keyProperty="func_id" useGeneratedKeys="true">
+        INSERT INTO func_model (func_id,level,func_model_name,parent_id,sys_func_id,is_del)
+        VALUES (#{func_id},#{level},#{func_model_name},#{parent_id},#{sys_func_id},0)
+    </insert>
+
+   <update id="update">
+        UPDATE func_model
+        SET func_model_name=#{funcName},
+        field1=#{field1},
+        field2=#{field2}
+        WHERE func_id=#{funcId}
+    </update>
+
+    <select id="selectByParentId" resultMap="BaseResultMap">
+        SELECT func_id, level, func_model_name, parent_id, sys_func_id, field1, field2
+        FROM func_model
+        where sys_func_id=#{sysFuncId} AND parent_id=#{parentId} AND is_del = 0
+    </select>
+    
+    <select id="getMenu" resultMap="BaseResultMap">
+        SELECT fm.func_id, fm.level, fm.func_model_name, fm.parent_id, fm.sys_func_id, fm.field1, fm.field2,
+        sm.sys_id, sm.sys_module_name
+        FROM func_model fm
+        JOIN sys_model sm ON fm.sys_func_id=sm.sys_id
+    </select>
+    
+    <!-- 根据系统id查询功能菜单列表 -->
+    <select id="queryMenuBysysId" resultType="java.util.Map">
+        SELECT fm.func_id, fm.level, fm.func_model_name, fm.parent_id,fm.sys_func_id, fm.field1, fm.field2,
+        sm.sys_id, sm.sys_module_name
+        FROM func_model fm
+        JOIN sys_model sm ON fm.sys_func_id=sm.sys_id
+        where fm.sys_func_id = #{sys_id} AND fm.is_del = 0
+    </select>
+    <!-- 根据功能菜单id查询详情 -->
+    <select id="queryByFuncId" resultMap="BaseResultMap">
+        SELECT fm.func_id, fm.level, fm.func_model_name, fm.parent_id, fm.sys_func_id, fm.field1, fm.field2
+        FROM func_model fm
+        where fm.func_id = #{func_id} AND fm.is_del = 0
+    </select>
+    <!-- 查询所有顶级功能菜单 -->
+    <select id="queryAll" resultMap="BaseResultMap">
+        SELECT func_id, level, func_model_name, parent_id, sys_func_id, field1, field2
+        FROM func_model
+        where func_id != 0 and parent_id = 0 and is_del = 0
+    </select>
+	<!-- 查询功能菜单明细 -->
+	<select id="queryFuncDetail" resultMap="BaseResultMap">
+        SELECT func_id, level, func_model_name, parent_id, sys_func_id, field1, field2, is_del
+        FROM func_model 
+        where level = #{level} and func_model_name = #{func_model_name} and parent_id = #{parent_id} and sys_func_id = #{sys_func_id} and is_del = 0
+    </select>
+    <!-- 根据系统id和菜单级别查询功能菜单列表 -->
+	<select id="queryMenuBySysIdAndLever" resultMap="BaseResultMap">
+        SELECT func_id, level, func_model_name, parent_id, sys_func_id, field1, field2
+        FROM func_model 
+        where level = #{map.level} and parent_id = #{map.parentId} and sys_func_id = #{map.sysFuncId} and is_del = 0
+    </select>
+    <!-- 根据系统id,功能菜单名称,菜单级别查询菜单 -->
+	<select id="queryMenuBySysIdAndLeverAndName" resultMap="BaseResultMap">
+        SELECT func_id, level, func_model_name, parent_id, sys_func_id, field1, field2
+        FROM func_model 
+        where level = #{map.level} and func_model_name = #{map.systemName} and sys_func_id = #{map.sysFuncId} and is_del = 0
+    </select>
+    
+    
+    <!-- 根据功能菜单id查询菜单详情 -->
+	<select id="queryMenuDetailByFuncId" resultMap="BaseResultMap">
+        SELECT func_id, level, func_model_name, parent_id, sys_func_id, field1, field2
+        FROM func_model 
+        where func_id = #{funcId} and is_del = 0
+    </select>
+
+    <!-- 根据功能菜单id作为parent_id去查询相关记录 -->
+    <select id="queryByParentId" resultMap="BaseResultMap">
+        SELECT fm.func_id, fm.level, fm.func_model_name, fm.parent_id, fm.sys_func_id, fm.field1, fm.field2
+        FROM func_model fm
+        where fm.parent_id = #{func_id} AND fm.is_del = 0
+    </select>
+
+    <!-- 根据id去删除相关记录 假删除，更新相关字段 -->
+    <update id="delete" parameterType="int">
+        UPDATE func_model
+        SET is_del=1
+        WHERE func_id=#{funcId}
+    </update>
+
+</mapper>

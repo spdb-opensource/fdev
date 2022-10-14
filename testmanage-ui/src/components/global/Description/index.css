@@ -1,0 +1,22 @@
+.label {
+  color: black;
+  font-size: 14px;
+  min-height: 20px;
+}
+.desc {
+  color: #616161;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+.left {
+  text-align: left;
+}
+
+.center .label {
+  text-align: right;
+}
+
+.right .label, .right .desc{
+  text-align: right;
+}

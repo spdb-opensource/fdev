@@ -1,0 +1,46 @@
+{
+  "volumes": [
+    {
+      "name": "app",
+      "mount_path": "/app",
+      "host_path": "/fdevnas/fdev-runner-data/app",
+      "read_only": false
+    },
+    {
+      "name": "workspace",
+      "mount_path": "/workspace",
+      "host_path": "/fdevnas/fdev-runner-data/workspace",
+      "read_only": false
+    },
+    {
+      "name": "maven",
+      "mount_path": "/root/.m2",
+      "host_path": "/home/ebank/spdb/maven/.m2",
+      "read_only": false
+    },
+    {
+      "name": "dockersock",
+      "mount_path": "/var/run/docker.sock",
+      "host_path": "/var/run/docker.sock",
+      "read_only": false
+    },
+    {
+      "name": "dockerbin",
+      "mount_path": "/usr/bin/docker",
+      "host_path": "/usr/bin/docker",
+      "read_only": false
+    },
+    {
+      "name": "file-upload",
+      "mount_path": "/fdev-ci-pipeline-data",
+      "host_path": "/fdevnas/fdev-ci-pipeline-data",
+      "read_only": false
+    },
+    {
+      "name": "hostpath-nodejs",
+      "mount_path": "/root/.npm",
+      "host_path": "/home/ebank/spdb/nodejs",
+      "read_only": false
+    }
+  ]
+}

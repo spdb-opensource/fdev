@@ -1,0 +1,30 @@
+<div>
+    <pre>
+  各位老师,你好:
+    ${task.name}任务已删除:
+    任务阶段:${stage}
+    研发单元:${(redmine_id)!"无研发单元编号"}
+    所属小组:${(groupName)!"无小组"}
+    所属应用:${(task.project_name)!"无应用"}
+    任务负责人:${(master)!"无"}
+    行内项目负责人:${(spdb_master)!"无"}
+    开发人员:${(developer)!"无"}
+    测试人员:${(tester)!"无"}
+    任务创建者：${(creator)!"无"}
+    分支名:${(task.feature_branch)!"无分支"}
+    描述信息:${(desc)!"无"}
+    
+    计划开发启动日期:${(plan_start_time)!"无"}
+    计划内测启动日期:${(plan_inner_test_time)!"无"}
+    计划uat测试启动日期:${(plan_uat_test_start_time)!"无"}
+    计划uat测试结束日期:${(plan_uat_test_stop_time)!"无"}
+    计划rel测试启动日期:${(plan_rel_test_time)!"无"}
+    计划投产日期:${(plan_fire_time)!"无"}
+    其他系统变更:${Other_system}
+    数据库变更:${Data_base_alter}
+    公共配置文件更新:${commonProfile}
+    安全测试: ${securityTest}
+    是否涉及特殊情况:${specialCase}
+    <br><br>
+</pre>
+</div>

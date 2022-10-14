@@ -1,0 +1,15 @@
+run:
+  modules-download-mode: vendor
+
+linters:
+  enable:
+    - deadcode
+    - errcheck
+    - staticcheck
+    - gosimple
+    - varcheck
+    - unused
+    - govet
+    - gofmt
+    - golint
+  disable-all: true

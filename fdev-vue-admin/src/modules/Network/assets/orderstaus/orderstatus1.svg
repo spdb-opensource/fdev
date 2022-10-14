@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>待审核</title>
+    <defs>
+        <linearGradient x1="10.4881069%" y1="13.6559397%" x2="92.5346164%" y2="38.074996%" id="linearGradient-1">
+            <stop stop-color="#FEC914" offset="0%"></stop>
+            <stop stop-color="#FFE795" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#FEC70B" offset="0%"></stop>
+            <stop stop-color="#FFE694" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="各状态步骤条" transform="translate(-114.000000, -61.000000)">
+            <g id="编组" transform="translate(109.000000, 61.000000)">
+                <g id="待审核" transform="translate(5.000000, 0.000000)">
+                    <rect id="矩形" fill="#FFF3CC" x="0" y="0" width="32" height="32" rx="8"></rect>
+                    <rect id="矩形" stroke="#FFFFFF" fill="url(#linearGradient-1)" x="11.3571429" y="6.78571429" width="8.14285714" height="7.57142857" rx="3"></rect>
+                    <circle id="椭圆形" stroke="#FFFFFF" fill="url(#linearGradient-2)" cx="15.7142857" cy="17.4285714" r="8.35714286"></circle>
+                    <path d="M19.0011628,10.8571429 L14.7443664,16.213686 L9.14285714,19.4395492 C13.0615159,19.2265276 15.3721019,19.012782 16.0746153,18.7983122 C17.1283852,18.4766076 17.4077572,17.2012777 17.6600474,16.5268972 C17.8282408,16.0773103 18.2752792,14.1873922 19.0011628,10.8571429 Z" id="路径-2" fill="#FFFFFF"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.testmanage.admin.mapper.SystemModelMapper">
+    <resultMap id="BaseResultMap" type="com.testmanage.admin.entity.SystemModel">
+        <id column="sys_id" property="sys_id"/>
+        <result column="sys_module_name" property="sys_module_name"/>
+        <result column="sys_module_en_name" property="sys_module_en_name"/>
+        <result column="field1" property="field1"/>
+        <result column="field2" property="field2"/>
+        <result column="field3" property="field3"/>
+        <result column="field4" property="field4"/>
+        <result column="field5" property="field5"/>
+    </resultMap>
+    <select id="query" resultMap="BaseResultMap">
+      SELECT sys_id, sys_module_name, sys_module_en_name
+      FROM sys_model WHERE sys_id = #{sys_id}
+    </select>
+    <select id="listAll" resultMap="BaseResultMap">
+      SELECT sys_id,sys_module_name,sys_module_en_name
+      FROM sys_model
+    </select>
+    <select id="queryBySystemName" resultMap="BaseResultMap">
+      SELECT sys_id, sys_module_name, sys_module_en_name
+      FROM sys_model WHERE sys_module_name = #{sys_module_name}
+    </select>
+    <select id="listAllToMap" resultType="java.util.Map">
+      SELECT sys_id,sys_module_name,sys_module_en_name
+      FROM sys_model
+    </select>
+</mapper>

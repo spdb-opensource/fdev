@@ -1,0 +1,1486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mantis.dao.ProIssueDao">
+    <resultMap id="AllProIssue" type="com.mantis.entity.ProIssue">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="requirement_name" jdbcType="VARCHAR" property="requirement_name"/>
+        <result column="occurred_time" jdbcType="VARCHAR" property="occurred_time"/>
+        <result column="issue_type" jdbcType="VARCHAR" property="issue_type"/>
+        <result column="is_trigger_issue" jdbcType="VARCHAR" property="is_trigger_issue"/>
+        <result column="issue_level" jdbcType="VARCHAR" property="issue_level"/>
+        <result column="task_no" jdbcType="VARCHAR" property="task_no"/>
+        <result column="module" jdbcType="VARCHAR" property="module"/>
+        <result column="problem_phenomenon" jdbcType="VARCHAR" property="problem_phenomenon"/>
+        <result column="issue_reason" jdbcType="VARCHAR" property="issue_reason"/>
+        <result column="influence_area" jdbcType="VARCHAR" property="influence_area"/>
+        <result column="dev_responsible" jdbcType="VARCHAR" property="dev_responsible"/>
+        <result column="audit_responsible" jdbcType="VARCHAR" property="audit_responsible"/>
+        <result column="test_responsible" jdbcType="VARCHAR" property="test_responsible"/>
+        <result column="task_responsible" jdbcType="VARCHAR" property="task_responsible"/>
+        <result column="discover_stage" jdbcType="VARCHAR" property="discover_stage"/>
+        <result column="improvement_measures" jdbcType="VARCHAR" property="improvement_measures"/>
+        <result column="reviewer_comment" jdbcType="VARCHAR" property="reviewer_comment"/>
+        <result column="reviewer_status" jdbcType="VARCHAR" property="reviewer_status"/>
+        <result column="deal_status" jdbcType="VARCHAR" property="deal_status"/>
+        <result column="backlog_schedule" jdbcType="VARCHAR" property="backlog_schedule"/>
+        <result column="backlog_schedule_reviewer" jdbcType="VARCHAR" property="backlog_schedule_reviewer"/>
+        <result column="backlog_schedule_complete_time" jdbcType="VARCHAR" property="backlog_schedule_complete_time"/>
+        <result column="backlog_schedule_current_completion" jdbcType="VARCHAR"
+                property="backlog_schedule_current_completion"/>
+        <result column="backlog_schedule_complete_percentage" jdbcType="VARCHAR"
+                property="backlog_schedule_complete_percentage"/>
+        <result column="backlog_schedule_2" jdbcType="VARCHAR" property="backlog_schedule_2"/>
+        <result column="backlog_schedule_reviewer_2" jdbcType="VARCHAR" property="backlog_schedule_reviewer_2"/>
+        <result column="backlog_schedule_complete_time_2" jdbcType="VARCHAR"
+                property="backlog_schedule_complete_time_2"/>
+        <result column="backlog_schedule_current_completion_2" jdbcType="VARCHAR"
+                property="backlog_schedule_current_completion_2"/>
+        <result column="backlog_schedule_complete_percentage_2" jdbcType="VARCHAR"
+                property="backlog_schedule_complete_percentage_2"/>
+        <result column="backlog_schedule_3" jdbcType="VARCHAR" property="backlog_schedule_3"/>
+        <result column="backlog_schedule_reviewer_3" jdbcType="VARCHAR" property="backlog_schedule_reviewer_3"/>
+        <result column="backlog_schedule_complete_time_3" jdbcType="VARCHAR"
+                property="backlog_schedule_complete_time_3"/>
+        <result column="backlog_schedule_current_completion_3" jdbcType="VARCHAR"
+                property="backlog_schedule_current_completion_3"/>
+        <result column="backlog_schedule_complete_percentage_3" jdbcType="VARCHAR"
+                property="backlog_schedule_complete_percentage_3"/>
+        <result column="responsible" jdbcType="VARCHAR" property="responsible"/>
+        <result column="responsibility_type" jdbcType="VARCHAR" property="responsibility_type"/>
+        <result column="responsibility_content" jdbcType="VARCHAR" property="responsibility_content"/>
+        <result column="responsible_2" jdbcType="VARCHAR" property="responsible_2"/>
+        <result column="responsibility_type_2" jdbcType="VARCHAR" property="responsibility_type_2"/>
+        <result column="responsibility_content_2" jdbcType="VARCHAR" property="responsibility_content_2"/>
+        <result column="responsible_3" jdbcType="VARCHAR" property="responsible_3"/>
+        <result column="responsibility_type_3" jdbcType="VARCHAR" property="responsibility_type_3"/>
+        <result column="responsibility_content_3" jdbcType="VARCHAR" property="responsibility_content_3"/>
+        <result column="is_uat_replication" jdbcType="VARCHAR" property="is_uat_replication"/>
+        <result column="is_rel_replication" jdbcType="VARCHAR" property="is_rel_replication"/>
+        <result column="is_involve_urgency" jdbcType="VARCHAR" property="is_involve_urgency"/>
+        <result column="is_gray_replication" jdbcType="VARCHAR" property="is_gray_replication"/>
+        <result column="release_node" jdbcType="VARCHAR" property="release_node"/>
+        <result column="first_occurred_time" jdbcType="VARCHAR" property="first_occurred_time"/>
+        <result column="location_time" jdbcType="VARCHAR" property="location_time"/>
+        <result column="repair_time" jdbcType="VARCHAR" property="repair_time"/>
+        <result column="reviewer_time" jdbcType="VARCHAR" property="reviewer_time"/>
+        <result column="reviewer" jdbcType="VARCHAR" property="reviewer"/>
+        <result column="emergency_process" jdbcType="VARCHAR" property="emergency_process"/>
+        <result column="emergency_responsible" jdbcType="VARCHAR" property="emergency_responsible"/>
+    </resultMap>
+
+    <!-- 查询任务下生产问题列表  -->
+    <select id="queryTaskProIssues" resultMap="AllProIssue">
+        select
+        kk.id,kk.requirement_name,
+        date_format(date_add(from_unixtime(kk.occurred_time), interval 1 day),'%Y-%m-%d') as occurred_time,
+        trim(both '|' from kk.issue_type) as issue_type,kk.issue_level,pk.issue_reason,kk.is_trigger_issue,
+        kk.task_no,kk.module,pk.problem_phenomenon,pk.influence_area,kk.dev_responsible,
+        kk.audit_responsible,kk.test_responsible,kk.task_responsible,
+        kk.discover_stage,pk.improvement_measures,pk.reviewer_comment,
+        kk.reviewer_status,kk.reviewer_status,kk.deal_status,pk.backlog_schedule,
+        kk.backlog_schedule_reviewer,
+        date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time), interval 1 day),'%Y-%m-%d') as
+        backlog_schedule_complete_time,
+        kk.backlog_schedule_current_completion,kk.backlog_schedule_complete_percentage,pk.remark,pk.backlog_schedule_2,kk.backlog_schedule_reviewer_2,
+        date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time_2), interval 1 day),'%Y-%m-%d') as
+        backlog_schedule_complete_time_2,
+        kk.backlog_schedule_current_completion_2,
+        kk.backlog_schedule_complete_percentage_2,pk.backlog_schedule_3,kk.backlog_schedule_reviewer_3,
+        date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time_3), interval 1 day),'%Y-%m-%d') as
+        backlog_schedule_complete_time_3,
+        kk.backlog_schedule_current_completion_3,
+        kk.backlog_schedule_complete_percentage_3,kk.responsible,kk.responsibility_type,pk.responsibility_content,kk.responsible_2,kk.responsibility_type_2,
+        pk.responsibility_content_2,kk.responsible_3,kk.responsibility_type_3,pk.responsibility_content_3,
+        kk.first_occurred_time,kk.location_time,kk.repair_time,kk.reviewer_time,kk.reviewer,kk.emergency_responsible,pk.emergency_process
+        from mantis_bug_table bt,
+        (
+        select tt.id,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 20 then value else '' end)requirement_name,
+        max(case field_id when 21 then value else '' end)module,
+        max(case field_id when 22 then value else '' end)occurred_time,
+        max(case field_id when 23 then value else '' end)is_trigger_issue,
+        max(case field_id when 27 then value else '' end)dev_responsible,
+        max(case field_id when 29 then value else '' end)audit_responsible,
+        max(case field_id when 30 then value else '' end)test_responsible,
+        max(case field_id when 31 then value else '' end)task_responsible,
+        max(case field_id when 32 then value else '' end)issue_type,
+        max(case field_id when 33 then value else '' end)discover_stage,
+        max(case field_id when 36 then value else '' end)issue_level,
+        max(case field_id when 37 then value else '' end)reviewer_status,
+        max(case field_id when 38 then value else '' end)deal_status,
+        max(case field_id when 40 then value else '' end)backlog_schedule_reviewer,
+        max(case field_id when 41 then value else '' end)backlog_schedule_complete_time,
+        max(case field_id when 42 then value else '' end)backlog_schedule_current_completion,
+        max(case field_id when 43 then value else '' end)backlog_schedule_complete_percentage,
+        max(case field_id when 44 then value else '' end)remark,
+        max(case field_id when 47 then value else '' end)backlog_schedule_reviewer_2,
+        max(case field_id when 48 then value else '' end)backlog_schedule_complete_time_2,
+        max(case field_id when 49 then value else '' end)backlog_schedule_current_completion_2,
+        max(case field_id when 50 then value else '' end)backlog_schedule_complete_percentage_2,
+        max(case field_id when 52 then value else '' end)backlog_schedule_reviewer_3,
+        max(case field_id when 53 then value else '' end)backlog_schedule_complete_time_3,
+        max(case field_id when 54 then value else '' end)backlog_schedule_current_completion_3,
+        max(case field_id when 55 then value else '' end)backlog_schedule_complete_percentage_3,
+        max(case field_id when 56 then value else '' end)responsible,
+        max(case field_id when 57 then value else '' end)responsibility_type,
+        max(case field_id when 59 then value else '' end)responsible_2,
+        max(case field_id when 60 then value else '' end)responsibility_type_2,
+        max(case field_id when 62 then value else '' end)responsible_3,
+        max(case field_id when 63 then value else '' end)responsibility_type_3,
+        max(case field_id when 74 then value else '' end)first_occurred_time,
+        max(case field_id when 75 then value else '' end)location_time,
+        max(case field_id when 76 then value else '' end)repair_time,
+        max(case field_id when 77 then value else '' end)reviewer_time,
+        max(case field_id when 78 then value else '' end)reviewer,
+        max(case field_id when 80 then value else '' end)emergency_responsible
+        from(
+        select b.id,p.field_id,s.value
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and b.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and b.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+            and b.project_id = 32
+        </if>
+        ) tt
+        group by id
+        ) kk,
+        (
+        select tt.id,
+        max(case field_id when 24 then text else '' end)problem_phenomenon,
+        max(case field_id when 25 then text else '' end)influence_area,
+        max(case field_id when 26 then text else '' end)issue_reason,
+        max(case field_id when 34 then text else '' end)improvement_measures,
+        max(case field_id when 35 then text else '' end)reviewer_comment,
+        max(case field_id when 39 then text else '' end)backlog_schedule,
+        max(case field_id when 46 then text else '' end)backlog_schedule_2,
+        max(case field_id when 51 then text else '' end)backlog_schedule_3,
+        max(case field_id when 44 then text else '' end)remark,
+        max(case field_id when 58 then text else '' end)responsibility_content,
+        max(case field_id when 61 then text else '' end)responsibility_content_2,
+        max(case field_id when 64 then text else '' end)responsibility_content_3,
+        max(case field_id when 79 then text else '' end)emergency_process
+        from(
+        select b.id,p.field_id,s.text
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and b.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and b.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+                and b.project_id = 32
+            </if>
+        ) tt
+        group by id
+        ) pk
+        where kk.id = bt.id
+        and bt.id = pk.id
+        <if test="env == 'sit'.toString()">
+            and bt.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and bt.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and bt.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and bt.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and bt.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+            and bt.project_id = 32
+        </if>
+        and kk.task_no = #{task_id}
+    </select>
+
+    <!-- 根据id查询生产问题  -->
+    <select id="queryProIssueById" resultMap="AllProIssue">
+        select
+        kk.id,kk.requirement_name,
+        date_format(date_add(from_unixtime(kk.occurred_time), interval 1 day),'%Y/%m/%d') as occurred_time,
+        trim(both '|' from kk.issue_type) as issue_type,kk.issue_level,pk.issue_reason,kk.is_trigger_issue,
+        kk.task_no,kk.module,pk.problem_phenomenon,pk.influence_area,kk.dev_responsible,
+        kk.audit_responsible,kk.test_responsible,kk.task_responsible,
+        kk.discover_stage,pk.improvement_measures,pk.reviewer_comment,
+        kk.reviewer_status,kk.reviewer_status,kk.deal_status,
+        pk.backlog_schedule,
+        kk.backlog_schedule_reviewer,
+        if(kk.backlog_schedule_complete_time !=
+        '',date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time), interval 1 day),'%Y/%m/%d'),'') as
+        backlog_schedule_complete_time,
+        kk.backlog_schedule_current_completion,
+        kk.backlog_schedule_complete_percentage,pk.remark,
+        pk.backlog_schedule_2,
+        kk.backlog_schedule_reviewer_2,
+        if(kk.backlog_schedule_complete_time_2 !=
+        '',date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time_2), interval 1 day),'%Y/%m/%d'),'')as
+        backlog_schedule_complete_time_2,
+        kk.backlog_schedule_current_completion_2,
+        kk.backlog_schedule_complete_percentage_2,
+        pk.backlog_schedule_3,
+        kk.backlog_schedule_reviewer_3,
+        if(kk.backlog_schedule_complete_time_3 !=
+        '',date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time_3), interval 1 day),'%Y/%m/%d'),'')as
+        backlog_schedule_complete_time_3,
+        kk.backlog_schedule_current_completion_3,
+        kk.backlog_schedule_complete_percentage_3,
+        kk.responsible,kk.responsibility_type,pk.responsibility_content,kk.responsible_2,kk.responsibility_type_2,
+        pk.responsibility_content_2,kk.responsible_3,kk.responsibility_type_3,pk.responsibility_content_3,
+        kk.is_gray_replication,kk.is_uat_replication,kk.is_rel_replication,kk.is_involve_urgency,kk.release_node,
+        kk.first_occurred_time,kk.location_time,kk.repair_time,kk.reviewer_time,kk.reviewer,kk.emergency_responsible,pk.emergency_process
+        from mantis_bug_table bt,
+        (
+        select tt.id,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 20 then value else '' end)requirement_name,
+        max(case field_id when 21 then value else '' end)module,
+        max(case field_id when 22 then value else '' end)occurred_time,
+        max(case field_id when 23 then value else '' end)is_trigger_issue,
+        max(case field_id when 27 then value else '' end)dev_responsible,
+        max(case field_id when 29 then value else '' end)audit_responsible,
+        max(case field_id when 30 then value else '' end)test_responsible,
+        max(case field_id when 31 then value else '' end)task_responsible,
+        max(case field_id when 32 then value else '' end)issue_type,
+        max(case field_id when 33 then value else '' end)discover_stage,
+        max(case field_id when 36 then value else '' end)issue_level,
+        max(case field_id when 37 then value else '' end)reviewer_status,
+        max(case field_id when 38 then value else '' end)deal_status,
+        max(case field_id when 40 then value else '' end)backlog_schedule_reviewer,
+        max(case field_id when 41 then value else '' end)backlog_schedule_complete_time,
+        max(case field_id when 42 then value else '' end)backlog_schedule_current_completion,
+        max(case field_id when 43 then value else '' end)backlog_schedule_complete_percentage,
+        max(case field_id when 44 then value else '' end)remark,
+        max(case field_id when 47 then value else '' end)backlog_schedule_reviewer_2,
+        max(case field_id when 48 then value else '' end)backlog_schedule_complete_time_2,
+        max(case field_id when 49 then value else '' end)backlog_schedule_current_completion_2,
+        max(case field_id when 50 then value else '' end)backlog_schedule_complete_percentage_2,
+        max(case field_id when 52 then value else '' end)backlog_schedule_reviewer_3,
+        max(case field_id when 53 then value else '' end)backlog_schedule_complete_time_3,
+        max(case field_id when 54 then value else '' end)backlog_schedule_current_completion_3,
+        max(case field_id when 55 then value else '' end)backlog_schedule_complete_percentage_3,
+        max(case field_id when 56 then value else '' end)responsible,
+        max(case field_id when 57 then value else '' end)responsibility_type,
+        max(case field_id when 59 then value else '' end)responsible_2,
+        max(case field_id when 60 then value else '' end)responsibility_type_2,
+        max(case field_id when 62 then value else '' end)responsible_3,
+        max(case field_id when 63 then value else '' end)responsibility_type_3,
+        max(case field_id when 66 then value else '' end)is_uat_replication,
+        max(case field_id when 67 then value else '' end)is_rel_replication,
+        max(case field_id when 69 then value else '' end)is_involve_urgency,
+        max(case field_id when 68 then value else '' end)is_gray_replication,
+        max(case field_id when 71 then value else '' end)release_node,
+        max(case field_id when 74 then value else '' end)first_occurred_time,
+        max(case field_id when 75 then value else '' end)location_time,
+        max(case field_id when 76 then value else '' end)repair_time,
+        max(case field_id when 77 then value else '' end)reviewer_time,
+        max(case field_id when 78 then value else '' end)reviewer,
+        max(case field_id when 80 then value else '' end)emergency_responsible
+        from(
+        select b.id,p.field_id,s.value
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        and b.id =  #{id}
+        ) tt
+        group by id
+        ) kk,
+        (
+        select tt.id,
+        max(case field_id when 24 then text else '' end)problem_phenomenon,
+        max(case field_id when 25 then text else '' end)influence_area,
+        max(case field_id when 26 then text else '' end)issue_reason,
+        max(case field_id when 34 then text else '' end)improvement_measures,
+        max(case field_id when 35 then text else '' end)reviewer_comment,
+        max(case field_id when 39 then text else '' end)backlog_schedule,
+        max(case field_id when 46 then text else '' end)backlog_schedule_2,
+        max(case field_id when 51 then text else '' end)backlog_schedule_3,
+        max(case field_id when 44 then text else '' end)remark,
+        max(case field_id when 58 then text else '' end)responsibility_content,
+        max(case field_id when 61 then text else '' end)responsibility_content_2,
+        max(case field_id when 64 then text else '' end)responsibility_content_3,
+        max(case field_id when 79 then text else '' end)emergency_process
+        from(
+        select b.id,p.field_id,s.text
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        and b.id =  #{id}
+        ) tt
+        group by id
+        ) pk
+        where kk.id = bt.id
+        and bt.id = pk.id
+        and kk.id = #{id}
+    </select>
+
+    <!-- 查询本人提交的生产问题总结 -->
+    <select id="queryUserProIssues" resultMap="AllProIssue">
+        select
+        kk.id,kk.requirement_name,
+        date_format(date_add(from_unixtime(kk.occurred_time), interval 1 day),'%Y/%m/%d') as occurred_time,
+        trim(both '|' from kk.issue_type) as issue_type,kk.issue_level,pk.issue_reason,kk.is_trigger_issue,
+        kk.task_no,kk.module,pk.problem_phenomenon,pk.influence_area,kk.dev_responsible,
+        kk.audit_responsible,kk.test_responsible,kk.task_responsible,
+        kk.discover_stage,pk.improvement_measures,pk.reviewer_comment,
+        kk.reviewer_status,kk.reviewer_status,kk.deal_status,pk.backlog_schedule,
+        kk.backlog_schedule_reviewer,
+        date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time), interval 1 day),'%Y/%m/%d') as
+        backlog_schedule_complete_time,
+        kk.backlog_schedule_current_completion,kk.backlog_schedule_complete_percentage,pk.remark,pk.backlog_schedule_2,kk.backlog_schedule_reviewer_2,
+        date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time_2), interval 1 day),'%Y/%m/%d') as
+        backlog_schedule_complete_time_2,
+        kk.backlog_schedule_current_completion_2,
+        kk.backlog_schedule_complete_percentage_2,pk.backlog_schedule_3,kk.backlog_schedule_reviewer_3,
+        date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time_3), interval 1 day),'%Y/%m/%d') as
+        backlog_schedule_complete_time_3,
+        kk.backlog_schedule_current_completion_3,
+        kk.backlog_schedule_complete_percentage_3,kk.responsible,kk.responsibility_type,pk.responsibility_content,kk.responsible_2,kk.responsibility_type_2,
+        pk.responsibility_content_2,kk.responsible_3,kk.responsibility_type_3,pk.responsibility_content_3,kk.release_node,
+        kk.first_occurred_time,kk.location_time,kk.repair_time,kk.reviewer_time,kk.reviewer,kk.emergency_responsible,pk.emergency_process
+        from mantis_bug_table bt,
+        (
+        select tt.id,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 20 then value else '' end)requirement_name,
+        max(case field_id when 21 then value else '' end)module,
+        max(case field_id when 22 then value else '' end)occurred_time,
+        max(case field_id when 23 then value else '' end)is_trigger_issue,
+        max(case field_id when 27 then value else '' end)dev_responsible,
+        max(case field_id when 29 then value else '' end)audit_responsible,
+        max(case field_id when 30 then value else '' end)test_responsible,
+        max(case field_id when 31 then value else '' end)task_responsible,
+        max(case field_id when 32 then value else '' end)issue_type,
+        max(case field_id when 33 then value else '' end)discover_stage,
+        max(case field_id when 36 then value else '' end)issue_level,
+        max(case field_id when 37 then value else '' end)reviewer_status,
+        max(case field_id when 38 then value else '' end)deal_status,
+        max(case field_id when 40 then value else '' end)backlog_schedule_reviewer,
+        max(case field_id when 41 then value else '' end)backlog_schedule_complete_time,
+        max(case field_id when 42 then value else '' end)backlog_schedule_current_completion,
+        max(case field_id when 43 then value else '' end)backlog_schedule_complete_percentage,
+        max(case field_id when 44 then value else '' end)remark,
+        max(case field_id when 47 then value else '' end)backlog_schedule_reviewer_2,
+        max(case field_id when 48 then value else '' end)backlog_schedule_complete_time_2,
+        max(case field_id when 49 then value else '' end)backlog_schedule_current_completion_2,
+        max(case field_id when 50 then value else '' end)backlog_schedule_complete_percentage_2,
+        max(case field_id when 52 then value else '' end)backlog_schedule_reviewer_3,
+        max(case field_id when 53 then value else '' end)backlog_schedule_complete_time_3,
+        max(case field_id when 54 then value else '' end)backlog_schedule_current_completion_3,
+        max(case field_id when 55 then value else '' end)backlog_schedule_complete_percentage_3,
+        max(case field_id when 56 then value else '' end)responsible,
+        max(case field_id when 57 then value else '' end)responsibility_type,
+        max(case field_id when 59 then value else '' end)responsible_2,
+        max(case field_id when 60 then value else '' end)responsibility_type_2,
+        max(case field_id when 62 then value else '' end)responsible_3,
+        max(case field_id when 63 then value else '' end)responsibility_type_3,
+        max(case field_id when 70 then value else '' end)orfanizer,
+        max(case field_id when 71 then value else '' end)release_node,
+        max(case field_id when 74 then value else '' end)first_occurred_time,
+        max(case field_id when 75 then value else '' end)location_time,
+        max(case field_id when 76 then value else '' end)repair_time,
+        max(case field_id when 77 then value else '' end)reviewer_time,
+        max(case field_id when 78 then value else '' end)reviewer,
+        max(case field_id when 80 then value else '' end)emergency_responsible
+        from(
+        select b.id,p.field_id,s.value
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and b.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and b.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+                and b.project_id = 32
+            </if>
+        ) tt
+        group by id
+        ) kk,
+        (
+        select tt.id,
+        max(case field_id when 24 then text else '' end)problem_phenomenon,
+        max(case field_id when 25 then text else '' end)influence_area,
+        max(case field_id when 26 then text else '' end)issue_reason,
+        max(case field_id when 34 then text else '' end)improvement_measures,
+        max(case field_id when 35 then text else '' end)reviewer_comment,
+        max(case field_id when 39 then text else '' end)backlog_schedule,
+        max(case field_id when 46 then text else '' end)backlog_schedule_2,
+        max(case field_id when 51 then text else '' end)backlog_schedule_3,
+        max(case field_id when 44 then text else '' end)remark,
+        max(case field_id when 58 then text else '' end)responsibility_content,
+        max(case field_id when 61 then text else '' end)responsibility_content_2,
+        max(case field_id when 64 then text else '' end)responsibility_content_3,
+        max(case field_id when 79 then text else '' end)emergency_process
+        from(
+        select b.id,p.field_id,s.text
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and b.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and b.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+                and b.project_id = 32
+            </if>
+        ) tt
+        group by id
+        ) pk
+        where kk.id = bt.id
+        and bt.id = pk.id
+        <if test="env == 'sit'.toString()">
+            and bt.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and bt.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and bt.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and bt.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and bt.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+                and bt.project_id = 32
+            </if>
+        and (locate(#{user_name_en},kk.dev_responsible) > 0
+        or
+        locate(#{user_name_en},kk.audit_responsible) > 0
+        or
+        locate(#{user_name_en},kk.test_responsible) > 0
+        or
+        locate(#{user_name_en},kk.task_responsible) > 0
+        )
+    </select>
+
+    <!-- 按条件查询总量 -->
+    <select id="queryProIssues" resultMap="AllProIssue">
+        select
+            kk.id,kk.requirement_name,
+            date_format(date_add(from_unixtime(kk.occurred_time), interval 1 day),'%Y/%m/%d') as occurred_time,
+            trim(both '|' from kk.issue_type) as issue_type,kk.issue_level,pk.issue_reason,kk.is_trigger_issue,
+            kk.task_no,kk.module,pk.problem_phenomenon,pk.influence_area,kk.dev_responsible,
+            kk.audit_responsible,kk.test_responsible,kk.task_responsible,
+            kk.discover_stage,pk.improvement_measures,pk.reviewer_comment,
+            kk.reviewer_status,kk.reviewer_status,kk.deal_status,pk.backlog_schedule,
+            kk.backlog_schedule_reviewer,
+            from_unixtime(kk.backlog_schedule_complete_time,'%Y/%m/%d') as backlog_schedule_complete_time,
+            kk.backlog_schedule_current_completion,kk.backlog_schedule_complete_percentage,pk.remark,pk.backlog_schedule_2,kk.backlog_schedule_reviewer_2,
+            date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time_2), interval 1 day),'%Y/%m/%d') as
+            backlog_schedule_complete_time_2,
+            kk.backlog_schedule_current_completion_2,
+            kk.backlog_schedule_complete_percentage_2,pk.backlog_schedule_3,kk.backlog_schedule_reviewer_3,
+            date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time_3), interval 1 day),'%Y/%m/%d') as
+            backlog_schedule_complete_time_3,
+            kk.backlog_schedule_current_completion_3,
+            kk.backlog_schedule_complete_percentage_3,kk.responsible,kk.responsibility_type,pk.responsibility_content,kk.responsible_2,kk.responsibility_type_2,
+            pk.responsibility_content_2,kk.responsible_3,kk.responsibility_type_3,pk.responsibility_content_3,kk.release_node,
+            kk.first_occurred_time,kk.location_time,kk.repair_time,kk.reviewer_time,kk.reviewer,kk.emergency_responsible,pk.emergency_process
+        from mantis_bug_table bt,
+        (
+        select tt.id,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 20 then value else '' end)requirement_name,
+        max(case field_id when 21 then value else '' end)module,
+        max(case field_id when 22 then value else '' end)occurred_time,
+        max(case field_id when 23 then value else '' end)is_trigger_issue,
+        max(case field_id when 27 then value else '' end)dev_responsible,
+        max(case field_id when 29 then value else '' end)audit_responsible,
+        max(case field_id when 30 then value else '' end)test_responsible,
+        max(case field_id when 31 then value else '' end)task_responsible,
+        max(case field_id when 32 then value else '' end)issue_type,
+        max(case field_id when 33 then value else '' end)discover_stage,
+        max(case field_id when 36 then value else '' end)issue_level,
+        max(case field_id when 37 then value else '' end)reviewer_status,
+        max(case field_id when 38 then value else '' end)deal_status,
+        max(case field_id when 40 then value else '' end)backlog_schedule_reviewer,
+        max(case field_id when 41 then value else '' end)backlog_schedule_complete_time,
+        max(case field_id when 42 then value else '' end)backlog_schedule_current_completion,
+        max(case field_id when 43 then value else '' end)backlog_schedule_complete_percentage,
+        max(case field_id when 44 then value else '' end)remark,
+        max(case field_id when 47 then value else '' end)backlog_schedule_reviewer_2,
+        max(case field_id when 48 then value else '' end)backlog_schedule_complete_time_2,
+        max(case field_id when 49 then value else '' end)backlog_schedule_current_completion_2,
+        max(case field_id when 50 then value else '' end)backlog_schedule_complete_percentage_2,
+        max(case field_id when 52 then value else '' end)backlog_schedule_reviewer_3,
+        max(case field_id when 53 then value else '' end)backlog_schedule_complete_time_3,
+        max(case field_id when 54 then value else '' end)backlog_schedule_current_completion_3,
+        max(case field_id when 55 then value else '' end)backlog_schedule_complete_percentage_3,
+        max(case field_id when 56 then value else '' end)responsible,
+        max(case field_id when 57 then value else '' end)responsibility_type,
+        max(case field_id when 59 then value else '' end)responsible_2,
+        max(case field_id when 60 then value else '' end)responsibility_type_2,
+        max(case field_id when 62 then value else '' end)responsible_3,
+        max(case field_id when 63 then value else '' end)responsibility_type_3,
+        max(case field_id when 71 then value else '' end)release_node,
+        max(case field_id when 74 then value else '' end)first_occurred_time,
+        max(case field_id when 75 then value else '' end)location_time,
+        max(case field_id when 76 then value else '' end)repair_time,
+        max(case field_id when 77 then value else '' end)reviewer_time,
+        max(case field_id when 78 then value else '' end)reviewer,
+        max(case field_id when 80 then value else '' end)emergency_responsible
+        from(
+        select b.id,p.field_id,s.value
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="module !=null and module.size() > 0">
+            and
+            b.id in (
+            select b.id
+            from
+            mantis_bug_table b,
+            mantis_custom_field_project_table p,
+            mantis_custom_field_string_table s
+            where p.project_id = b.project_id
+            and s.field_id = p.field_id
+            and b.id = s.bug_id and s.field_id = 21 and find_in_set(s.value,
+            <foreach collection="module" item="item" open="''" separator="','" close="''">
+                #{item}
+            </foreach>)
+            )
+        </if>
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and b.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and b.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+                and b.project_id = 32
+            </if>
+        ) tt
+        group by id
+        ) kk,
+        (
+        select tt.id,
+        max(case field_id when 24 then text else '' end)problem_phenomenon,
+        max(case field_id when 25 then text else '' end)influence_area,
+        max(case field_id when 26 then text else '' end)issue_reason,
+        max(case field_id when 34 then text else '' end)improvement_measures,
+        max(case field_id when 35 then text else '' end)reviewer_comment,
+        max(case field_id when 39 then text else '' end)backlog_schedule,
+        max(case field_id when 46 then text else '' end)backlog_schedule_2,
+        max(case field_id when 51 then text else '' end)backlog_schedule_3,
+        max(case field_id when 44 then text else '' end)remark,
+        max(case field_id when 58 then text else '' end)responsibility_content,
+        max(case field_id when 61 then text else '' end)responsibility_content_2,
+        max(case field_id when 64 then text else '' end)responsibility_content_3,
+        max(case field_id when 79 then text else '' end)emergency_process
+        from(
+        select b.id,p.field_id,s.text
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="module !=null and module.size() > 0">
+            and
+            b.id in (
+            select b.id
+            from
+            mantis_bug_table b,
+            mantis_custom_field_project_table p,
+            mantis_custom_field_string_table s
+            where p.project_id = b.project_id
+            and s.field_id = p.field_id
+            and b.id = s.bug_id and s.field_id = 21 and find_in_set(s.value,
+            <foreach collection="module" item="item" open="''" separator="','" close="''">
+                #{item}
+            </foreach>)
+            )
+        </if>
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and b.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and b.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+                and b.project_id = 32
+            </if>
+        ) tt
+        group by id
+        ) pk
+        <where>kk.id = bt.id
+            and bt.id = pk.id
+            <if test="env == 'sit'.toString()">
+                and bt.project_id = 21
+            </if>
+            <if test="env == 'sit-new'.toString()">
+                and bt.project_id = 29
+            </if>
+            <if test="env == 'rel'.toString()">
+                and bt.project_id = 24
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and bt.project_id = 31
+            </if>
+            <if test="env == 'pro'.toString()">
+                and bt.project_id = 20
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and bt.project_id = 32
+            </if>
+            <if test="module !=null and module.size() > 0">
+                and kk.module in
+                <foreach collection="module" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="deal_status != null and deal_status != '' ">
+                and kk.deal_status = #{deal_status}
+            </if>
+            <if test="issue_level != null and issue_level != '' ">
+                and kk.issue_level = #{issue_level}
+            </if>
+            <if test="reviewerStatus != null and reviewerStatus != '' ">
+                and kk.reviewer_status = #{reviewerStatus}
+            </if>
+            <if test="responsible_name_en != null and responsible_name_en != '' ">
+                <if test="responsible_type == '0'.toString() ">
+                    and (kk.dev_responsible = #{responsible_name_en}
+                    or kk.audit_responsible = #{responsible_name_en}
+                    or kk.test_responsible = #{responsible_name_en}
+                    or kk.task_responsible = #{responsible_name_en})
+                </if>
+                <if test="responsible_type == '1'.toString() ">
+                    and kk.dev_responsible = #{responsible_name_en}
+                </if>
+                <if test="responsible_type == '2'.toString() ">
+                    and kk.audit_responsible = #{responsible_name_en}
+                </if>
+                <if test="responsible_type == '3'.toString() ">
+                    and kk.test_responsible = #{responsible_name_en}
+                </if>
+                <if test="responsible_type == '4'.toString() ">
+                    and kk.task_responsible = #{responsible_name_en}
+                </if>
+            </if>
+            <if test="start_time != null and start_time != '' ">
+                and date_format(date_add(from_unixtime(kk.occurred_time), interval 1 day),'%Y-%m-%d') &gt;= #{start_time}
+            </if>
+            <if test="end_time != null and end_time != '' ">
+                and date_format(date_add(from_unixtime(kk.occurred_time), interval 1 day),'%Y-%m-%d') &lt;= #{end_time}
+            </if>
+            <if test="problem_type != null and problem_type != ''">
+                and kk.issue_type regexp #{problem_type}
+            </if>
+        </where>
+        <if test="sortParam != null and sortParam != '' and sortord != null and sortord != '' ">
+            ORDER BY kk.${sortParam} ${sortord}
+        </if>
+        <if test="page_size != '0'.toString()">
+            limit #{start_page},#{page_size}
+        </if>
+    </select>
+
+    <!-- 按条件查询总量个数 分页用 -->
+    <select id="countProIssues" resultType="map">
+        select
+        *
+        from mantis_bug_table bt,
+        (
+        select tt.id,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 20 then value else '' end)requirement_name,
+        max(case field_id when 21 then value else '' end)module,
+        max(case field_id when 22 then value else '' end)occurred_time,
+        max(case field_id when 23 then value else '' end)is_trigger_issue,
+        max(case field_id when 27 then value else '' end)dev_responsible,
+        max(case field_id when 29 then value else '' end)audit_responsible,
+        max(case field_id when 30 then value else '' end)test_responsible,
+        max(case field_id when 31 then value else '' end)task_responsible,
+        max(case field_id when 32 then value else '' end)issue_type,
+        max(case field_id when 33 then value else '' end)discover_stage,
+        max(case field_id when 36 then value else '' end)issue_level,
+        max(case field_id when 37 then value else '' end)reviewer_status,
+        max(case field_id when 38 then value else '' end)deal_status,
+        max(case field_id when 40 then value else '' end)backlog_schedule_reviewer,
+        max(case field_id when 41 then value else '' end)backlog_schedule_complete_time,
+        max(case field_id when 42 then value else '' end)backlog_schedule_current_completion,
+        max(case field_id when 43 then value else '' end)backlog_schedule_complete_percentage,
+        max(case field_id when 44 then value else '' end)remark
+        from(
+        select b.id,p.field_id,s.value
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="module !=null and module.size() > 0">
+            and
+            b.id in (
+            select b.id
+            from
+            mantis_bug_table b,
+            mantis_custom_field_project_table p,
+            mantis_custom_field_string_table s
+            where p.project_id = b.project_id
+            and s.field_id = p.field_id
+            and b.id = s.bug_id and s.field_id = 21 and find_in_set(s.value,
+            <foreach collection="module" item="item" open="''" separator="','" close="''">
+                #{item}
+            </foreach>)
+            )
+        </if>
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and b.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and b.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+            and b.project_id = 32
+        </if>
+        ) tt
+        group by id
+        ) kk,
+        (
+        select tt.id,
+        max(case field_id when 24 then text else '' end)problem_phenomenon,
+        max(case field_id when 25 then text else '' end)influence_area,
+        max(case field_id when 26 then text else '' end)issue_reason,
+        max(case field_id when 34 then text else '' end)improvement_measures,
+        max(case field_id when 35 then text else '' end)reviewer_comment,
+        max(case field_id when 39 then text else '' end)backlog_schedule,
+        max(case field_id when 44 then text else '' end)remark
+        from(
+        select b.id,p.field_id,s.text
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="module !=null and module.size() > 0">
+            and
+            b.id in (
+            select b.id
+            from
+            mantis_bug_table b,
+            mantis_custom_field_project_table p,
+            mantis_custom_field_string_table s
+            where p.project_id = b.project_id
+            and s.field_id = p.field_id
+            and b.id = s.bug_id and s.field_id = 21 and find_in_set(s.value,
+            <foreach collection="module" item="item" open="''" separator="','" close="''">
+                #{item}
+            </foreach>)
+            )
+        </if>
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and b.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and b.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+                and b.project_id = 32
+            </if>
+        ) tt
+        group by id
+        ) pk
+        <where>kk.id = bt.id
+            and bt.id = pk.id
+            <if test="env == 'sit'.toString()">
+                and bt.project_id = 21
+            </if>
+            <if test="env == 'sit-new'.toString()">
+                and bt.project_id = 29
+            </if>
+            <if test="env == 'rel'.toString()">
+                and bt.project_id = 24
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and bt.project_id = 31
+            </if>
+            <if test="env == 'pro'.toString()">
+                and bt.project_id = 20
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and bt.project_id = 32
+            </if>
+            <if test="module !=null and module.size() > 0">
+                and kk.module in
+                <foreach collection="module" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="deal_status != null and deal_status != '' ">
+                and kk.deal_status = #{deal_status}
+            </if>
+            <if test="issue_level != null and issue_level != '' ">
+                and kk.issue_level = #{issue_level}
+            </if>
+            <if test="reviewerStatus != null and reviewerStatus != '' ">
+                and kk.reviewer_status = #{reviewerStatus}
+            </if>
+            <if test="responsible_name_en != null and responsible_name_en != '' ">
+                <if test="responsible_type == '0'.toString() ">
+                    and (kk.dev_responsible = #{responsible_name_en}
+                    or kk.audit_responsible = #{responsible_name_en}
+                    or kk.test_responsible = #{responsible_name_en}
+                    or kk.task_responsible = #{responsible_name_en})
+                </if>
+                <if test="responsible_type == '1'.toString() ">
+                    and kk.dev_responsible = #{responsible_name_en}
+                </if>
+                <if test="responsible_type == '2'.toString() ">
+                    and kk.audit_responsible = #{responsible_name_en}
+                </if>
+                <if test="responsible_type == '3'.toString() ">
+                    and kk.test_responsible = #{responsible_name_en}
+                </if>
+                <if test="responsible_type == '4'.toString() ">
+                    and kk.task_responsible = #{responsible_name_en}
+                </if>
+            </if>
+            <if test="start_time != null and start_time != '' ">
+                and date_format(date_add(from_unixtime(kk.occurred_time), interval 1 day),'%Y-%m-%d') &gt;=
+                #{start_time}
+            </if>
+            <if test="end_time != null and end_time != '' ">
+                and date_format(date_add(from_unixtime(kk.occurred_time), interval 1 day),'%Y-%m-%d') &lt;= #{end_time}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryProByTeam" resultType="map">
+        SELECT
+        kk.issue_type, kk.module, COUNT(kk.id) AS num
+        FROM
+        (SELECT
+        kk.id,
+        FROM_UNIXTIME(kk.occurred_time, '%Y-%m-%d') AS occurred_time,
+        TRIM(BOTH '|' FROM kk.issue_type) AS issue_type,
+        kk.module
+        FROM
+        bugtracker.mantis_bug_table bt, (select tt.id,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 20 then value else '' end)requirement_name,
+        max(case field_id when 21 then value else '' end)module,
+        max(case field_id when 22 then value else '' end)occurred_time,
+        max(case field_id when 23 then value else '' end)is_trigger_issue,
+        max(case field_id when 27 then value else '' end)dev_responsible,
+        max(case field_id when 29 then value else '' end)audit_responsible,
+        max(case field_id when 30 then value else '' end)test_responsible,
+        max(case field_id when 31 then value else '' end)task_responsible,
+        max(case field_id when 32 then value else '' end)issue_type,
+        max(case field_id when 33 then value else '' end)discover_stage,
+        max(case field_id when 36 then value else '' end)issue_level,
+        max(case field_id when 37 then value else '' end)reviewer_status,
+        max(case field_id when 38 then value else '' end)deal_status,
+        max(case field_id when 40 then value else '' end)backlog_schedule_reviewer,
+        max(case field_id when 41 then value else '' end)backlog_schedule_complete_time,
+        max(case field_id when 42 then value else '' end)backlog_schedule_current_completion,
+        max(case field_id when 43 then value else '' end)backlog_schedule_complete_percentage,
+        max(case field_id when 44 then value else '' end)remark,
+        max(case field_id when 47 then value else '' end)backlog_schedule_reviewer_2,
+        max(case field_id when 48 then value else '' end)backlog_schedule_complete_time_2,
+        max(case field_id when 49 then value else '' end)backlog_schedule_current_completion_2,
+        max(case field_id when 50 then value else '' end)backlog_schedule_complete_percentage_2,
+        max(case field_id when 52 then value else '' end)backlog_schedule_reviewer_3,
+        max(case field_id when 53 then value else '' end)backlog_schedule_complete_time_3,
+        max(case field_id when 54 then value else '' end)backlog_schedule_current_completion_3,
+        max(case field_id when 55 then value else '' end)backlog_schedule_complete_percentage_3,
+        max(case field_id when 56 then value else '' end)responsible,
+        max(case field_id when 57 then value else '' end)responsibility_type,
+        max(case field_id when 59 then value else '' end)responsible_2,
+        max(case field_id when 60 then value else '' end)responsibility_type_2,
+        max(case field_id when 62 then value else '' end)responsible_3,
+        max(case field_id when 63 then value else '' end)responsibility_type_3
+        from(
+        select b.id,p.field_id,s.value
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="module !=null and module.size() > 0">
+            and
+            b.id in (
+            select b.id
+            from
+            mantis_bug_table b,
+            mantis_custom_field_project_table p,
+            mantis_custom_field_string_table s
+            where p.project_id = b.project_id
+            and s.field_id = p.field_id
+            and b.id = s.bug_id and s.field_id = 21 and find_in_set(s.value,
+            <foreach collection="module" item="item" open="''" separator="','" close="''">
+                #{item}
+            </foreach>)
+            )
+        </if>
+        <if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+            and
+            b.id
+            in
+            (
+            select id from mantis_bug_table where from_unixtime(date_submitted,'%Y-%m-%d') between #{start_time} and #{end_time}
+            )
+        </if>
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and b.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and b.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+                and b.project_id = 32
+            </if>
+        ) tt
+        group by id) kk
+        <where>kk.id = bt.id
+            <if test="env == 'sit'.toString()">
+                and bt.project_id = 21
+            </if>
+            <if test="env == 'sit-new'.toString()">
+                and bt.project_id = 29
+            </if>
+            <if test="env == 'rel'.toString()">
+                and bt.project_id = 24
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and bt.project_id = 31
+            </if>
+            <if test="env == 'pro'.toString()">
+                and bt.project_id = 20
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and bt.project_id = 32
+            </if>
+            <if test="module !=null and module.size() > 0">
+                and kk.module in
+                <foreach collection="module" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="deal_status != null and deal_status != '' ">
+                and kk.deal_status = #{deal_status}
+            </if>
+            <if test="issue_level != null and issue_level != '' ">
+                and kk.issue_level = #{issue_level}
+            </if>
+
+            <if test="responsible_name_en != null and responsible_name_en != '' ">
+                <if test="responsible_type == '0'.toString() ">
+                    and (kk.dev_responsible = #{responsible_name_en}
+                    or kk.audit_responsible = #{responsible_name_en}
+                    or kk.test_responsible = #{responsible_name_en}
+                    or kk.task_responsible = #{responsible_name_en})
+                </if>
+                <if test="responsible_type == '1'.toString() ">
+                    and kk.dev_responsible = #{responsible_name_en}
+                </if>
+                <if test="responsible_type == '2'.toString() ">
+                    and kk.audit_responsible = #{responsible_name_en}
+                </if>
+                <if test="responsible_type == '3'.toString() ">
+                    and kk.test_responsible = #{responsible_name_en}
+                </if>
+                <if test="responsible_type == '4'.toString() ">
+                    and kk.task_responsible = #{responsible_name_en}
+                </if>
+            </if>
+            <if test="start_time != null and start_time != '' ">
+                and date_format(date_add(from_unixtime(kk.occurred_time), interval 1 day),'%Y-%m-%d') &gt;=
+                #{start_time}
+            </if>
+            <if test="end_time != null and end_time != '' ">
+                and date_format(date_add(from_unixtime(kk.occurred_time), interval 1 day),'%Y-%m-%d') &lt;= #{end_time}
+            </if>
+        </where>) AS kk
+        GROUP BY issue_type , module
+    </select>
+
+    <insert id="addProIssueReleaseNode">
+        insert
+        into
+            mantis_custom_field_string_table
+        (field_id, bug_id, value)
+        values(
+        71,#{id},#{release_node_name}
+        )
+    </insert>
+
+
+    <!-- 按条件查询总量 -->
+    <select id="queryProIssueByReleaseNodeList" resultMap="AllProIssue">
+        select
+        kk.id,kk.requirement_name,
+        date_format(date_add(from_unixtime(kk.occurred_time), interval 1 day),'%Y/%m/%d') as occurred_time,
+        trim(both '|' from kk.issue_type) as issue_type,kk.issue_level,pk.issue_reason,kk.is_trigger_issue,
+        kk.task_no,kk.module,pk.problem_phenomenon,pk.influence_area,kk.dev_responsible,
+        kk.audit_responsible,kk.test_responsible,kk.task_responsible,
+        kk.discover_stage,pk.improvement_measures,pk.reviewer_comment,
+        kk.reviewer_status,kk.reviewer_status,kk.deal_status,pk.backlog_schedule,
+        kk.backlog_schedule_reviewer,
+        from_unixtime(kk.backlog_schedule_complete_time,'%Y/%m/%d') as backlog_schedule_complete_time,
+        kk.backlog_schedule_current_completion,kk.backlog_schedule_complete_percentage,pk.remark,pk.backlog_schedule_2,kk.backlog_schedule_reviewer_2,
+        date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time_2), interval 1 day),'%Y/%m/%d') as
+        backlog_schedule_complete_time_2,
+        kk.backlog_schedule_current_completion_2,
+        kk.backlog_schedule_complete_percentage_2,pk.backlog_schedule_3,kk.backlog_schedule_reviewer_3,
+        date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time_3), interval 1 day),'%Y/%m/%d') as
+        backlog_schedule_complete_time_3,
+        kk.backlog_schedule_current_completion_3,
+        kk.backlog_schedule_complete_percentage_3,kk.responsible,kk.responsibility_type,pk.responsibility_content,kk.responsible_2,kk.responsibility_type_2,
+        pk.responsibility_content_2,kk.responsible_3,kk.responsibility_type_3,pk.responsibility_content_3,kk.release_node,
+        kk.first_occurred_time,kk.location_time,kk.repair_time,kk.reviewer_time,kk.reviewer,kk.emergency_responsible,pk.emergency_process
+        from mantis_bug_table bt,
+        (
+        select tt.id,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 20 then value else '' end)requirement_name,
+        max(case field_id when 21 then value else '' end)module,
+        max(case field_id when 22 then value else '' end)occurred_time,
+        max(case field_id when 23 then value else '' end)is_trigger_issue,
+        max(case field_id when 27 then value else '' end)dev_responsible,
+        max(case field_id when 29 then value else '' end)audit_responsible,
+        max(case field_id when 30 then value else '' end)test_responsible,
+        max(case field_id when 31 then value else '' end)task_responsible,
+        max(case field_id when 32 then value else '' end)issue_type,
+        max(case field_id when 33 then value else '' end)discover_stage,
+        max(case field_id when 36 then value else '' end)issue_level,
+        max(case field_id when 37 then value else '' end)reviewer_status,
+        max(case field_id when 38 then value else '' end)deal_status,
+        max(case field_id when 40 then value else '' end)backlog_schedule_reviewer,
+        max(case field_id when 41 then value else '' end)backlog_schedule_complete_time,
+        max(case field_id when 42 then value else '' end)backlog_schedule_current_completion,
+        max(case field_id when 43 then value else '' end)backlog_schedule_complete_percentage,
+        max(case field_id when 44 then value else '' end)remark,
+        max(case field_id when 47 then value else '' end)backlog_schedule_reviewer_2,
+        max(case field_id when 48 then value else '' end)backlog_schedule_complete_time_2,
+        max(case field_id when 49 then value else '' end)backlog_schedule_current_completion_2,
+        max(case field_id when 50 then value else '' end)backlog_schedule_complete_percentage_2,
+        max(case field_id when 52 then value else '' end)backlog_schedule_reviewer_3,
+        max(case field_id when 53 then value else '' end)backlog_schedule_complete_time_3,
+        max(case field_id when 54 then value else '' end)backlog_schedule_current_completion_3,
+        max(case field_id when 55 then value else '' end)backlog_schedule_complete_percentage_3,
+        max(case field_id when 56 then value else '' end)responsible,
+        max(case field_id when 57 then value else '' end)responsibility_type,
+        max(case field_id when 59 then value else '' end)responsible_2,
+        max(case field_id when 60 then value else '' end)responsibility_type_2,
+        max(case field_id when 62 then value else '' end)responsible_3,
+        max(case field_id when 63 then value else '' end)responsibility_type_3,
+        max(case field_id when 71 then value else '' end)release_node,
+        max(case field_id when 74 then value else '' end)first_occurred_time,
+        max(case field_id when 75 then value else '' end)location_time,
+        max(case field_id when 76 then value else '' end)repair_time,
+        max(case field_id when 77 then value else '' end)reviewer_time,
+        max(case field_id when 78 then value else '' end)reviewer,
+        max(case field_id when 80 then value else '' end)emergency_responsible
+        from(
+        select b.id,p.field_id,s.value
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="relaseNodeName !=null and relaseNodeName.size() > 0">
+            and
+            b.id in (
+            select b.id
+            from
+            mantis_bug_table b,
+            mantis_custom_field_project_table p,
+            mantis_custom_field_string_table s
+            where p.project_id = b.project_id
+            and s.field_id = p.field_id
+            and b.id = s.bug_id and s.field_id = 71 and find_in_set(s.value,
+            <foreach collection="relaseNodeName" item="item" open="''" separator="','" close="''">
+                #{item}
+            </foreach>)
+            )
+        </if>
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and b.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and b.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+            and b.project_id = 32
+        </if>
+        ) tt
+        group by id
+        ) kk,
+        (
+        select tt.id,
+        max(case field_id when 24 then text else '' end)problem_phenomenon,
+        max(case field_id when 25 then text else '' end)influence_area,
+        max(case field_id when 26 then text else '' end)issue_reason,
+        max(case field_id when 34 then text else '' end)improvement_measures,
+        max(case field_id when 35 then text else '' end)reviewer_comment,
+        max(case field_id when 39 then text else '' end)backlog_schedule,
+        max(case field_id when 46 then text else '' end)backlog_schedule_2,
+        max(case field_id when 51 then text else '' end)backlog_schedule_3,
+        max(case field_id when 44 then text else '' end)remark,
+        max(case field_id when 58 then text else '' end)responsibility_content,
+        max(case field_id when 61 then text else '' end)responsibility_content_2,
+        max(case field_id when 64 then text else '' end)responsibility_content_3,
+        max(case field_id when 79 then text else '' end)emergency_process
+        from(
+        select b.id,p.field_id,s.text
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="relaseNodeName !=null and relaseNodeName.size() > 0">
+            and
+            b.id in (
+            select b.id
+            from
+            mantis_bug_table b,
+            mantis_custom_field_project_table p,
+            mantis_custom_field_string_table s
+            where p.project_id = b.project_id
+            and s.field_id = p.field_id
+            and b.id = s.bug_id and s.field_id = 71 and find_in_set(s.value,
+            <foreach collection="relaseNodeName" item="item" open="''" separator="','" close="''">
+                #{item}
+            </foreach>)
+            )
+        </if>
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'sit-new'.toString()">
+            and b.project_id = 29
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'rel-new'.toString() ">
+            and b.project_id = 31
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        <if test="env == 'pro-new'.toString()">
+            and b.project_id = 32
+        </if>
+        ) tt
+        group by id
+        ) pk
+        <where>kk.id = bt.id
+            and bt.id = pk.id
+            <if test="env == 'sit'.toString()">
+                and bt.project_id = 21
+            </if>
+            <if test="env == 'sit-new'.toString()">
+                and bt.project_id = 29
+            </if>
+            <if test="env == 'rel'.toString()">
+                and bt.project_id = 24
+            </if>
+            <if test="env == 'rel-new'.toString() ">
+                and bt.project_id = 31
+            </if>
+            <if test="env == 'pro'.toString()">
+                and bt.project_id = 20
+            </if>
+            <if test="env == 'pro-new'.toString()">
+                and bt.project_id = 32
+            </if>
+            <if test="relaseNodeName != null and relaseNodeName.size() > 0 ">
+                and kk.release_node in
+                <foreach collection="relaseNodeName" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 按条件查询总量 -->
+    <select id="queryProIssueByReleaseNode" resultMap="AllProIssue">
+        select
+        kk.id,kk.requirement_name,
+        date_format(date_add(from_unixtime(kk.occurred_time), interval 1 day),'%Y/%m/%d') as occurred_time,
+        trim(both '|' from kk.issue_type) as issue_type,kk.issue_level,pk.issue_reason,kk.is_trigger_issue,
+        kk.task_no,kk.module,pk.problem_phenomenon,pk.influence_area,kk.dev_responsible,
+        kk.audit_responsible,kk.test_responsible,kk.task_responsible,
+        kk.discover_stage,pk.improvement_measures,pk.reviewer_comment,
+        kk.reviewer_status,kk.reviewer_status,kk.deal_status,pk.backlog_schedule,
+        kk.backlog_schedule_reviewer,
+        from_unixtime(kk.backlog_schedule_complete_time,'%Y/%m/%d') as backlog_schedule_complete_time,
+        kk.backlog_schedule_current_completion,kk.backlog_schedule_complete_percentage,pk.remark,pk.backlog_schedule_2,kk.backlog_schedule_reviewer_2,
+        date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time_2), interval 1 day),'%Y/%m/%d') as
+        backlog_schedule_complete_time_2,
+        kk.backlog_schedule_current_completion_2,
+        kk.backlog_schedule_complete_percentage_2,pk.backlog_schedule_3,kk.backlog_schedule_reviewer_3,
+        date_format(date_add(from_unixtime(kk.backlog_schedule_complete_time_3), interval 1 day),'%Y/%m/%d') as
+        backlog_schedule_complete_time_3,
+        kk.backlog_schedule_current_completion_3,
+        kk.backlog_schedule_complete_percentage_3,kk.responsible,kk.responsibility_type,pk.responsibility_content,kk.responsible_2,kk.responsibility_type_2,
+        pk.responsibility_content_2,kk.responsible_3,kk.responsibility_type_3,pk.responsibility_content_3,kk.release_node,
+        kk.first_occurred_time,kk.location_time,kk.repair_time,kk.reviewer_time,kk.reviewer,kk.emergency_responsible,pk.emergency_process
+        from mantis_bug_table bt,
+        (
+        select tt.id,
+        max(case field_id when 19 then value else '' end)task_no,
+        max(case field_id when 20 then value else '' end)requirement_name,
+        max(case field_id when 21 then value else '' end)module,
+        max(case field_id when 22 then value else '' end)occurred_time,
+        max(case field_id when 23 then value else '' end)is_trigger_issue,
+        max(case field_id when 27 then value else '' end)dev_responsible,
+        max(case field_id when 29 then value else '' end)audit_responsible,
+        max(case field_id when 30 then value else '' end)test_responsible,
+        max(case field_id when 31 then value else '' end)task_responsible,
+        max(case field_id when 32 then value else '' end)issue_type,
+        max(case field_id when 33 then value else '' end)discover_stage,
+        max(case field_id when 36 then value else '' end)issue_level,
+        max(case field_id when 37 then value else '' end)reviewer_status,
+        max(case field_id when 38 then value else '' end)deal_status,
+        max(case field_id when 40 then value else '' end)backlog_schedule_reviewer,
+        max(case field_id when 41 then value else '' end)backlog_schedule_complete_time,
+        max(case field_id when 42 then value else '' end)backlog_schedule_current_completion,
+        max(case field_id when 43 then value else '' end)backlog_schedule_complete_percentage,
+        max(case field_id when 44 then value else '' end)remark,
+        max(case field_id when 47 then value else '' end)backlog_schedule_reviewer_2,
+        max(case field_id when 48 then value else '' end)backlog_schedule_complete_time_2,
+        max(case field_id when 49 then value else '' end)backlog_schedule_current_completion_2,
+        max(case field_id when 50 then value else '' end)backlog_schedule_complete_percentage_2,
+        max(case field_id when 52 then value else '' end)backlog_schedule_reviewer_3,
+        max(case field_id when 53 then value else '' end)backlog_schedule_complete_time_3,
+        max(case field_id when 54 then value else '' end)backlog_schedule_current_completion_3,
+        max(case field_id when 55 then value else '' end)backlog_schedule_complete_percentage_3,
+        max(case field_id when 56 then value else '' end)responsible,
+        max(case field_id when 57 then value else '' end)responsibility_type,
+        max(case field_id when 59 then value else '' end)responsible_2,
+        max(case field_id when 60 then value else '' end)responsibility_type_2,
+        max(case field_id when 62 then value else '' end)responsible_3,
+        max(case field_id when 63 then value else '' end)responsibility_type_3,
+        max(case field_id when 71 then value else '' end)release_node,
+        max(case field_id when 74 then value else '' end)first_occurred_time,
+        max(case field_id when 75 then value else '' end)location_time,
+        max(case field_id when 76 then value else '' end)repair_time,
+        max(case field_id when 77 then value else '' end)reviewer_time,
+        max(case field_id when 78 then value else '' end)reviewer,
+        max(case field_id when 80 then value else '' end)emergency_responsible
+        from(
+        select b.id,p.field_id,s.value
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        ) tt
+        group by id
+        ) kk,
+        (
+        select tt.id,
+        max(case field_id when 24 then text else '' end)problem_phenomenon,
+        max(case field_id when 25 then text else '' end)influence_area,
+        max(case field_id when 26 then text else '' end)issue_reason,
+        max(case field_id when 34 then text else '' end)improvement_measures,
+        max(case field_id when 35 then text else '' end)reviewer_comment,
+        max(case field_id when 39 then text else '' end)backlog_schedule,
+        max(case field_id when 46 then text else '' end)backlog_schedule_2,
+        max(case field_id when 51 then text else '' end)backlog_schedule_3,
+        max(case field_id when 44 then text else '' end)remark,
+        max(case field_id when 58 then text else '' end)responsibility_content,
+        max(case field_id when 61 then text else '' end)responsibility_content_2,
+        max(case field_id when 64 then text else '' end)responsibility_content_3,
+        max(case field_id when 79 then text else '' end)emergency_process
+        from(
+        select b.id,p.field_id,s.text
+        from
+        mantis_bug_table b,
+        mantis_custom_field_project_table p,
+        mantis_custom_field_string_table s
+        where p.project_id = b.project_id
+        and s.field_id = p.field_id
+        and b.id = s.bug_id
+        <if test="env == 'sit'.toString()">
+            and b.project_id = 21
+        </if>
+        <if test="env == 'rel'.toString()">
+            and b.project_id = 24
+        </if>
+        <if test="env == 'pro'.toString()">
+            and b.project_id = 20
+        </if>
+        ) tt
+        group by id
+        ) pk
+        <where>kk.id = bt.id
+            and bt.id = pk.id
+            <if test="env == 'sit'.toString()">
+                and b.project_id = 21
+            </if>
+            <if test="env == 'rel'.toString()">
+                and b.project_id = 24
+            </if>
+            <if test="env == 'pro'.toString()">
+                and b.project_id = 20
+            </if>
+            <if test="relaseNodeName != null and relaseNodeName != '' ">
+                and kk.release_node = #{relaseNodeName}
+            </if>
+        </where>
+    </select>
+</mapper>

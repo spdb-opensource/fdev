@@ -1,0 +1,198 @@
+{
+    "title": "原生出包参数配置",
+    "key": "Type",
+    "children": {
+      "0": {
+        "title": "自定义配置测试包",
+        "children": [
+           {
+            "title": "环境选择",
+            "key": "Environment",
+            "children": {
+              "0": "SIT1",
+              "1": "SIT2",
+              "2": "UAT",
+              "3": "REL",
+              "4": "GRAY",
+              "5": "WAP",
+              "6": "兼容性",
+              "7": {
+                "title": "自定义",
+                "children": {
+                  "serviceid": {
+                    "title": "交易服务器(其余配置与SIT2保持一致)",
+                    "key": "service_id",
+                    "textinput": true,
+                    "placehoder": "https://etest2.spdb.com.cn/pmclient"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "title": "是否带i",
+            "key": "isi",
+            "children": {
+              "0": "是",
+              "1": "否"
+            }
+          },
+          {
+            "title": "测试环境是否可选择",
+            "key": "SingleEnvironment",
+            "children": {
+              "0": "是",
+              "1": "否"
+            }
+          },
+           {
+            "title": "网络选择",
+            "key": "Network",
+            "children": {
+              "0": "内网",
+              "1": "外网"
+            }
+          },
+           {
+            "title": "版本号",
+            "key": "version",
+            "children": {
+              "0": "默认版本",
+              "1": {
+                "title": "自定义版本",
+                "key": "appversion",
+                "textinput": true,
+                "placehoder": "请输入版本号"
+              }
+            }
+          },
+           {
+            "title": "RNBundle",
+            "key": "rnversion",
+            "children": {
+              "0": "默认bundle版本",
+              "1": {
+                "title": "Release",
+                "key": "release_rnversion",
+                "textinput": true,
+                "placehoder": "请输入RNBundle版本号"
+              },
+              "2": {
+                "title": "Debug",
+                "key": "debug_rnversion",
+                "textinput": true,
+                "placehoder": "请输入RNBundle版本号"
+              }
+            }
+          },
+          {
+            "title": "是否加固",
+            "key": "isbangbang",
+            "children":
+              {
+                "0": "不加固",
+                "1": "加固"
+              }
+            
+          },
+          {
+            "title": "是否开启CDN",
+            "key": "cdnstat",
+            "children":
+              {
+                "0": "开启",
+                "1": "不开启"
+              }
+            
+          },
+          {
+            "title": "是否开启缓存",
+            "key": "achestat",
+            "children":
+              {
+                "0": "开启",
+                "1": "不开启"
+              }
+            
+          },
+
+          {
+            "title": "是否开启RNDebug模式",
+            "key": "rndebugstat",
+            "children":
+              {
+                "0": "开启",
+                "1": "不开启"
+              }
+            
+          },
+          {
+            "title": "是否交易加密",
+            "key": "encrystat",
+            "children":
+              {
+                "0": "加密",
+                "1": "不加密"
+              }
+            
+          },
+          {
+            "title": "键盘乱序",
+            "key": "keyboard",
+            "children":
+              {
+                "0": "乱序",
+                "1": "不乱序"
+              }
+            
+          },
+          {
+            "title": "云上云下模式",
+            "key": "overlay",
+            "children":
+              {
+                "0": "云上模式",
+                "1": "云下模式"
+              }
+            
+          },
+          {
+            "title": "是否关闭前端aspect",
+            "key": "aspect",
+            "children":
+              {
+                "0": "关闭",
+                "1": "打开"
+              }
+            
+          }
+        ]
+      },
+      "1": {
+        "title": "默认出包",
+        "children": [
+            {
+            "title": "是否加固",
+            "key": "isbangbang",
+            "children":
+              {
+                "0": "不加固"
+              }
+            
+          }
+            ]
+      },
+      "test": {
+        "title": "否"
+      },
+      "jrcs": {
+        "title": "兼容性测试包"
+      },
+      "auto": {
+        "title": "自动化测试包"
+      },
+      "yace": {
+        "title": "压测包"
+      }
+    }
+  }

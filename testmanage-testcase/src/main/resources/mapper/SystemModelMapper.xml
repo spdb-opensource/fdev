@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.manager.ftms.dao.SystemModelDao">
+	<select id="querySysIdBySysName" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT sys_id FROM sys_model where sys_module_name = #{system_name}		
+	</select>
+
+	<!-- 根据功能id查询系统中文名-->
+	<select id="querySysNameByFuncId" resultType="String">
+		SELECT
+			s.sys_module_name
+		FROM
+			sys_model s, func_model f
+		WHERE
+			s.sys_id = f.sys_func_id
+		AND
+			f.func_id = #{funcId}
+	</select>
+
+</mapper>

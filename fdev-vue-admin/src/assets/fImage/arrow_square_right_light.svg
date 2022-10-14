@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon_32_right1_unchoose</title>
+    <g id="icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-174.000000, -474.000000)" id="icon_32_right1_unchoose">
+            <g transform="translate(190.000000, 490.000000) scale(-1, 1) translate(-190.000000, -490.000000) translate(174.000000, 474.000000)">
+                <rect id="矩形" x="0" y="0" width="32" height="32"></rect>
+                <rect id="bg-" stroke="#ECEFF1" x="1" y="1" width="30" height="30" rx="3"></rect>
+                <path d="M13.2928932,14.8828427 L17.8857864,10.2899495 C18.2723858,9.90335017 18.8991871,9.90335017 19.2857864,10.2899495 C19.6723858,10.6765488 19.6723858,11.3033502 19.2857864,11.6899495 L15.3857864,15.5899495 L19.2857864,19.4899495 C19.6723858,19.8765488 19.6723858,20.5033502 19.2857864,20.8899495 C18.8991871,21.2765488 18.2723858,21.2765488 17.8857864,20.8899495 L13.2928932,16.2970563 C12.9023689,15.906532 12.9023689,15.273367 13.2928932,14.8828427 L13.2928932,14.8828427 Z" id="Shape" fill="#ECEFF1"></path>
+            </g>
+        </g>
+    </g>
+</svg>

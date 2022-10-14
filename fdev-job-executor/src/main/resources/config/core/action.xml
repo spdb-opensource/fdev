@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.csii.com.cn/schema/pe"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.csii.com.cn/schema/pe http://www.csii.com.cn/schema/pe/pe.xsd">
+
+
+
+	<action id="abstractAction" class="com.csii.pe.action.ext.AbstractAction" abstract="true" />
+
+	<action id="baseAction" class="com.csii.pe.action.ext.BaseAction" parent="abstractAction" />
+
+	<action id="baseQueryAction" class="com.csii.pe.action.ext.BaseQueryAction" parent="baseAction" />
+
+
+</config>

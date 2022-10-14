@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.auto.dao.MenuMapper">
+
+    <resultMap id="Menu" type="com.auto.entity.MenuSheet">
+        <id column="MENU_SHEET_ID" jdbcType="INTEGER" property="menuSheetId"/>
+        <result column="MENU_NAME" jdbcType="VARCHAR" property="menuName"/>
+        <result column="MENU_NO" jdbcType="VARCHAR" property="menuNo"/>
+        <result column="SECONDARY_MENU" jdbcType="VARCHAR" property="secondaryMenu"/>
+        <result column="SECONDARY_MENU_NO" jdbcType="VARCHAR" property="secondaryMenuNo"/>
+        <result column="THIRD_MENU" jdbcType="VARCHAR" property="thirdMenu"/>
+        <result column="THIRD_MENU_NO" jdbcType="VARCHAR" property="thirdMenuNo"/>
+        <result column="DELETED" jdbcType="VARCHAR" property="deleted"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="VARCHAR" property="modifyTime"/>
+        <result column="LAST_OPR" jdbcType="VARCHAR" property="lastOpr"/>
+    </resultMap>
+
+    <sql id = "Menu_Column_List" >
+        MENU_SHEET_ID,
+        MENU_NAME,
+        MENU_NO,
+        SECONDARY_MENU,
+        SECONDARY_MENU_NO,
+        THIRD_MENU,
+        THIRD_MENU_NO,
+        DELETED,
+        CREATE_TIME,
+        MODIFY_TIME,
+        LAST_OPR
+    </sql>
+
+    <insert id="addMenu" parameterType="com.auto.entity.MenuSheet" >
+        INSERT INTO
+            AUTO_MENU_SHEET
+            (MENU_NAME, MENU_NO, SECONDARY_MENU, SECONDARY_MENU_NO, THIRD_MENU,
+            THIRD_MENU_NO, DELETED, CREATE_TIME, MODIFY_TIME,LAST_OPR)
+        VALUES
+            (#{menuName,jdbcType=VARCHAR},
+            #{menuNo,jdbcType=VARCHAR}, #{secondaryMenu,jdbcType=VARCHAR},
+            #{secondaryMenuNo,jdbcType=VARCHAR}, #{thirdMenu,jdbcType=VARCHAR},
+            #{thirdMenuNo,jdbcType=VARCHAR}, #{deleted,jdbcType=VARCHAR},
+            #{createTime,jdbcType=VARCHAR}, #{modifyTime,jdbcType=VARCHAR},
+            #{lastOpr,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="queryMenu" resultMap="Menu">
+        SELECT
+            <include refid="Menu_Column_List"/>
+        FROM
+            AUTO_MENU_SHEET
+        <where>
+            <if test="search != '' and search != null">
+                AND (
+                    MENU_NAME like concat('%', #{search}, '%') OR
+                    MENU_NO like concat('%', #{search}, '%') OR
+                    SECONDARY_MENU like concat('%', #{search}, '%') OR
+                    SECONDARY_MENU_NO like concat('%', #{search}, '%') OR
+                    THIRD_MENU like concat('%', #{search}, '%') OR
+                    THIRD_MENU_NO like concat('%', #{search}, '%')
+                )
+            </if>
+            <if test="valid != '' and valid != null">
+                AND
+                    DELETED = #{valid}
+            </if>
+        </where>
+    </select>
+    
+   	<select id="queryMenuByMenuSheet" parameterType="String" resultMap="Menu">
+        SELECT
+            <include refid="Menu_Column_List"/>
+        FROM
+            AUTO_MENU_SHEET
+        WHERE 
+        	DELETED = '0'
+        <if test="menuNo != '' and menuNo != null">
+            AND MENU_NO = #{menuNo}
+        </if>
+        <if test="secondaryMenuNo != '' and secondaryMenuNo != null">
+            AND SECONDARY_MENU_NO = #{secondaryMenuNo}
+        </if>
+        <if test="thirdMenuNo != '' and thirdMenuNo != null">
+            AND THIRD_MENU_NO = #{thirdMenuNo}
+        </if>
+        <if test="menuSheetId != '' and menuSheetId != null">
+            AND MENU_SHEET_ID != #{menuSheetId}
+        </if>
+    </select>
+
+    <update id="deleteMenu" parameterType="String">
+        UPDATE
+            AUTO_MENU_SHEET
+        SET
+            DELETED = '1',
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            MENU_SHEET_ID in (${menuSheetId})
+    </update>
+
+    <update id="updateMenu" parameterType="String">
+        UPDATE
+            AUTO_MENU_SHEET
+        SET
+            MENU_NAME = #{menuName},
+            MENU_NO = #{menuNo},
+            SECONDARY_MENU = #{secondaryMenu},
+            SECONDARY_MENU_NO = #{secondaryMenuNo},
+            THIRD_MENU = #{thirdMenu},
+            THIRD_MENU_NO = #{thirdMenuNo},
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            MENU_SHEET_ID = #{menuSheetId}
+    </update>
+</mapper>

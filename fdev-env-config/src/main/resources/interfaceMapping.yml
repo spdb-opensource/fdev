@@ -1,0 +1,66 @@
+/fservice/api/app/query:
+  res:
+    - gitlabId: "gitlab_project_id"
+      nameEN: "name_en"
+      nameCN: "name_zh"
+      typeValue: "type_id"
+      spdbManagers: "spdb_managers"
+      devManagers: "dev_managers"
+      businessSystem: "service_system"
+      gitAddress: "git"
+      archetypeId: "archetype_id"
+      pipeline: "appCiType"
+
+/fservice/api/app/queryApps:
+  res:
+    - gitlabId: "gitlab_project_id"
+      nameEN: "name_en"
+      nameCN: "name_zh"
+      typeValue: "type_id"
+      spdbManagers: "spdb_managers"
+      devManagers: "dev_managers"
+      businessSystem: "service_system"
+      gitAddress: "git"
+      archetypeId: "archetype_id"
+      pipeline: "appCiType"
+
+/fservice/api/app/findbyid:
+  res:
+    gitlabId: "gitlab_project_id"
+    nameEN: "name_en"
+    nameCN: "name_zh"
+    typeValue: "type_id"
+    spdbManagers: "spdb_managers"
+    devManagers: "dev_managers"
+    businessSystem: "service_system"
+    gitAddress: "git"
+    archetypeId: "archetype_id"
+    pipeline: "appCiType"
+
+/fservice/api/app/getAppByGitId:
+  req:
+    gitlab_project_id: "gitlabId"
+  res:
+    gitlabId: "gitlab_project_id"
+    nameEN: "name_en"
+    nameCN: "name_zh"
+    typeValue: "type_id"
+    spdbManagers: "spdb_managers"
+    devManagers: "dev_managers"
+    businessSystem: "service_system"
+    gitAddress: "git"
+    archetypeId: "archetype_id"
+    pipeline: "appCiType"
+       
+/fservice/api/app/getAppByIdsOrGitlabIds:
+  res:
+   - gitlabId: "gitlab_project_id"
+     nameEN: "name_en"
+     nameCN: "name_zh"
+     typeValue: "type_id"
+     spdbManagers: "spdb_managers"
+     devManagers: "dev_managers"
+     businessSystem: "service_system"
+     gitAddress: "git"
+     archetypeId: "archetype_id"
+     pipeline: "appCiType"

@@ -1,0 +1,10 @@
+<div>
+    <pre>
+${user_name},你好：
+    以下信息为你登录效能平台的初始信息。还请尽快完成首次登录！
+    登录地址：${loginpath}
+    登录名：${login_user_name}
+    初始密码：虚机密码
+    <br><br>
+</pre>
+</div>

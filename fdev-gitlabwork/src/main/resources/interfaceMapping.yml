@@ -1,0 +1,6 @@
+/fservice/api/app/query:
+  res:
+    - gitlabId: "gitlab_project_id"
+      nameEN: "name_en"
+      nameCN: "name_zh"
+      gitAddress: "git"

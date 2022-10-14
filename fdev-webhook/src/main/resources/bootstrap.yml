@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: fwebhook
+  cloud:
+    config:
+    #快速失败响应
+      fail-fast: true
+      label: master
+      uri: xxx/fdev-configserver
+      name: fwebhook
+      profile: ${SPRING_PROFILE_ACTIVE}
+
+    bus:
+      refresh:
+       enabled: true
+#    bus:
+#        enabled: false
+#        trace:
+#          enabled: false
+#    stream:
+#      kafka:
+#        binder:
+#          brokers:
+#          -xxx:9092
+#          -xxx:9092
+#          -xxx:9092
+#          zkNodes:
+#          -xxx:8181
+#          -xxx:8181
+#          -xxx:8181
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: bus-refresh

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>keep_on_file</title>
+    <defs>
+        <linearGradient x1="99.6148383%" y1="100%" x2="0%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#085AAD" offset="0%"></stop>
+            <stop stop-color="#022140" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon" transform="translate(-14.000000, -329.000000)" fill-rule="nonzero">
+            <g id="keep_on_file" transform="translate(14.000000, 329.000000)">
+                <g id="编组-15" fill="#8FBAE6">
+                    <rect id="矩形" x="0" y="0" width="48" height="48" rx="8"></rect>
+                </g>
+                <g id="编组-9" transform="translate(11.142857, 11.142644)">
+                    <path d="M-4.51894867e-23,7.31766836 L2.55983247,1.62832982 C2.95398138,0.530372015 3.95584868,-0.0123337199 5.56543436,-2.22044605e-16 C7.17502004,0.0130490088 12.072883,0.0194672029 20.2590232,0.0194672029 C21.6392177,-0.010959125 22.5525505,0.525328416 22.9990218,1.62832982 C23.4454931,2.73133123 24.2996682,4.62777741 25.5615472,7.31766836 L25.5615472,23.7343798 C25.5784976,24.9589209 25.0438622,25.5711914 23.9576411,25.5711914 C22.87142,25.5711914 15.4570919,25.6190329 1.71465684,25.7147159 C0.578100881,25.8003367 0.0098229029,25.1402247 0.0098229029,23.7343798 C0.0098229029,22.3285349 0.00654860193,16.8562978 -4.51894867e-23,7.31766836 Z" id="路径-4" stroke="#FFFFFF" fill="url(#linearGradient-1)"></path>
+                    <polygon id="矩形" stroke="#FFFFFF" fill="#FFFFFF" points="18.9854591 4.78592691 20.4722554 8.27569647 5.85967015 8.92878405 6.27405457 5.14894884"></polygon>
+                    <g id="编组-8" transform="translate(6.000000, 11.143070)" fill="#FFFFFF">
+                        <polygon id="路径-16" points="-3.70804557e-16 3.53306189 6.78128895 7.0539877 13.7142857 2.57142857 6.85714286 11.5467412"></polygon>
+                        <rect id="矩形" x="5.14285714" y="0" width="3.42857143" height="7.71428571"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

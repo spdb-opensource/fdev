@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon_24_txt</title>
+    <defs>
+        <polygon id="path-1" points="0.167243368 0 21.5005767 0 21.5005767 24 0.167243368 24"></polygon>
+    </defs>
+    <g id="图标" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="场景图标" transform="translate(-609.000000, -1057.000000)">
+            <g id="编组" transform="translate(609.000000, 1057.000000)">
+                <g id="word-2" transform="translate(1.000000, 0.000000)">
+                    <g id="word" transform="translate(0.166090, 0.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <g id="Clip-2"></g>
+                        <path d="M1.4471767,0 C1.1272767,0 0.785876701,0.12 0.551243368,0.36 C0.316576701,0.59996875 0.167243368,0.90003125 0.167243368,1.1999375 L0.167243368,22.8000625 C0.167243368,23.0999687 0.295243368,23.4200313 0.551243368,23.64 C0.807210035,23.88 1.1272767,24 1.4471767,24 L20.2206434,24 C20.5405434,24 20.8819434,23.88 21.1165767,23.64 C21.3725767,23.4000313 21.5005767,23.0999687 21.5005767,22.8000625 L21.5005767,6.8000625 L14.2471767,0 L1.4471767,0 Z" id="Fill-1" fill="#9785FF" mask="url(#mask-2)"></path>
+                        <path d="M21.5005767,6.66666667 L16.0104617,6.66666667 C15.7162855,6.66666667 15.4026242,6.54902069 15.1869705,6.31360619 C14.951556,6.09795253 14.83391,5.7842912 14.83391,5.49011498 L14.83391,0 L21.5005767,6.66666667 Z" id="Fill-3" fill="#BBC0FF" mask="url(#mask-2)"></path>
+                    </g>
+                    <text id="T" font-family="PingFangSC-Semibold, PingFang SC" font-size="12" font-weight="500" fill="#FFFFFF">
+                        <tspan x="7" y="17">T</tspan>
+                    </text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.plan.dao.TestcaseMapper" >
+
+    <select id="countCaseByPlanID" resultType="Integer">
+        SELECT
+            count(*)
+        FROM
+            plan_list pl
+        JOIN
+            FTMS_PLAN_RESULT r
+        ON
+            pl.plan_id = r.PLAN_ID
+        WHERE
+            pl.plan_id = #{planId}
+        AND
+            pl.work_no = #{workNo}
+    </select>
+
+</mapper>

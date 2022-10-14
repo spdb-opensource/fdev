@@ -1,0 +1,47 @@
+title = "CI Runner Config TOML Example"
+name = "ci-runner"
+executor = "kubernetes"
+#executor = "docker"
+#executor = "local"
+concurrent = 10
+log_level = "warning"
+listen_address = ":9252"
+url = "xxx"
+#本地 url = "http://localhost:8080"
+token = "123qweasdzxc"
+log = "/tmp/logs/ci-runner.log"
+temp_log_dir = "/tmp/logs"
+[kubernetes]
+config = "/Users/kiwi/.kube/config"
+namespace = "lisy"
+#dns = ["xxx"]
+helper_image = "ci-runner-helper:latest"
+
+
+[kafka]
+    [kafka.read]
+        brokerList = "localhost:9092"
+        topic = "super-runner"
+        groupId = "super-runner"
+    [kafka.writer]
+        brokerList = "localhost:9092"
+        topic = "super-runner-write"
+
+[minio]
+    url = "xxx:9000"
+    artifacts_bucket = "fdev-ci-artifacts"
+    plugins_bucket = "fdev-ci-plugins"
+    access_key = "admin"
+    secret_key = "12345678"
+[git]
+    name = "yuyangfeng"
+    password = "2989c1308d96b8eec932cd5b52af4529"
+[docker]
+    workspace = "/workspace"
+    dns = ["xxx","xxx"]
+    privileged = true
+    [[docker.volumes]]
+      name = "workspace"
+      source = "/tmp/workspace"
+      target = "/workspace"
+      read_only = false

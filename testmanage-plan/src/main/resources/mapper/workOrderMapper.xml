@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.plan.dao.WorkOrderMapper" >
+
+
+    <!--根据 工单编号获取工单主任务名称 -->
+    <select id="queryMainTaskNoByWorkNo" resultType="String">
+        SELECT
+        main_task_no
+        FROM
+        work_order
+        WHERE
+        work_no = #{workNo}
+    </select>
+
+    <!--根据 工单编号获取工单work_flag 判断是否是fdev任务 -->
+    <select id="queryWorkFlagByWorkNo" resultType="String">
+        SELECT
+            work_flag
+        FROM
+            work_order
+        WHERE
+            work_no = #{workNo}
+    </select>
+    
+    <update id="updateIssueTime">
+    	UPDATE
+    		FTMS_PLAN_RESULT
+    	SET FNL_ISSUE_TM = #{fnlIssueTm}	
+    		WHERE 
+    		ID = #{id}
+    </update>
+
+    <select id="queryWorkManagerByWorkNo" resultType="String">
+        SELECT
+            work_manager
+        FROM
+            work_order
+        WHERE
+            work_no = #{workNo}
+    </select>
+
+    <!--根据 工单编号获取工单主任务名称 -->
+    <select id="queryMainTaskNameByWorkNo" resultType="String">
+        SELECT
+            main_task_name
+        FROM
+            work_order
+        WHERE
+            work_no = #{workNo}
+    </select>
+
+    <select id="queryFtmsPeopleByWorkNo" resultType="Map">
+        SELECT
+            testers as testers,
+            work_manager as workManager,
+            work_leader as workLeader
+        FROM
+            work_order
+        WHERE
+            work_no = #{workNo}
+    </select>
+
+    <select id="queryFtmsGroupId" resultType="java.lang.String">
+        SELECT
+        FTMS_GROUP_ID
+        FROM
+        FTMS_GROUP_MAP
+        WHERE
+        FDEV_GROUP_ID = #{fdevGroupId}
+    </select>
+
+    <!--根据多个工单号查询多个任务单号-->
+    <select id="queryTaskNoByWorkNos" resultType="String">
+        select task_no from task_list where work_no in
+        <foreach collection="workNos" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+<!--根据工单号查询多个任务单号-->
+    <select id="queryTaskNosByWorkNo" resultType="String">
+        select task_no from task_list where work_no =  #{workNo}
+    </select>
+
+    <!--根据工单号查询工单的需求名称-->
+    <select id="queryDemandNameByWorkNo" resultType="String">
+        select demand_name from work_order where work_no =  #{workNo}
+    </select>
+
+    <!--根据工单号查询工单下所有任务名-->
+    <select id="queryTaskNamesByWorkNo" resultType="String">
+        select task_name from task_list where work_no =  #{workNo}
+    </select>
+
+    <!--根据任务编号查询任务名-->
+    <select id="queryTaskNameByTaskNo" resultType="String">
+        select task_name from task_list where task_no =  #{taskNo}
+    </select>
+
+    <!--根据工单号查询实施单元编号-->
+    <select id="queryUnitNoByWorkNo" resultType="String">
+        select work_unit from work_order where work_no =  #{workNo}
+    </select>
+
+    <select id="queryWorkOrderByTaskNo" resultType="Map">
+        select
+        t.task_no,
+        t.work_no,
+        t.task_name,
+        w.main_task_name,
+        w.work_unit,
+        w.fdev_group_id,
+        w.fdev_new,
+        w.demand_id
+        from
+        task_list t
+        left join
+        work_order w
+        on
+        t.work_no=w.work_no
+        where
+        t.task_no=#{taskNo}
+    </select>
+
+    <select id="queryFdevNewByWorkNo" resultType="String">
+        select
+        fdev_new
+        from
+        work_order
+        where
+        work_no=#{workNo}
+    </select>
+
+    <select id="queryWorkOrderByNo" resultType="Map">
+        select
+            work_no as workNo,
+            fdev_group_id as fdevGroupId,
+            fdev_new
+        from
+            work_order
+        where
+            work_no=#{workNo}
+    </select>
+</mapper>

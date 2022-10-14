@@ -1,0 +1,46 @@
+# Compiled class file
+*.class
+
+#XSL transformation
+*.out.xml
+
+# Log file
+*.log
+*.out
+*/log
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+
+
+# virtual machine crash logs
+hs_err_pid*
+
+# Eclipse Project files
+*/.classpath
+.classpath
+*/.project
+.project
+*/.settings/
+.settings/
+
+# IDEA files
+*/.idea/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# maven files
+/target/*
+/target/
+*/target/*
+
+# MAC system files
+*/.DS_Store
+.DS_Store
+
+*.pyc

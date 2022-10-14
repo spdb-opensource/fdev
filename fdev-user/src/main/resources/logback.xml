@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="GBK" ?>
+<!DOCTYPE configuration>
+
+<configuration>
+	<variable name="CI_ENVIRONMENT_SLUG" value="${CI_ENVIRONMENT_SLUG:-master}"/>
+	<property name="APP_NAME" value="fdev-user" />
+	<property name="LOG_HOME" value="/fdev/log/fuser/${CI_ENVIRONMENT_SLUG}" ></property>
+	<springProperty scope="context" name="springAppName" source="spring.application.name"/>
+
+	<contextName>${APP_NAME}</contextName>
+
+	
+	<!-- 控制台输出 -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+			<evaluator>
+				<expression>return message.contains("has no read method. SKIPPED");</expression>
+			</evaluator>
+			<OnMismatch>NEUTRAL</OnMismatch>
+			<OnMatch>DENY</OnMatch>
+		</filter>
+		
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%X全局流水号%msg：日志消息，%n是换行符 -->
+			<!--<pattern>%-5p %d{HH:mm:ss:SSS} [%thread] %c{0} %X{globalNo} %m %X{IPAddress}%n</pattern>-->
+			<pattern>%-5p %d{yyyy-MM-dd HH:mm:ss:SSS} [${springAppName},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-}] [%thread] %X{currentUser} %c{0} %m %n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+	
+	 <!--按照每天生成日志文件-->
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${LOG_HOME}/${APP_NAME}.log</File>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/${APP_NAME}.%d.%i.log.gz</fileNamePattern>
+			<!-- maxHistory历史文件保存天数 -->
+			<maxHistory>1</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- maxFileSize 默认设置活动页大小10M，此处1KB测试 -->
+				<maxFileSize>50MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+
+		<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+			<evaluator>
+				<expression>return message.contains("has no read method. SKIPPED");</expression>
+			</evaluator>
+			<OnMismatch>NEUTRAL</OnMismatch>
+			<OnMatch>DENY</OnMatch>
+		</filter>
+
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%-5p %d{yyyy-MM-dd HH:mm:ss:SSS} [${springAppName},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-}] [%thread] %X{currentUser} %c{0} %m %n</pattern>
+			<charset>UTF-8</charset>
+			<!-- <immediateFlush>false</immediateFlush> -->
+		</encoder>
+	</appender>
+	
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="FILE" />
+		<!-- <appender-ref ref="CONSOLE" /> -->
+	</root>
+</configuration>

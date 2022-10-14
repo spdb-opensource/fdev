@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.auto.dao.CaseDetailMapper">
+
+    <resultMap id="CaseDetail" type="com.auto.entity.CaseDetail">
+        <id column="DETAIL_ID" jdbcType="INTEGER" property="detailId"/>
+        <result column="TESTCASE_NO" jdbcType="VARCHAR" property="testcaseNo"/>
+        <result column="STEP_NO" jdbcType="VARCHAR" property="stepNo"/>
+        <result column="MODULE_ID" jdbcType="VARCHAR" property="moduleId"/>
+        <result column="ELEMENT_DYNAMIC_TYPE" jdbcType="VARCHAR" property="elementType"/>
+        <result column="ASSERT_ID" jdbcType="VARCHAR" property="assertId"/>
+        <result column="ELEMENT_ID" jdbcType="VARCHAR" property="elementId"/>
+        <result column="ELEMENT_DATA" jdbcType="VARCHAR" property="elementData"/>
+        <result column="EXE_TIMES" jdbcType="VARCHAR" property="exeTimes"/>
+        <result column="DELETED" jdbcType="VARCHAR" property="deleted"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="VARCHAR" property="modifyTime"/>
+        <result column="LAST_OPR" jdbcType="VARCHAR" property="lastOpr"/>
+        <result column="TESTCASE_NAME" jdbcType="VARCHAR" property="testcaseName"/>
+    </resultMap>
+
+    <sql id = "CaseDetail_Column_List" >
+        DETAIL_ID,
+        TESTCASE_NO,
+        STEP_NO,
+        MODULE_ID,
+        ELEMENT_DYNAMIC_TYPE,
+        ASSERT_ID,
+        ELEMENT_ID,
+        ELEMENT_DATA,
+        EXE_TIMES,
+        DELETED,
+        CREATE_TIME,
+        MODIFY_TIME,
+        LAST_OPR
+    </sql>
+
+    <insert id="addCaseDetail" parameterType="com.auto.entity.CaseDetail" >
+        INSERT INTO
+            AUTO_CASE_DETAIL
+            (TESTCASE_NO, STEP_NO, MODULE_ID, ELEMENT_DYNAMIC_TYPE, ASSERT_ID, ELEMENT_ID, ELEMENT_DATA,
+            EXE_TIMES, DELETED, CREATE_TIME, MODIFY_TIME, LAST_OPR)
+        VALUES
+            (#{testcaseNo,jdbcType=VARCHAR}, #{stepNo,jdbcType=VARCHAR},
+            #{moduleId,jdbcType=VARCHAR}, #{elementType,jdbcType=VARCHAR},
+            #{assertId,jdbcType=VARCHAR}, #{elementId,jdbcType=VARCHAR},
+            #{elementData,jdbcType=VARCHAR}, #{exeTimes,jdbcType=VARCHAR},
+            #{deleted,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR},
+            #{modifyTime,jdbcType=VARCHAR}, #{lastOpr,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="queryCaseDetail" resultType="Map">
+        SELECT
+            c.TESTCASE_NAME as testcaseName,
+            d.DETAIL_ID as detailId,
+            d.TESTCASE_NO as testcaseNo,
+            d.STEP_NO as stepNo,
+            d.MODULE_ID as moduleId,
+            m.MODULE_NAME_CN as moduleNameCn,
+            m.MODULE_NAME as moduleName,
+            d.ELEMENT_DYNAMIC_TYPE as elementType,
+            d.ASSERT_ID as assertId,
+            d.ELEMENT_ID as elementId,
+            d.ELEMENT_DATA as elementData,
+            d.EXE_TIMES as exeTimes,
+            d.DELETED as deleted,
+            d.CREATE_TIME as createTime,
+            d.MODIFY_TIME as modifyTime,
+            d.LAST_OPR as lastOpr,
+            a.LABEL as assertLabel,
+            e.ELEMENT_NAME as elementName
+        FROM
+            AUTO_CASE_DETAIL d
+        LEFT JOIN
+            AUTO_CASE c
+        ON
+            d.TESTCASE_NO = c.TESTCASE_NO
+        LEFT JOIN
+            AUTO_MODULE m
+        ON
+            m.MODULE_ID = d.MODULE_ID
+        LEFT JOIN
+            AUTO_ASSERT a
+        ON
+            d.ASSERT_ID = a.ASSERT_ID
+        LEFT JOIN
+            AUTO_ELEMENT e
+        ON
+            e.ELEMENT_ID = d.ELEMENT_ID
+        <where>
+            <if test="search != '' and search != null">
+                AND
+                    c.TESTCASE_NAME like concat('%', #{search}, '%')
+            </if>
+            <if test="valid != '' and valid != null">
+                AND
+                    d.DELETED = #{valid}
+            </if>
+        </where>
+    </select>
+    
+    
+    <select id="queryCaseDetailByTestCaseNo" resultType="Map">
+        SELECT
+            c.TESTCASE_NAME as testcaseName,
+            d.DETAIL_ID as detailId,
+            d.TESTCASE_NO as testcaseNo,
+            d.STEP_NO as stepNo,
+            d.MODULE_ID as moduleId,
+            m.MODULE_NAME_CN as moduleNameCn,
+            m.MODULE_NAME as moduleName,
+            d.ELEMENT_DYNAMIC_TYPE as elementType,
+            d.ASSERT_ID as assertId,
+            d.ELEMENT_ID as elementId,
+            d.ELEMENT_DATA as elementData,
+            d.EXE_TIMES as exeTimes,
+            d.DELETED as deleted,
+            d.CREATE_TIME as createTime,
+            d.MODIFY_TIME as modifyTime,
+            d.LAST_OPR as lastOpr,
+            a.LABEL as assertLabel,
+            e.ELEMENT_NAME as elementName
+        FROM
+            AUTO_CASE_DETAIL d
+        LEFT JOIN
+            AUTO_CASE c
+        ON
+            d.TESTCASE_NO = c.TESTCASE_NO
+        LEFT JOIN
+            AUTO_MODULE m
+        ON
+            m.MODULE_ID = d.MODULE_ID
+        LEFT JOIN
+            AUTO_ASSERT a
+        ON
+            d.ASSERT_ID = a.ASSERT_ID
+        LEFT JOIN
+            AUTO_ELEMENT e
+        ON
+            e.ELEMENT_ID = d.ELEMENT_ID
+       	WHERE d.DELETED = '0'
+            <if test="testcaseNo != '' and testcaseNo != null">
+                AND
+                    c.TESTCASE_NO = #{testcaseNo}
+            </if>
+        ORDER BY cast(d.STEP_NO as unsigned integer)
+    </select>
+    
+    
+    <select id="queryCaseDetailByCaseNoAndStep" resultType="Map">
+        SELECT
+            <include refid="CaseDetail_Column_List" />
+        FROM
+            AUTO_CASE_DETAIL
+        WHERE DELETED = '0'
+            <if test="testcaseNo != '' and testcaseNo != null">
+                AND
+                    TESTCASE_NO = #{testcaseNo}
+            </if>
+            <if test="stepNo != '' and stepNo != null">
+                AND
+                    STEP_NO = #{stepNo}
+            </if>
+            <if test="detailId != '' and detailId != null">
+                AND
+                    DETAIL_ID != #{detailId}
+            </if>
+    </select>
+
+    <update id="deleteCaseDetail" parameterType="String">
+        UPDATE
+            AUTO_CASE_DETAIL
+        SET
+            DELETED = '1',
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            DETAIL_ID in (${detailId})
+    </update>
+
+    <update id="updateCaseDetail" parameterType="String">
+        UPDATE
+            AUTO_CASE_DETAIL
+        SET
+        <if test="testcaseNo != null and testcaseNo != '' ">
+            TESTCASE_NO = #{testcaseNo},
+        </if>
+        <if test="stepNo != null and stepNo != '' ">
+            STEP_NO = #{stepNo},
+        </if>
+            MODULE_ID = #{moduleId},
+        <if test="elementType != null and elementType != '' ">
+            ELEMENT_DYNAMIC_TYPE = #{elementType},
+        </if>
+            ASSERT_ID = #{assertId},
+            ELEMENT_ID = #{elementId},
+            ELEMENT_DATA = #{elementData},
+            EXE_TIMES = #{exeTimes},
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            DETAIL_ID = #{detailId}
+    </update>
+</mapper>

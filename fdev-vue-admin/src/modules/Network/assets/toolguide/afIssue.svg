@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="66px" height="66px" viewBox="0 0 66 66" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>切片</title>
+    <defs>
+        <path d="M45.5,0 L45.5,0 C51.2989873,0 56,4.7010127 56,10.5 L56,45.5 L56,45.5 C56,51.2989873 51.2989873,56 45.5,56 C45.5,56 45.5,56 45.5,56 L10.5,56 L10.5,56 C4.70101266,56 0,51.2989873 0,45.5 C0,45.5 0,45.5 0,45.5 L0,10.5 L0,10.5 C0,4.70101428 4.70100582,0 10.5,0 L45.5,0 L45.5,0 Z" id="path-1"></path>
+        <filter x="-9.8%" y="-6.2%" width="119.6%" height="119.6%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0235294118   0 0 0 0 0.388235294   0 0 0 0 0.745098039  0 0 0 0.1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="mantis备份-3" transform="translate(5.000000, 5.000000)">
+            <g id="路径">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#8CBC48" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <text id="应用架构-issue" font-family="PingFangSC-Semibold, PingFang SC" font-size="12" font-weight="500" fill="#FFFFFF">
+                <tspan x="4" y="24">应用架构</tspan>
+                <tspan x="52" y="24" font-family="Arial-Black, Arial Black" font-weight="800"></tspan>
+                <tspan x="10.6679688" y="41" font-family="Arial-Black, Arial Black" font-weight="800">issue</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

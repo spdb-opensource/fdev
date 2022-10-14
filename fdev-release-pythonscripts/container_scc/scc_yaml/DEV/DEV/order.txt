@@ -1,0 +1,2 @@
+tag:2021-05-12_20-14-32_3238%obname:mspmk-cli-abroadservice%port:8080%imagename:mspmk-cli-abroadservice%imagespacename:mbper%namespace:mbper-sit%cluster:k8-phy-b01%obyml:mspmk-cli-abroadservice.yaml
+tag:2021-05-12_20-14-32_3238%obname:spdb-tfp-server%port:8080%imagename:mspmk-cli-abroadservice%imagespacename:mbper%namespace:finc-pt%cluster:k8-phypt-b01%obyml:spdb-tfp-server.yaml%kind:Service%checkAndUp:0

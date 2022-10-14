@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gotest.dao.BatchMapper" >
+
+    <select id="queryOrder" resultType="Map">
+        SELECT
+        work_no as workNo,
+        main_task_no as mainTaskNo,
+        work_manager as workManager,
+        work_leader as workLeader,
+        fdev_group_id as fdevGroupId
+        FROM
+        work_order
+        WHERE
+        (work_manager is null
+        OR
+        work_manager = ''
+        OR
+        work_leader is null
+        OR
+        work_leader = '')
+        AND
+        work_flag =1
+        AND
+        ( main_task_no is null
+        OR
+        main_task_no = '')
+        and
+        order_type = 'function'
+    </select>
+
+    <update id="setFdevGroupId">
+        UPDATE
+            work_order
+        SET
+            fdev_group_id = #{fdevGroupId}
+        WHERE
+            work_no = #{workNo}
+    </update>
+
+    <update id="setWorkManager">
+        UPDATE
+            work_order
+        SET
+            work_manager = #{workManager}
+        WHERE
+            work_no = #{workNo}
+    </update>
+
+    <update id="setWorkLeader">
+        UPDATE
+            work_order
+        SET
+            work_leader = #{workLeader}
+        WHERE
+            work_no = #{workNo}
+    </update>
+    
+    <select id="queryproblemRqrmntNos" resultType="String">
+        SELECT
+            RQR_NO
+        FROM
+            FTMS_SUBMIT_SIT_RECORD
+        WHERE
+            CREATE_TIME between '2020-11-21 18:34:09' and '2020-11-23 19:27:39';
+    </select>
+    
+    <update id="setRqrNo">
+        UPDATE
+            FTMS_SUBMIT_SIT_RECORD
+        SET
+            RQR_NO = #{oaNoName}
+        WHERE
+            RQR_NO = #{problemRqrmntNo}
+    </update>
+
+    <resultMap id="ResultMap" type="com.gotest.domain.WorkOrder" >
+        <id column="work_no" property="workOrderNo" jdbcType="VARCHAR" />
+        <result column="main_task_no" property="mainTaskNo" jdbcType="VARCHAR" />
+        <result column="main_task_name" property="mainTaskName" jdbcType="VARCHAR" />
+        <result column="work_stage" property="stage" jdbcType="VARCHAR" />
+        <result column="work_unit" property="unit" jdbcType="VARCHAR" />
+        <result column="testers" property="testers" jdbcType="VARCHAR" />
+        <result column="sit_date" property="planSitDate" jdbcType="DATE" />
+        <result column="product_date" property="planProDate" jdbcType="DATE" />
+        <result column="uat_date" property="planUatDate" jdbcType="DATE" />
+        <result column="work_flag" property="workOrderFlag" jdbcType="VARCHAR" />
+        <result column="work_manager" property="workManager" jdbcType="VARCHAR" />
+        <result column="work_leader" property="groupLeader" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="field1" property="field1" jdbcType="VARCHAR"/>
+        <result column="field2" property="field2" jdbcType="VARCHAR" />
+        <result column="field3" property="field3" jdbcType="VARCHAR" />
+        <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+        <result column="field5" property="field5" jdbcType="VARCHAR" />
+        <result column="uat_submit_date" property="uatSubmitDate" jdbcType="VARCHAR" />
+        <result column="risk_description" property="riskDescription" jdbcType="VARCHAR" />
+        <result column="sit_flag" property="sitFlag" jdbcType="VARCHAR" />
+        <result column="approval_flag" property="approvalFlag" jdbcType="VARCHAR" />
+        <result column="fst_sit_date" property="fstSitDate" jdbcType="VARCHAR" />
+        <result column="fnl_sit_date" property="fnlSitDate" jdbcType="VARCHAR" />
+        <result column="image_link" property="imageLink" jdbcType="VARCHAR" />
+        <result column="FDEV_GROUP_ID" property="fdevGroupId" jdbcType="VARCHAR"/>
+        <result column="FDEV_GROUP_NAME" property="fdevGroupName" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <select id="queryFdevAllOrder" resultMap="ResultMap">
+        SELECT
+            work_no,
+            main_task_no,
+            main_task_name,
+            work_stage,
+            work_unit,
+            testers,
+            sit_date,
+            product_date,
+            uat_date,
+            work_flag,
+            work_manager,
+            work_leader,
+            remark,
+            create_time,
+            field1,
+            field2,
+            field3,
+            field5,
+            sit_flag,
+            fdev_group_id
+        FROM
+            work_order
+        WHERE
+            work_unit like 'FDEV%'
+    </select>
+
+    <update id="setOrderDemandNo">
+        UPDATE
+            work_order
+        SET
+            demand_no = #{rqrmntNo}
+        WHERE
+            work_no = #{workNo}
+    </update>
+
+    <update id="setOrderDemandName">
+        UPDATE
+            work_order
+        SET
+            demand_name = #{rqrmntName}
+        WHERE
+            work_no = #{workNo}
+    </update>
+</mapper>

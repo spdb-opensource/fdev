@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.auto.dao.CaseMapper">
+
+    <resultMap id="Case" type="com.auto.entity.Testcase">
+        <id column="TESTCASE_NO" jdbcType="INTEGER" property="testcaseNo"/>
+        <result column="DATA_ID" jdbcType="VARCHAR" property="dataId"/>
+        <result column="USER_ID" jdbcType="VARCHAR" property="userId"/>
+        <result column="FUNC_POINT" jdbcType="VARCHAR" property="funcPoint"/>
+        <result column="TESTCASE_NAME" jdbcType="VARCHAR" property="testcaseName"/>
+        <result column="PRECONDITION" jdbcType="VARCHAR" property="precondition"/>
+        <result column="TESTCASE_DESC" jdbcType="VARCHAR" property="testcaseDesc"/>
+        <result column="EXPECTED_RESULT" jdbcType="VARCHAR" property="expectedResult"/>
+        <result column="VALID_FLAG" jdbcType="VARCHAR" property="validFlag"/>
+        <result column="MENU_SHEET_ID" jdbcType="VARCHAR" property="menuSheetId"/>
+        <result column="ASSERT_ID" jdbcType="VARCHAR" property="assertId"/>
+        <result column="DELETED" jdbcType="VARCHAR" property="deleted"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="VARCHAR" property="modifyTime"/>
+        <result column="LAST_OPR" jdbcType="VARCHAR" property="lastOpr"/>
+    </resultMap>
+
+    <sql id = "Case_Column_List" >
+        TESTCASE_NO,
+        DATA_ID,
+        USER_ID,
+        FUNC_POINT,
+        TESTCASE_NAME,
+        PRECONDITION,
+        TESTCASE_DESC,
+        EXPECTED_RESULT,
+        VALID_FLAG,
+        MENU_SHEET_ID,
+        ASSERT_ID,
+        DELETED,
+        CREATE_TIME,
+        MODIFY_TIME,
+        LAST_OPR
+    </sql>
+
+    <insert id="addCase" parameterType="com.auto.entity.Testcase" useGeneratedKeys="true" keyProperty="testcaseNo" keyColumn="TESTCASE_NO" >
+        INSERT INTO
+            AUTO_CASE
+            (DATA_ID, USER_ID, FUNC_POINT, TESTCASE_NAME, PRECONDITION, TESTCASE_DESC, EXPECTED_RESULT,
+            VALID_FLAG, MENU_SHEET_ID, ASSERT_ID, DELETED, CREATE_TIME, MODIFY_TIME, LAST_OPR)
+        VALUES
+            (#{dataId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR},
+            #{funcPoint,jdbcType=VARCHAR}, #{testcaseName,jdbcType=VARCHAR},
+            #{precondition,jdbcType=VARCHAR}, #{testcaseDesc,jdbcType=VARCHAR},
+            #{expectedResult,jdbcType=VARCHAR}, #{validFlag,jdbcType=VARCHAR},
+            #{menuSheetId,jdbcType=VARCHAR}, #{assertId,jdbcType=VARCHAR},
+            #{deleted,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR},
+            #{modifyTime,jdbcType=VARCHAR}, #{lastOpr,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="queryCaseByCaseName" resultType="Map">
+        SELECT
+            <include refid="Case_Column_List"/>
+        FROM
+            AUTO_CASE
+        WHERE 
+        	DELETED = '0'
+        <if test="testcaseName != '' and testcaseName != null">
+            AND
+            	TESTCASE_NAME = #{testcaseName}
+        </if>
+        <if test="testcaseNo != '' and testcaseNo != null">
+            AND
+            	TESTCASE_NO != #{testcaseNo}
+        </if>
+    </select>
+    
+    
+    <select id="queryCase" resultType="Map">
+        SELECT
+            c.TESTCASE_NO as testcaseNo,
+            c.DATA_ID as dataId,
+            c.USER_ID as userId,
+            c.FUNC_POINT as funcPoint,
+            c.TESTCASE_NAME as testcaseName,
+            c.PRECONDITION as precondition,
+            c.TESTCASE_DESC as testcaseDesc,
+            c.EXPECTED_RESULT as expectedResult,
+            c.VALID_FLAG as validFlag,
+            c.MENU_SHEET_ID as menuSheetId,
+            c.ASSERT_ID as assertId,
+            c.DELETED as deleted,
+            c.CREATE_TIME as createTime,
+            c.MODIFY_TIME as modifyTime,
+            c.LAST_OPR as lastOpr,
+            m.MENU_NO as menuNo,
+            u.USERNAME as userName,
+            d.LABEL as dataLabel,
+            a.LABEL as assertLabel
+        FROM
+            AUTO_CASE c
+        LEFT JOIN
+            AUTO_MENU_SHEET m
+        ON
+            c.MENU_SHEET_ID = m.MENU_SHEET_ID
+        LEFT JOIN
+            AUTO_USER u
+        ON
+            u.USER_ID = c.USER_ID
+        LEFT JOIN
+            AUTO_CASE_DATA d
+        ON
+            d.DATA_ID = c.DATA_ID
+        LEFT JOIN
+            AUTO_ASSERT a
+        ON
+            a.ASSERT_ID = c.ASSERT_ID
+        <where>
+            <if test="search != '' and search != null">
+                AND
+                    c.TESTCASE_NAME like concat('%', #{search}, '%')
+            </if>
+            <if test="valid != '' and valid != null">
+                AND
+                    c.DELETED = #{valid}
+            </if>
+            <if test="flag != '' and flag != null">
+                AND
+                    c.VALID_FLAG = #{flag}
+            </if>
+        </where>
+    </select>
+
+    <update id="deleteCase" parameterType="String">
+        UPDATE
+            AUTO_CASE
+        SET
+            DELETED = '1',
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            TESTCASE_NO in (${testcaseNo})
+    </update>
+
+    <update id="updateCase" parameterType="String">
+        UPDATE
+            AUTO_CASE
+        SET
+            DATA_ID  = #{dataId},
+            USER_ID = #{userId},
+            FUNC_POINT = #{funcPoint},
+        <if test="testcaseName != null and testcaseName != '' ">
+            TESTCASE_NAME = #{testcaseName},
+        </if>
+            PRECONDITION = #{precondition},
+            TESTCASE_DESC = #{testcaseDesc},
+            EXPECTED_RESULT = #{expectedResult},
+        <if test="validFlag != null and validFlag != '' ">
+            VALID_FLAG = #{validFlag},
+        </if>
+            MENU_SHEET_ID = #{menuSheetId},
+            ASSERT_ID = #{assertId},
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            TESTCASE_NO = #{testcaseNo}
+    </update>
+</mapper>

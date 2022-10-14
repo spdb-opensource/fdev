@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gotest.dao.TaskListMapper" >
+    <resultMap id="ResultMap" type="com.gotest.domain.TaskList" >
+        <id column="task_no" property="taskno" jdbcType="VARCHAR" />
+        <result column="work_no" property="workno" jdbcType="VARCHAR" />
+        <result column="task_name" property="taskname" jdbcType="VARCHAR" />
+        <result column="task_unit" property="taskunit" jdbcType="VARCHAR" />
+        <result column="spdb_manager" property="spdbmanager" jdbcType="VARCHAR" />
+        <result column="developer" property="developer" jdbcType="VARCHAR" />
+        <result column="flag" property="flag" jdbcType="INTEGER" />
+        <result column="field1" property="field1" jdbcType="VARCHAR" />
+        <result column="field2" property="field2" jdbcType="VARCHAR" />
+        <result column="field3" property="field3" jdbcType="VARCHAR" />
+        <result column="field4" property="field4" jdbcType="VARCHAR" />
+        <result column="field5" property="field5" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id = "TaskList_Column_List" >
+        task_no,
+        work_no,
+        task_name,
+        task_unit,
+        spdb_manager,
+        developer,
+        flag,
+        field1,
+        field2,
+        field3,
+        field4,
+        field5
+    </sql>
+
+    <!--根据work_No,taskName 页面数量，当前页数 查询数据-->
+    <select id="queryTaskListByWorkNo" resultMap="ResultMap">
+        SELECT DISTINCT
+        <include refid="TaskList_Column_List" />
+        FROM
+        task_list
+        WHERE
+        work_no = #{workNo}
+        AND
+        task_name LIKE #{taskName}
+        limit #{start},#{pageSize}
+    </select>
+
+    <!--根据work_no，task_name 查询数据总数-->
+    <select id="queryTaskListCountByWorkNo" resultType="INTEGER">
+        SELECT DISTINCT
+        count(1)
+        FROM
+        task_list
+        WHERE
+        work_no = #{workNo}
+        AND
+        task_name LIKE #{taskName}
+    </select>
+
+    <!--新增子任务-->
+    <insert id = "addTaskList" parameterType="com.gotest.domain.TaskList">
+        INSERT INTO
+        task_list(
+        <include refid="TaskList_Column_List"/>
+        )
+        values
+        (
+        #{taskno,jdbcType=VARCHAR},
+        #{workno,jdbcType=VARCHAR},
+        #{taskname,jdbcType=VARCHAR},
+        #{taskunit,jdbcType=VARCHAR},
+        #{spdbmanager,jdbcType=VARCHAR},
+        #{developer,jdbcType=VARCHAR},
+        #{flag,jdbcType=INTEGER},
+        #{field1,jdbcType=VARCHAR},
+        #{field2,jdbcType=VARCHAR},
+        #{field3,jdbcType=VARCHAR},
+        #{field4,jdbcType=VARCHAR},
+        #{field5,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- 删除任务 -->
+    <delete id="dropTaskListByTaskNo">
+        DELETE FROM
+            task_list
+        WHERE
+            task_no = #{taskNo}
+    </delete>
+
+    <!--根据work_no，task_no 查询任务是否存在 -->
+    <select id="queryTaskExist" resultType="INTEGER">
+        SELECT DISTINCT
+        count(1)
+        FROM
+        task_list
+        WHERE
+        work_no = #{workOrderNo}
+        AND
+        task_no = #{taskNo}
+    </select>
+
+    <!--根据工单编号查子任务列表-->
+    <select id="queryTaskByNo" resultMap="ResultMap">
+        SELECT DISTINCT
+            <include refid="TaskList_Column_List" />
+        FROM
+            task_list
+        WHERE
+            work_no = #{workNo}
+    </select>
+
+    <!--根据子任务名查主任务工单-->
+    <select id="queryOrderByTaskName" resultType="String">
+        SELECT
+            work_no
+        FROM
+            task_list
+        WHERE
+            task_name like concat('%',#{taskName},'%')
+    </select>
+
+    <!--根据任务编号查询任务-->
+    <select id="queryTaskByTaskNo" resultMap="ResultMap">
+        SELECT DISTINCT
+            <include refid="TaskList_Column_List" />
+        FROM
+            task_list
+        WHERE
+            task_no = #{taskNo}
+    </select>
+
+    <!--修改任务对应的工单号和实施单元-->
+    <update id="updateWorkNoAndUnitNoByTaskNo">
+        UPDATE
+            task_list
+        SET
+            work_no = #{workNo},
+            task_unit = #{unitNo}
+        WHERE
+            task_no = #{taskNo}
+    </update>
+
+    <!--根据工单编号和任务编号查询任务-->
+    <select id="queryTaskListByWorkNoAndTaskNo" resultMap="ResultMap">
+        SELECT DISTINCT
+            <include refid="TaskList_Column_List" />
+        FROM
+            task_list
+        <where>
+            work_no = #{workNo}
+            <if test="taskNo != null and taskNo != ''">
+                and task_no = #{taskNo}
+            </if>
+        </where>
+    </select>
+
+    <!--修改任务对应的工单号-->
+    <update id="updateWorkNoByTaskNo">
+        UPDATE
+            task_list
+        SET
+            work_no = #{workNo}
+        WHERE
+            task_no = #{taskNo}
+    </update>
+
+    <select id="queryNewOrOldOrder" resultType="Integer">
+        SELECT
+            count(1)
+        FROM
+            work_order
+        WHERE
+            work_no = #{workNo}
+        AND
+            work_flag = 1
+        AND
+            main_task_no is not null
+        AND
+            main_task_no != ''
+    </select>
+
+    <select id="queryTaskNoByOrder" resultType="String">
+        SELECT
+            task_no
+        FROM
+            task_list
+        WHERE
+            work_no = #{workOrderNo}
+    </select>
+
+    <!--根据工单号修改任务对应的工单号-->
+    <update id="updateWorkNoByTaskNos">
+        UPDATE
+            task_list
+        SET
+            work_no = #{newWorkNo}
+        WHERE
+            task_no in
+        <foreach collection="taskIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="queryTaskNoByOrders" resultType="Map">
+        SELECT
+            task_no as taskNo,
+            work_no as workNo
+        FROM
+            task_list
+        WHERE
+        work_no in
+        <foreach collection="workNoList" item="workNo" separator="," open="(" close=")">
+            #{workNo}
+        </foreach>
+    </select>
+</mapper>

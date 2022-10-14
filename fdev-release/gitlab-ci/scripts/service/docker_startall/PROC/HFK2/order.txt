@@ -1,0 +1,2 @@
+tag:pro-20200331_008-001%obname:mspmk-cli-finance%port:8080%replicasnu:1
+tag:pro-20200331_008-001%obname:mspmk-web-login%port:8080%replicasnu:1

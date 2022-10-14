@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>fdev-gitlabwork</title>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+    <style>
+        #app {
+            margin: 30px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div>
+        <el-row>
+            <el-col :span="24">
+                <el-table
+                        :data="detail"
+                        :default-sort="{prop:'committedDate',order:'descending'}"
+                        style="width: 100%">
+                    <el-table-column
+                            prop="nickName"
+                            label="提交人"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="projectName"
+                            label="项目名"
+                            width="200">
+                    </el-table-column>
+                    <el-table-column
+                            prop="status.total"
+                            label="影响总行数">
+                    </el-table-column>
+                    <el-table-column
+                            prop="status.additions"
+                            label="添加行数">
+                    </el-table-column>
+                    <el-table-column
+                            prop="status.deletions"
+                            label="删除行数">
+                    </el-table-column>
+                    <el-table-column
+                            prop="committedDate"
+                            label="提交日期"
+                            width="200"
+                            sortable>
+                    </el-table-column>
+                    <el-table-column
+                            label="文件差异链接"
+                            width="200">
+                        <template slot-scope="scope">
+                            <el-button type="text" size="small" @click="newWindow(scope.row.fileDiffUrl)">查看差异文件详情
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            label="文件变更列表">
+                        <template slot-scope="scope">
+                            <el-button type="text" size="small" @click="showDiffFileDialog(scope.row.fileNameList)">
+                                查看文件变更列表
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-col>
+        </el-row>
+        <el-dialog title="文件变更列表" :visible.sync="dialogTableVisible">
+            <el-table :data="diffFileList">
+                <el-table-column label="文件路径">
+                    <template slot-scope="scope">
+                        {{scope.row}}
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-dialog>
+    </div>
+</div>
+</body>
+<script src="vue.min.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<script src="ajax/ajax.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                detail: [],
+                dialogTableVisible: false,
+                diffFileList: [],
+            }
+        },
+        methods: {
+            newWindow(id) {
+                window.open(id, '_blank')
+            },
+            showDiffFileDialog(list) {
+                this.diffFileList = list;
+                this.dialogTableVisible = true;
+            }
+        },
+        created:function()  {
+            let params = sessionStorage.getItem('params');
+            params = JSON.parse(params)
+            let _this = this;
+            ajax({
+                    type:'post',
+                    url:'/fgitwork/getDetailInfo',
+                    dataType:'json',
+                    data: params,
+                    success: function(res){
+                        _this.detail = res;
+                    }
+                })
+            //let res = await axios.post('/fgitwork/getDetailInfo', params);
+            //this.detail = res.data;
+            //app.detail.splice(this.detail.length);
+        }
+    });
+</script>
+</html>

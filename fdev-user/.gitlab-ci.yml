@@ -1,0 +1,42 @@
+image: xxx/mbpe-public-docker-local/library/fdev-helper:latest
+
+stages:
+  - maven-build
+  - deploy
+
+variables:
+  CI_REGISTRY: "xxx/mbpe-public-docker-local"
+  CI_REGISTRY_IMAGE: "xxx/mbpe-public-docker-local/library/fdev-user"
+  CI_REGISTRY_USER: "spdb-mbpe"
+  CI_REGISTRY_PASSWORD: "xxx"
+
+maven-build:
+  image: xxx/mbpe-public-docker-local/library/maven:3-jdk-8
+  stage: maven-build
+  script:
+    - mvn -U clean package -Dmaven.test.skip=true
+    # - mvn sonar:sonar  -Dsonar.host.url=xxx -Dsonar.login=072ae30eadf9021f6fc9a7e7c085d47236a12533 -Dsonar.scm.provider=git
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 30 min
+  only:
+    - /^SIT.*$/
+    - /^sit.*$/
+    - schedules
+    - /^PRO.*$/
+    - /^pro.*$/
+
+k8s-deploy:
+  services:
+    - xxx/mbpe-public-docker-local/library/docker:dind-spdb
+  stage: deploy
+  script:
+    - build_fdev.py
+    - deploy_fdev.py
+  only:
+    - /^SIT.*$/
+    - /^sit.*$/
+    - schedules
+    - /^PRO.*$/
+    - /^pro.*$/

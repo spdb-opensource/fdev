@@ -1,0 +1,49 @@
+SERVICE_NAME: fdev-config
+spring:
+  application:
+    name: ${SERVICE_NAME}
+  profiles:
+    active: git
+  cloud:
+    config: 
+      server:
+#        native:
+#          search-locations: ${CONFIG_DIR}
+#          order: 1
+        git:
+          uri: http://xxx/ebank_fdev/devops/fdev-config.git
+          search-paths: congfig-repo
+          username: xxx
+          force-pull: true
+          password: xxx
+          basedir: /tmp/
+      label: master
+
+    bus:
+      refresh:
+        enabled: true
+
+  kafka:
+    bootstrap-servers:
+      -xxx:9092
+      -xxx:9092
+      -xxx:9092
+
+
+server:
+  port: 8080
+  tomcat:
+      accesslog:
+        enabled: true
+        directory: /appservice/config-server/log
+        prefix: ${SERVICE_NAME}-${HOSTNAME}-access
+        pattern: combined
+        rotate: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh
+debug: false
+
+

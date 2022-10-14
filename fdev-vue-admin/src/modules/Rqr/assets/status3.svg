@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>实施中</title>
+    <defs>
+        <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#38D686" offset="0%"></stop>
+            <stop stop-color="#65E9A7" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="0702" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="待实施">
+            <g id="编组-15" fill="#C8F4DE">
+                <rect id="矩形" x="0" y="0" width="48" height="48" rx="8"></rect>
+            </g>
+            <g id="jinxing" transform="translate(9.000000, 9.000000)">
+                <path d="M15,0.5 C18.9988281,0.5 22.6237274,2.12575605 25.2489857,4.75101433 C27.874244,7.37627261 29.5,11.0011719 29.5,15 C29.5,19.0072951 27.8767603,22.6300032 25.2547461,25.2520174 C22.6289973,27.8777662 19.0016812,29.5 15,29.5 C10.9927049,29.5 7.36999681,27.8767603 4.74798259,25.2547461 C2.12223382,22.6289973 0.5,19.0016812 0.5,15 C0.5,11.0011719 2.12575605,7.37627261 4.75101433,4.75101433 C7.37627261,2.12575605 11.0011719,0.5 15,0.5 Z" id="路径" stroke="#FFFFFF" fill="url(#linearGradient-1)"></path>
+                <g id="编组-8" transform="translate(7.000000, 9.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                    <polygon id="路径" points="0 2.91964286 1.95535714 2.91964286 1.95535714 8.75892857 0 8.75892857 0 2.91964286"></polygon>
+                    <polygon id="路径" points="2.89285714 2.91964286 4.84821429 2.91964286 4.84821429 8.75892857 2.89285714 8.75892857 2.89285714 2.91964286"></polygon>
+                    <polygon id="路径" points="9.72321429 2.91964286 5.8125 2.91964286 5.8125 8.75892857 9.72321429 8.75892857 9.72321429 11.6517857 15.5357143 5.83928571 9.72321429 -2.0301221e-15"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

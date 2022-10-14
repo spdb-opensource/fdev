@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TaskManager">
+
+    <resultMap id="selectJobDetail" type="HashMap">
+        <result property="schedName" column="SCHED_NAME"/>
+        <result property="jobName" column="JOB_NAME"/>
+        <result property="jobGroup" column="JOB_GROUP"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="jobClassName" column="JOB_CLASS_NAME"/>
+        <result property="isDurable" column="IS_DURABLE"/>
+        <result property="isNonconcurrent" column="IS_NONCONCURRENT"/>
+        <result property="isUpdateData" column="IS_UPDATE_DATA"/>
+        <result property="requestsRecovery" column="REQUESTS_RECOVERY"/>
+        <result property="jobData" column="JOB_DATA"/>
+        <result property="cronExpression" column="CRON_EXPRESSION"/>
+        <result property="triggerState" column="TRIGGER_STATE"/>
+    </resultMap>
+    <select id="selectJobDetail" parameterType="HashMap" resultMap="selectJobDetail">
+        SELECT
+        QRTZ_TRIGGERS.SCHED_NAME,QRTZ_TRIGGERS.JOB_NAME,QRTZ_TRIGGERS.JOB_GROUP,QRTZ_JOB_DETAILS.DESCRIPTION,JOB_CLASS_NAME,IS_DURABLE,
+        IS_NONCONCURRENT,IS_UPDATE_DATA,REQUESTS_RECOVERY,QRTZ_JOB_DETAILS.JOB_DATA,CRON_EXPRESSION,TRIGGER_STATE
+        FROM
+        QRTZ_CRON_TRIGGERS
+        LEFT JOIN QRTZ_TRIGGERS
+        ON QRTZ_TRIGGERS.TRIGGER_NAME = QRTZ_CRON_TRIGGERS.TRIGGER_NAME
+        AND QRTZ_TRIGGERS.TRIGGER_GROUP = QRTZ_CRON_TRIGGERS.TRIGGER_GROUP
+        AND QRTZ_TRIGGERS.SCHED_NAME = QRTZ_CRON_TRIGGERS.SCHED_NAME
+        LEFT JOIN QRTZ_JOB_DETAILS
+        ON QRTZ_TRIGGERS.JOB_NAME = QRTZ_JOB_DETAILS.JOB_NAME
+        AND QRTZ_TRIGGERS.JOB_GROUP = QRTZ_JOB_DETAILS.JOB_GROUP
+        AND QRTZ_TRIGGERS.SCHED_NAME = QRTZ_JOB_DETAILS.SCHED_NAME
+        WHERE QRTZ_TRIGGERS.SCHED_NAME = #{schedName}
+        <if test="jobName != null and jobName != ''">AND QRTZ_TRIGGERS.JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND QRTZ_TRIGGERS.JOB_GROUP = #{jobGroup}</if>
+    </select>
+
+    <select id="selectDetail" parameterType="HashMap" resultMap="selectJobDetail">
+        SELECT
+        DESCRIPTION,JOB_CLASS_NAME,IS_DURABLE,IS_NONCONCURRENT,IS_UPDATE_DATA,REQUESTS_RECOVERY,JOB_DATA
+        FROM QRTZ_JOB_DETAILS
+        WHERE QRTZ_JOB_DETAILS.SCHED_NAME = #{schedName}
+        <if test="jobName != null and jobName != ''">AND JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND JOB_GROUP = #{jobGroup}</if>
+    </select>
+
+    <resultMap id="selectpausedTriggerDateJobList" type="HashMap">
+        <result property="pausedDateId" column="PAUSED_DATE_ID"/>
+        <result property="schedName" column="SCHED_NAME"/>
+        <result property="triggerGroup" column="TRIGGER_GROUP"/>
+        <result property="triggerName" column="TRIGGER_NAME"/>
+        <result property="jobGroup" column="JOB_GROUP"/>
+        <result property="jobName" column="JOB_NAME"/>
+        <result property="strategyName" column="STRATEGY_NAME"/>
+        <result property="startPausedDate" column="START_PAUSED_DATE"/>
+        <result property="endPausedDate" column="END_PAUSED_DATE"/>
+        <result property="strategy" column="STRATEGY"/>
+    </resultMap>
+    <select id="selectpausedTriggerDateJobList" parameterType="HashMap" resultMap="selectpausedTriggerDateJobList">
+        SELECT
+        PAUSED_DATE_ID,SPDB_PAUSED_STRATEGY_JOB.SCHED_NAME,SPDB_PAUSED_STRATEGY_JOB.TRIGGER_GROUP,
+        SPDB_PAUSED_STRATEGY_JOB.TRIGGER_NAME,SPDB_PAUSED_STRATEGY_JOB.JOB_GROUP,SPDB_PAUSED_STRATEGY_JOB.JOB_NAME,
+        STRATEGY_NAME,START_PAUSED_DATE,END_PAUSED_DATE,STRATEGY
+        FROM
+        SPDB_PAUSED_STRATEGY_JOB INNER JOIN SPDB_PAUSED_STRATEGY
+        ON SPDB_PAUSED_STRATEGY_JOB.PAUSED_DATE_ID = SPDB_PAUSED_STRATEGY.ID
+        AND SPDB_PAUSED_STRATEGY_JOB.SCHED_NAME = SPDB_PAUSED_STRATEGY.SCHED_NAME
+        WHERE
+        SPDB_PAUSED_STRATEGY_JOB.SCHED_NAME = #{schedName}
+        <if test="jobName != null and jobName != ''">AND JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND SPDB_PAUSED_STRATEGY_JOB.JOB_GROUP = #{jobGroup}</if>
+    </select>
+
+    <insert id="insertSimpleTrigger" parameterType="HashMap">
+        INSERT INTO
+        QRTZ_SIMPLE_TRIGGERS (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP,REPEAT_COUNT,REPEAT_INTERVAL,TIMES_TRIGGERED)
+        VALUES
+        (#{schedName},#{triggerName},#{triggerGroup},#{repeatCount},#{repeatInterval},#{timesTriggered})
+    </insert>
+
+    <resultMap id="selectTrigger" type="HashMap">
+        <result property="schedName" column="SCHED_NAME"/>
+        <result property="triggerName" column="TRIGGER_NAME"/>
+        <result property="triggerGroup" column="TRIGGER_GROUP"/>
+        <result property="jobName" column="JOB_NAME"/>
+        <result property="jobGroup" column="JOB_GROUP"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="nextFireTime" column="NEXT_FIRE_TIME"/>
+        <result property="prevFireTime" column="PREV_FIRE_TIME"/>
+        <result property="priority" column="PRIORITY"/>
+        <result property="triggerState" column="TRIGGER_STATE"/>
+        <result property="triggerType" column="TRIGGER_TYPE"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="calendarName" column="CALENDAR_NAME"/>
+        <result property="misfireInstr" column="MISFIRE_INSTR"/>
+        <result property="triggerJobData" column="TRIGGER_JOB_DATA"/>
+        <result property="cronExpression" column="CRON_EXPRESSION"/>
+        <result property="timeZoneId" column="TIME_ZONE_ID"/>
+        <result property="jobClassName" column="JOB_CLASS_NAME"/>
+        <result property="jobData" column="JOB_DATA"/>
+        <result property="jobId" column="JOB_ID"/>
+    </resultMap>
+    <select id="selectTrigger" parameterType="HashMap" resultMap="selectTrigger">
+        SELECT
+        qrtzTrigger.SCHED_NAME,qrtzTrigger.TRIGGER_NAME,qrtzTrigger.TRIGGER_GROUP,qrtzTrigger.JOB_NAME,qrtzTrigger.JOB_GROUP,
+        qrtzTrigger.NEXT_FIRE_TIME,qrtzTrigger.PREV_FIRE_TIME,PRIORITY,
+        qrtzTrigger.TRIGGER_STATE,qrtzTrigger.TRIGGER_TYPE,qrtzTrigger.START_TIME,qrtzTrigger.END_TIME,qrtzTrigger.CALENDAR_NAME,
+        qrtzTrigger.MISFIRE_INSTR,qrtzTrigger.JOB_DATA AS
+        TRIGGER_JOB_DATA,cronTrigger.CRON_EXPRESSION,cronTrigger.TIME_ZONE_ID,
+        jobDetails.JOB_CLASS_NAME,jobDetails.DESCRIPTION,jobDetails.JOB_DATA
+        FROM
+        QRTZ_TRIGGERS qrtzTrigger
+        LEFT JOIN QRTZ_CRON_TRIGGERS cronTrigger
+        ON qrtzTrigger.TRIGGER_NAME = cronTrigger.TRIGGER_NAME AND qrtzTrigger.TRIGGER_GROUP = cronTrigger.TRIGGER_GROUP
+        AND qrtzTrigger.SCHED_NAME = cronTrigger.SCHED_NAME
+        LEFT JOIN QRTZ_JOB_DETAILS jobDetails
+        ON qrtzTrigger.JOB_NAME = jobDetails.JOB_NAME
+        AND qrtzTrigger.JOB_GROUP = jobDetails.JOB_GROUP
+        AND qrtzTrigger.SCHED_NAME = jobDetails.SCHED_NAME
+        WHERE
+        qrtzTrigger.SCHED_NAME = #{schedName}
+        <if test="triggerName != null and triggerName != ''">AND qrtzTrigger.TRIGGER_NAME = #{triggerName}</if>
+        <if test="triggerGroup != null and triggerGroup != ''">AND qrtzTrigger.TRIGGER_GROUP = #{triggerGroup}</if>
+        <if test="jobName != null and jobName != ''">AND qrtzTrigger.JOB_NAME = #{jobName}</if>
+        <if test="jobGroup != null and jobGroup != ''">AND qrtzTrigger.JOB_GROUP = #{jobGroup}</if>
+        <if test="triggerType != null and triggerType != ''">AND qrtzTrigger.TRIGGER_TYPE = #{triggerType}</if>
+        <if test="description != null and description != ''">AND jobDetails.DESCRIPTION like concat(concat('%',#{description}),'%')</if>
+        <if test="description != null and description != ''">OR jobDetails.JOB_NAME like concat(concat('%',#{description}),'%')</if>
+    </select>
+
+    <insert id="insertTrigger" parameterType="HashMap">
+        INSERT INTO
+        QRTZ_TRIGGERS
+        (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP,JOB_NAME,JOB_GROUP,NEXT_FIRE_TIME,PREV_FIRE_TIME,PRIORITY,TRIGGER_STATE,TRIGGER_TYPE,START_TIME,END_TIME,MISFIRE_INSTR)
+        VALUES
+        (#{schedName},#{triggerName},#{triggerGroup},#{jobName},#{jobGroup},#{nextFireTime},#{prevFireTime},#{priority},#{triggerState},#{triggerType},#{startTime},#{endTime},#{misfireInstr})
+    </insert>
+</mapper>

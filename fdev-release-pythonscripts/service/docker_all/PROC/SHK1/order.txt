@@ -1,0 +1,2 @@
+tag:pro-20200818_009-004%obname:mspmk-web-account%port:8080%replicasnu:1
+tag:pro-20200818_009-001%obname:mspmk-web-dsbank%port:8080%replicasnu:1

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>跳过1</title>
+    <g id="持续集成-流水线（优化中）" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="日志全景图" transform="translate(-1423.000000, -286.000000)">
+            <g id="编组-3" transform="translate(1407.000000, 270.000000)">
+                <g id="失败" transform="translate(16.000000, 16.000000)">
+                    <circle id="椭圆形" fill="#B0BEC5" cx="12" cy="12" r="12"></circle>
+                    <circle id="椭圆形" stroke="#FFFFFF" cx="12" cy="12" r="7.5"></circle>
+                    <g id="xiayibu" transform="translate(7.000000, 8.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                        <path d="M1.14100932,8.4550473 C1.14100932,4.81868367 4.05010023,1.90959275 7.68646386,1.90959275 L7.68646386,3.36413821 C4.85010022,3.36413821 2.59555477,5.61868367 2.59555477,8.4550473 L1.14100932,8.4550473 Z" id="路径" transform="translate(4.413737, 5.182320) rotate(21.000000) translate(-4.413737, -5.182320) "></path>
+                        <polygon id="路径" points="6.0062372 8.00705891 5.06135531 7.12516915 8.21096161 3.97556285 5.06135531 0.888948681 6.0062372 0.0070589114 9.97474114 3.97556285"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

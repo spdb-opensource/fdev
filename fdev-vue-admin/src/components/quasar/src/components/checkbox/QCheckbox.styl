@@ -1,0 +1,108 @@
+$checkbox-transition = .22s cubic-bezier(0,0,.2,1) 0ms
+
+.q-checkbox
+  vertical-align: middle
+
+  &__bg
+    top 25%
+    left 25%
+    width: 50%
+    height: 50%
+    border: 1px solid currentColor
+    border-radius: 1px
+    transition: background $checkbox-transition
+
+  &__native
+    width: 1px
+    height: 1px
+
+  &__svg
+    color: #fff
+
+  &__truthy
+    stroke: currentColor
+    stroke-width: 3.12px
+    stroke-dashoffset: 29.78334
+    stroke-dasharray: 29.78334
+
+  &__indet
+    fill: currentColor
+    transform-origin: 50% 50%
+    transform: rotate(-280deg) scale(0)
+
+  &__inner
+    font-size: 32px
+    width: 1em
+    min-width: 1em
+    height: 1em
+    outline: 0
+    border-radius: 50%
+    color: $grey-2
+
+    &--truthy, &--indet
+      color: $primary
+      color: var(--q-color-primary)
+      .q-checkbox__bg
+        background: currentColor
+
+    &--truthy
+      path
+        stroke-dashoffset: 0
+        transition: stroke-dashoffset .18s cubic-bezier(.4,0,.6,1) 0ms
+
+    &--falsy
+      .q-checkbox__bg
+        color $grey-2
+
+    &--indet
+      .q-checkbox__indet
+        transform: rotate(0) scale(1)
+        transition: transform $checkbox-transition
+
+  &__label
+    color #323243
+    
+  &.disabled
+    opacity 1 !important
+    .q-checkbox__label
+      color $grey-3
+    .q-checkbox__bg
+      background-color $grey-0
+      color $grey-2
+    .q-checkbox__svg
+      color $grey-2
+
+  &--dark
+    .q-checkbox__inner
+      color: rgba(255,255,255,.7)
+      &:before
+        opacity: .32 !important
+      &--truthy, &--indet
+        color: $primary
+        color: var(--q-color-primary)
+
+  &--dense
+    .q-checkbox__inner
+      width: .5em
+      min-width: .5em
+      height: .5em
+
+    .q-checkbox__bg
+      left: 5%
+      top: 5%
+      width: 90%
+      height: 90%
+
+    .q-checkbox__label
+      padding-left: .5em
+
+    &.reverse .q-checkbox__label
+      padding-left: 0
+      padding-right: .5em
+
+body.desktop
+  .q-checkbox:not(.disabled)
+    &:focus,
+    &:hover
+      .q-checkbox__bg
+        color $primary

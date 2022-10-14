@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.auto.dao.AssertMapper">
+
+    <resultMap id="Assert" type="com.auto.entity.Assert">
+        <id column="ASSERT_ID" jdbcType="INTEGER" property="assertId"/>
+        <result column="LABEL" jdbcType="VARCHAR" property="label"/>
+        <result column="ASSERTDATA1" jdbcType="VARCHAR" property="assertData1"/>
+        <result column="ASSERTDATA2" jdbcType="VARCHAR" property="assertData2"/>
+        <result column="ASSERTDATA3" jdbcType="VARCHAR" property="assertData3"/>
+        <result column="ASSERTDATA4" jdbcType="VARCHAR" property="assertData4"/>
+        <result column="ASSERTDATA5" jdbcType="VARCHAR" property="assertData5"/>
+        <result column="ASSERTDATA6" jdbcType="VARCHAR" property="assertData6"/>
+        <result column="ASSERTDATA7" jdbcType="VARCHAR" property="assertData7"/>
+        <result column="ASSERTDATA8" jdbcType="VARCHAR" property="assertData8"/>
+        <result column="ASSERTDATA9" jdbcType="VARCHAR" property="assertData9"/>
+        <result column="ASSERTDATA10" jdbcType="VARCHAR" property="assertData10"/>
+        <result column="DELETED" jdbcType="VARCHAR" property="deleted"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="VARCHAR" property="modifyTime"/>
+        <result column="LAST_OPR" jdbcType="VARCHAR" property="lastOpr"/>
+    </resultMap>
+
+    <sql id = "Assert_Column_List" >
+        ASSERT_ID as assertId,
+        LABEL as label,
+        ASSERTDATA1,
+        ASSERTDATA2,
+        ASSERTDATA3,
+        ASSERTDATA4,
+        ASSERTDATA5,
+        ASSERTDATA6,
+        ASSERTDATA7,
+        ASSERTDATA8,
+        ASSERTDATA9,
+        ASSERTDATA10,
+        DELETED as deleted,
+        CREATE_TIME as createTime,
+        MODIFY_TIME as modifyTime,
+        LAST_OPR as lastOpr
+    </sql>
+
+    <insert id="addAssert" parameterType="com.auto.entity.Assert" >
+        INSERT INTO
+            AUTO_ASSERT
+            (
+            LABEL, ASSERTDATA1, ASSERTDATA2, ASSERTDATA3, ASSERTDATA4, ASSERTDATA5,
+            ASSERTDATA6, ASSERTDATA7, ASSERTDATA8, ASSERTDATA9, ASSERTDATA10, DELETED,
+            CREATE_TIME, MODIFY_TIME, LAST_OPR)
+        VALUES
+            (#{label,jdbcType=VARCHAR}, #{assertData1,jdbcType=VARCHAR}, #{assertData2,jdbcType=VARCHAR},
+            #{assertData3,jdbcType=VARCHAR}, #{assertData4,jdbcType=VARCHAR}, #{assertData5,jdbcType=VARCHAR},
+            #{assertData6,jdbcType=VARCHAR}, #{assertData7,jdbcType=VARCHAR}, #{assertData8,jdbcType=VARCHAR},
+            #{assertData9,jdbcType=VARCHAR}, #{assertData10,jdbcType=VARCHAR}, #{deleted,jdbcType=VARCHAR},
+            #{createTime,jdbcType=VARCHAR}, #{modifyTime,jdbcType=VARCHAR}, #{lastOpr,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="queryAssert" resultType="map">
+        SELECT
+            <include refid="Assert_Column_List" />
+        FROM
+            AUTO_ASSERT
+        <where>
+            <if test="search != '' and search != null">
+                AND
+                    LABEL like concat('%', #{search}, '%')
+            </if>
+            <if test="valid != '' and valid != null">
+                AND
+                    DELETED = #{valid}
+            </if>
+        </where>
+    </select>
+    
+    <select id="queryAssertByLabel" resultType="map">
+        SELECT
+            <include refid="Assert_Column_List" />
+        FROM
+            AUTO_ASSERT
+        WHERE
+         	DELETED = '0'
+            <if test="label != '' and label != null">
+                AND
+                    LABEL = #{label}
+            </if>
+            <if test="assertId != '' and assertId != null">
+                AND
+                    ASSERT_ID != #{assertId}
+            </if>
+    </select>
+        
+    <select id="queryAssertByTestCaseNo" resultType="Map">
+        SELECT
+			a.ASSERTDATA1,a.ASSERTDATA2,a.ASSERTDATA3,a.ASSERTDATA4,a.ASSERTDATA5,
+			a.ASSERTDATA6,a.ASSERTDATA7,a.ASSERTDATA8,a.ASSERTDATA9,a.ASSERTDATA10
+        FROM AUTO_CASE c
+			LEFT JOIN AUTO_ASSERT a 
+			ON c.ASSERT_ID = a.ASSERT_ID 
+		WHERE 
+			a.DELETED = '0'
+            <if test="testcaseNo != '' and testcaseNo != null">
+                AND c.TESTCASE_NO = #{testcaseNo}
+            </if>
+    </select>
+
+    <update id="deleteAssert" parameterType="String">
+        UPDATE
+            AUTO_ASSERT
+        SET
+            DELETED = '1',
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            ASSERT_ID in (${asrt})
+    </update>
+
+    <update id="updateAssert">
+        UPDATE
+            AUTO_ASSERT
+        SET
+            LABEL  = #{label},
+        <if test="map.size() > 0">
+            <foreach collection="map" item="value" index="key">
+                ${key} = #{value},
+            </foreach>
+        </if>
+            MODIFY_TIME = #{time},
+            LAST_OPR = #{userNameEn}
+        WHERE
+            ASSERT_ID = #{assertId}
+    </update>
+</mapper>

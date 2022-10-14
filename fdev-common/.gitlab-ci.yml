@@ -1,0 +1,21 @@
+image: xxx/mbpe-public-docker-local/library/fdev-helper:latest
+stages:
+  - maven-build
+
+maven-build:
+  image: xxx/mbpe-public-docker-local/library/fcomponent-package:latest
+  stage: maven-build
+  script:
+    - echo "jdkVersion:"$jdkVersion
+    - echo "version:"$version
+    - if [[ -z "$jdkVersion" ]] || [[ -z "$version" ]];then echo "非fdev触发pipeline，取消执行！" && exit 1;fi;
+    - if [[ "${jdkVersion}" = "3-jdk7_79" ]];then export JAVA_HOME=/usr/share/jdk1.7.0_79 && export PATH=$JAVA_HOME/bin:$PATH;fi;
+    - echo $JAVA_HOME
+    - env|grep -w PATH
+    - echo "success"
+    - $cdDir
+    - mvn org.codehaus.mojo:versions-maven-plugin:2.1:set org.codehaus.mojo:versions-maven-plugin:2.1:commit -DnewVersion=$version
+    - mvn clean deploy -Dmaven.test.skip=true
+  except:
+    - master
+    - pushes

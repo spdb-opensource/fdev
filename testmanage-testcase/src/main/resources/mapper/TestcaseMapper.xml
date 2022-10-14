@@ -1,0 +1,936 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.manager.ftms.dao.TestcaseMapper">
+	<resultMap id="BaseResultMap"
+			   type="com.manager.ftms.entity.Testcase">
+		<id column="testcase_no" jdbcType="VARCHAR" property="testcaseNo" />
+		<result column="testcase_name" jdbcType="VARCHAR"
+				property="testcaseName" />
+		<result column="testcase_status" jdbcType="CHAR"
+				property="testcaseStatus" />
+		<result column="testcase_type" jdbcType="CHAR"
+				property="testcaseType" />
+		<result column="testcase_priority" jdbcType="CHAR"
+				property="testcasePriority" />
+		<result column="testcase_pre" jdbcType="VARCHAR"
+				property="testcasePre" />
+		<result column="testcase_nature" jdbcType="CHAR"
+				property="testcaseNature" />
+		<result column="funcation_point" jdbcType="VARCHAR"
+				property="funcationPoint" />
+		<result column="testcase_describe" jdbcType="VARCHAR"
+				property="testcaseDescribe" />
+		<result column="expected_result" jdbcType="VARCHAR"
+				property="expectedResult" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="testcase_version" jdbcType="CHAR"
+				property="testcaseVersion" />
+		<result column="testcase_people" jdbcType="VARCHAR"
+				property="testcasePeople" />
+		<result column="testcase_date" jdbcType="VARCHAR"
+				property="testcaseDate" />
+		<result column="testcase_func_id" jdbcType="INTEGER"
+				property="testcaseFuncId" />
+		<result column="sys_module_name" jdbcType="VARCHAR"
+				property="systemName" />
+		<result column="sys_id" jdbcType="INTEGER" property="systemId" />
+		<result column="func_model_name" jdbcType="VARCHAR"
+				property="testcaseFuncName" />
+		<result column="field1" jdbcType="VARCHAR" property="field1" />
+		<result column="field2" jdbcType="VARCHAR" property="field2" />
+		<result column="field3" jdbcType="VARCHAR" property="field3" />
+		<result column="field4" jdbcType="VARCHAR" property="field4" />
+		<result column="field5" jdbcType="VARCHAR" property="field5" />
+		<result column="user_name" jdbcType="VARCHAR"
+				property="userName" />
+		<result column="id" jdbcType="INTEGER"
+				property="planlistTestcaseId" />
+		<result column="PLAN_ID" jdbcType="INTEGER" property="planId" />
+		<result column="RESULT_STATUS" jdbcType="VARCHAR"
+				property="testcaseExecuteResult" />
+		<result column="FNL_TM" jdbcType="VARCHAR"
+				property="testcaseExecuteDate" />
+		<result column="IS_TEST" jdbcType="VARCHAR"
+			property="necessaryFlag" />
+		<result column="ORDER_NUM" jdbcType="VARCHAR"
+		property="orderNum" />
+	</resultMap>
+
+	<resultMap id="BaseResulStatustMap" type="java.util.Map">
+	<!-- 案例总数 -->
+	<result column="allCase" jdbcType="INTEGER" property="allCase" />
+	<!-- 点击执行总数 -->
+	<result column="exeNum" jdbcType="INTEGER" property="exeNum" />
+	<!-- 执行通过的 -->
+	<result column="sumSucc" jdbcType="INTEGER" property="sumSucc" />
+	<!-- 执行失败的 -->
+	<result column="sumFail" jdbcType="INTEGER" property="sumFail" />
+	<!-- 执行阻塞的 -->
+	<result column="sumBlock" jdbcType="INTEGER"
+			property="sumBlock" />
+	<!-- 未执行案例数 -->
+	<result column="sumUnExe" jdbcType="INTEGER"
+			property="sumUnExe" />
+</resultMap>
+
+	<resultMap id="ApprovalList" type="java.util.Map">
+		<!-- 待评审 -->
+		<result column="waitApproval" jdbcType="INTEGER" property="waitApproval" />
+		<!-- 待生效 -->
+		<result column="waitEffect" jdbcType="INTEGER" property="waitEffect" />
+	</resultMap>
+
+	<insert id="addTestcase"
+			parameterType="com.manager.ftms.entity.Testcase">
+		<!--新增案例信息 -->
+		insert into testcase (testcase_No, testcase_name, testcase_status,
+		testcase_type,
+		testcase_priority, testcase_pre, testcase_nature,
+		funcation_point, testcase_describe,expected_result, remark,
+		testcase_version, testcase_people, testcase_date,
+		testcase_func_id
+		)
+		values
+		(#{testcaseNo,jdbcType=VARCHAR},#{testcaseName,jdbcType=VARCHAR},
+		#{testcaseStatus,jdbcType=CHAR},
+		#{testcaseType,jdbcType=CHAR},
+		#{testcasePriority,jdbcType=CHAR}, #{testcasePre,jdbcType=VARCHAR},
+		#{testcaseNature,jdbcType=CHAR},
+		#{funcationPoint,jdbcType=VARCHAR},
+		#{testcaseDescribe,jdbcType=VARCHAR},#{expectedResult,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR},
+		#{testcaseVersion,jdbcType=CHAR},
+		#{testcasePeople,jdbcType=VARCHAR}, #{testcaseDate,jdbcType=DATE},
+		#{testcaseFuncId,jdbcType=INTEGER}
+		)
+	</insert>
+
+	<update id="updateTestcaseByTestcaseNo"
+			parameterType="java.util.Map">
+		update testcase
+		set testcase_name = #{testcaseName,jdbcType=VARCHAR},
+		testcase_status = #{testcaseStatus,jdbcType=CHAR},
+		testcase_type = #{testcaseType,jdbcType=CHAR},
+		testcase_priority = #{testcasePriority,jdbcType=CHAR},
+		testcase_pre = #{testcasePre,jdbcType=VARCHAR},
+		testcase_nature = #{testcaseNature,jdbcType=CHAR},
+		funcation_point = #{funcationPoint,jdbcType=VARCHAR},
+		testcase_describe = #{testcaseDescribe,jdbcType=VARCHAR},
+		expected_result = #{expectedResult,jdbcType=VARCHAR},
+		remark = #{remark,jdbcType=VARCHAR},
+		testcase_version = #{testcaseVersion,jdbcType=CHAR},
+		testcase_people = #{testcasePeople,jdbcType=VARCHAR},
+		testcase_date = #{testcaseDate,jdbcType=DATE},
+		testcase_func_id = #{testcaseFuncId,jdbcType=INTEGER},
+		field1 = #{field1,jdbcType=VARCHAR},
+		field2 = #{field2,jdbcType=VARCHAR},
+		field3 = #{field3,jdbcType=VARCHAR},
+		field4 = #{field4,jdbcType=VARCHAR},
+		field5 = #{field5,jdbcType=VARCHAR}
+		where testcase_No = #{testcaseNo,jdbcType=VARCHAR}
+	</update>
+	<!--根据testcaseNo修改审核状态为待审核 -->
+	<update id="updateTestcaseByStatusWaitPass"
+			parameterType="java.lang.String">
+		update testcase
+		set testcase_status = "10"
+		where
+		testcase_No = #{testcaseNo,jdbcType=VARCHAR}
+	</update>
+	<!--根据testcaseNo修改审核状态为待生效 -->
+	<update id="updateTestcaseByStatusWaitEffect"
+			parameterType="java.lang.String">
+		update testcase
+		set testcase_status = "20"
+		where
+		testcase_No = #{testcaseNo,jdbcType=VARCHAR}
+	</update>
+	<select id="queryCaseByTestcaseNo" resultMap="BaseResultMap">
+		select
+		t.testcase_No, t.testcase_name, t.testcase_status, t.testcase_type,
+		t.testcase_priority,
+		t.testcase_pre, t.testcase_nature,
+		t.funcation_point, t.testcase_describe,t.expected_result,
+		t.remark,
+		t.IS_TEST,
+		t.testcase_version,
+		t.testcase_people, t.testcase_date,
+		t.testcase_func_id,
+		fm.func_model_name,sm.sys_module_name,sm.sys_id
+		from testcase t
+		join func_model fm
+		on t.testcase_func_id = fm.func_id
+		join sys_model sm
+		on fm.sys_func_id = sm.sys_id
+		where t.testcase_No =
+		#{testcaseNo,jdbcType=VARCHAR}
+	</select>
+	<select id="queryDetailByTestcaseNo" resultMap="BaseResultMap">
+	select
+	t.testcase_no, t.testcase_name, t.testcase_status, t.testcase_type,
+	t.testcase_priority,
+	t.testcase_pre, t.testcase_nature,
+	t.funcation_point, t.testcase_describe,t.expected_result,
+	t.remark,t.IS_TEST,
+	t.testcase_version,
+	t.testcase_people, t.testcase_date,
+	t.testcase_func_id
+	from testcase t
+	where t.testcase_no = #{testcaseNo,jdbcType=VARCHAR}
+</select>
+	<select id="selectAllTestcase" resultMap="BaseResultMap">
+		<!--查询所有的案例信息 -->
+		select testcase_No, testcase_name, testcase_status, testcase_type,
+		testcase_priority,IS_TEST,
+		testcase_pre, testcase_nature, funcation_point,
+		testcase_describe,expected_result,
+		remark, testcase_version,
+		testcase_people, testcase_date, testcase_func_id
+		from testcase
+	</select>
+
+	<!--根据计划id查询计划下案例 分页 -->
+	<select id="queryTestByPlanId" resultMap="BaseResultMap">
+		SELECT
+			ptr.ORDER_NUM,t.testcase_No,t.testcase_name,t.testcase_status,t.testcase_type,t.testcase_priority,
+			t.testcase_pre,t.testcase_nature,t.funcation_point,t.testcase_describe,t.remark,
+			t.testcase_version,t.testcase_people,t.testcase_date,t.testcase_func_id,t.expected_result,
+			t.IS_TEST,
+			ptr.id,ptr.plan_id,ptr.RESULT_STATUS,
+			date_format(ptr.FNL_TM,'%Y-%m-%d') FNL_TM,fm.func_model_name
+		FROM
+			FTMS_PLAN_RESULT ptr
+		JOIN
+			testcase t
+		ON
+			ptr.testcase_id = t.testcase_No
+		LEFT JOIN
+			func_model fm
+		ON
+			fm.func_id=t.testcase_func_id
+		WHERE
+			ptr.plan_id = #{planId,jdbcType=INTEGER}
+		<choose>
+			<when test="testcaseExecuteResult != null and testcaseExecuteResult !='' and testcaseExecuteResult !='allExe'.toString()">
+				and ptr.RESULT_STATUS = #{testcaseExecuteResult}
+			</when>
+			<when test="testcaseExecuteResult =='allExe'.toString()">
+				and ptr.RESULT_STATUS in (1,2,3,4)
+			</when>
+		</choose>
+		<if test="testcaseStatus != null and testcaseStatus !=''">
+			and t.testcase_status = #{testcaseStatus}
+		</if>
+		<if test="testcaseType != null and testcaseType !=''">
+			and t.testcase_type = #{testcaseType}
+		</if>
+		<if test="testcaseNature != null and testcaseNature !=''">
+			and t.testcase_nature = #{testcaseNature}
+		</if>
+		<if test="testcaseName != null and testcaseName !=''">
+			and t.testcase_name like concat('%',#{testcaseName},'%')
+		</if>
+		<if test="planlistTestcaseId != null and planlistTestcaseId !=''">
+			and ptr.ID = #{planlistTestcaseId}
+		</if>
+		ORDER BY
+			ptr.ORDER_NUM is null,
+			ptr.ORDER_NUM ASC,
+			ptr.ID ASC
+		LIMIT
+			#{start},#{pageSize}
+	</select>
+	<!--根据计划id查询计划下案例 分页 -->
+	<select id="queryTestCount" resultType="Integer">
+		SELECT
+			count(1)
+		FROM
+			FTMS_PLAN_RESULT ptr
+		JOIN
+			testcase t
+		ON
+			ptr.testcase_id = t.testcase_No
+		WHERE
+			ptr.plan_id = #{planId,jdbcType=INTEGER}
+		<choose>
+			<when test="testcaseExecuteResult != null and testcaseExecuteResult !='' and testcaseExecuteResult !='allExe'.toString()">
+				and ptr.RESULT_STATUS = #{testcaseExecuteResult}
+			</when>
+			<when test="testcaseExecuteResult =='allExe'.toString()">
+				and ptr.RESULT_STATUS in (1,2,3,4)
+			</when>
+		</choose>
+		<if test="testcaseStatus != null and testcaseStatus !=''">
+			and t.testcase_status = #{testcaseStatus}
+		</if>
+		<if test="testcaseType != null and testcaseType !=''">
+			and t.testcase_type = #{testcaseType}
+		</if>
+		<if test="testcaseNature != null and testcaseNature !=''">
+			and t.testcase_nature = #{testcaseNature}
+		</if>
+		<if test="testcaseName != null and testcaseName !=''">
+			and t.testcase_name like concat('%',#{testcaseName},'%')
+		</if>
+		<if test="planlistTestcaseId != null and planlistTestcaseId !=''">
+			and ptr.ID = #{planlistTestcaseId}
+		</if>
+	</select>
+
+	<!--根据计划id查询计划下案例 -->
+	<select id="queryTestcaseByPlanId"
+			resultMap="BaseResultMap">
+		SELECT
+		ptr.ORDER_NUM,t.testcase_No,t.testcase_name,t.testcase_status,t.testcase_type,t.testcase_priority,
+		t.testcase_pre,t.testcase_nature,t.funcation_point,t.testcase_describe,t.remark,
+		t.testcase_version,t.testcase_people,t.testcase_date,t.testcase_func_id,t.expected_result,
+		t.IS_TEST,
+		ptr.id,ptr.plan_id,ptr.RESULT_STATUS,
+		date_format(ptr.FNL_TM,'%Y-%m-%d') FNL_TM,fm.func_model_name
+		FROM FTMS_PLAN_RESULT ptr join testcase t on
+		ptr.testcase_id =
+		t.testcase_No
+		left join func_model fm
+		on fm.func_id=t.testcase_func_id
+		where ptr.plan_id =
+		#{map.planId,jdbcType=INTEGER}
+		<if test="map.testcaseExecuteResult != null">
+			and ptr.RESULT_STATUS = #{map.testcaseExecuteResult}
+		</if>
+		<if test="map.testcaseStatus != null ">
+			and t.testcase_status = #{map.testcaseStatus}
+		</if>
+		<if test="map.testcaseType != null ">
+			and t.testcase_type = #{map.testcaseType}
+		</if>
+		<if test="map.testcaseNature != null ">
+			and t.testcase_nature = #{map.testcaseNature}
+		</if>
+		order by ptr.ORDER_NUM is null,ptr.ORDER_NUM ASC,ptr.ID ASC
+	</select>
+
+	<!--根据testcaseNo删除案例 -->
+	<delete id="deleteTestcaseByTestcaseNo"
+			parameterType="java.lang.String">
+		delete from testcase
+		where testcase_No = #{testcaseNo,jdbcType=VARCHAR}
+		and testcase_status not
+		in('30','21')
+	</delete>
+
+	<!-- 模糊匹配查询 selectTestCaseFuzzy -->
+	<select id="selectTestCaseFuzzy"
+			parameterType="java.lang.String" resultMap="BaseResultMap">
+		<!--根据案例编号查询案例详情 -->
+		select testcase_No, testcase_name, testcase_status, testcase_type,
+		testcase_priority,
+		IS_TEST,
+		testcase_pre, testcase_nature, funcation_point,
+		testcase_describe,expected_result,
+		remark, testcase_version,
+		testcase_people, testcase_date, testcase_func_id
+		from testcase
+		where
+		testcase_No LIKE "%"#{parameters}"%"
+	</select>
+	<!--案例审核操作 -->
+	<update id="updateTestcaseByStatus"
+			parameterType="com.manager.ftms.entity.Testcase">
+		<!--根据审核结果更新案例状态 -->
+		update testcase
+		set testcase_status = #{testcaseStatus,jdbcType=CHAR}
+		where testcase_No = #{testcaseNo,jdbcType=VARCHAR}
+	</update>
+	<select id="selectTestcaseByUserEnName"
+			parameterType="java.util.Map" resultMap="BaseResultMap">
+		<!--根据用户英文名查询案例 -->
+		SELECT DISTINCT
+		(tc.testcase_No),tc.testcase_name,tc.testcase_status,tc.testcase_type,
+		tc.testcase_priority,tc.testcase_pre,tc.testcase_nature,tc.funcation_point,
+		tc.testcase_describe,tc.expected_result,tc.remark,tc.testcase_version,tc.testcase_people,
+		tc.testcase_date,tc.testcase_func_id,
+		tc.IS_TEST,
+		pl.plan_id,wo.work_no,
+		fm.func_id,fm.func_model_name
+		FROM testcase tc
+		JOIN FTMS_PLAN_RESULT pt
+		ON tc.testcase_No=pt.testcase_id
+		JOIN plan_list pl ON
+		pl.plan_id=pt.plan_id
+		JOIN work_order wo ON wo.work_no=pl.work_no
+		JOIN
+		func_model fm ON tc.testcase_func_id = fm.func_id
+		WHERE (wo.work_leader
+		like concat('%',#{userEnName},'%') OR wo.work_manager=#{userEnName})
+		AND
+		tc.testcase_status=#{testcaseStatus};
+	</select>
+	<!-- 根据案案例编号删除 -->
+	<delete id="delBatchTestCaseNos" parameterType="java.util.List">
+		delete from FTMS_PLAN_RESULT
+		where
+		<foreach collection="testcaseNoList" open="(" close=")"
+				 separator="," item="item" index="index">
+			RESULT_STATUS = #{item}
+		</foreach>
+		and plan_id = #{planId}
+	</delete>
+	<!-- 根据案案例编号删除 delTestcase -->
+	<delete id="delTestcase">
+		delete from testcase
+		where
+		<foreach collection="map" item="value" index="key"
+				 separator=",">
+			testcase_No = #{key}
+		</foreach>
+	</delete>
+	<!--"testcaseStatus 审核状态":"", "testcaseExecuteResult 执行结果":"", "testcaseType 
+		" 案例类型:"", "testcaseNature 案例性质 ":"" -->
+	<select id="selTestCaseCondition" parameterType="java.util.Map"
+			resultMap="BaseResultMap">
+		select
+		t.testcase_No,t.testcase_name,t.testcase_status,t.testcase_type,t.testcase_priority,
+		t.testcase_pre,t.testcase_nature,t.funcation_point,t.testcase_describe,t.remark,
+		t.IS_TEST,
+		t.testcase_version,t.testcase_people,t.testcase_date,t.testcase_func_id,t.expected_result
+		ptr.id,ptr.testcase_id,ptr.plan_id,ptr.RESULT_STATUS,ptr.testcase_execute_date
+		from testcase t LEFT JOIN FTMS_PLAN_RESULT ptr
+		on t.testcase_No =
+		ptr.testcase_id
+		<where>
+			ptr.plan_id = #{planId}
+			<!-- 案例状态 -->
+			<if test=" testcaseStatus != null ">
+				and t.testcase_status = #{testcaseStatus}
+			</if>
+			<if test=" testcaseExecuteResult != null ">
+				and ptr.RESULT_STATUS = #{testcaseExecuteResult}
+			</if>
+			<if test=" testcaseType != null ">
+				and t.testcase_Type = #{testcaseType}
+			</if>
+			<if test=" testcaseNature != null ">
+				and t.testcase_nature = #{testcaseNature}
+			</if>
+		</where>
+	</select>
+	<!-- 批量提交审核 -->
+	<update id="batchAudit" parameterType="java.util.List">
+		update testcase
+		set testcase_status = #{testcaseStatus,jdbcType=CHAR}
+		where testcase_No IN
+		<foreach collection="testcaseNos" item="testcaseNos"
+				 separator="," open="(" close=")">
+			#{testcaseNos}
+		</foreach>
+	</update>
+	<!--根据功能菜单id查询案例 -->
+	<select id="selectTestcaseByFuncId"
+			parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT distinct tc.testcase_No, tc.testcase_name, tc.testcase_status,
+		tc.testcase_type, tc.testcase_priority,
+		tc.testcase_pre, tc.testcase_nature, tc.funcation_point,
+		tc.testcase_describe,tc.expected_result, tc.remark,
+		tc.testcase_version,
+		tc.IS_TEST,
+		tc.testcase_people, tc.testcase_date, tc.testcase_func_id,
+		tc.func_model_name
+		FROM
+		(select a.*,fm.func_model_name from testcase a left join func_model fm on a.testcase_func_id=fm.func_id)tc
+		LEFT JOIN
+		FTMS_PLAN_RESULT pt
+	    on
+		tc.testcase_no=pt.TESTCASE_ID
+		<where>
+		<!-- 案例状态 -->
+		<if test="map.testcaseStatus != null">
+			AND tc.testcase_status = #{map.testcaseStatus}
+		</if>
+		<!-- 功能菜单id -->
+		<if test="map.testcaseFuncId != null">
+			AND tc.testcase_func_id = #{map.testcaseFuncId}
+		</if>
+		<!-- 功能点 -->
+		<if test="map.funcationPoint != null">
+			AND tc.funcation_point like concat('%',#{map.funcationPoint},'%')
+		</if>
+		<!-- 案例编写人 -->
+		<if test="map.testcasePeople != null">
+			AND tc.testcase_people like concat('%',#{map.testcasePeople},'%')
+		</if>
+		<!-- 案例类型 -->
+		<if test="map.testcaseType != null">
+			AND tc.testcase_type = #{map.testcaseType}
+		</if>
+		<!-- 案例性质 -->
+		<if test="map.testcaseNature != null">
+			AND tc.testcase_nature = #{map.testcaseNature}
+		</if>
+		<!-- 工单号 -->
+		<if test="map.workNo != null">
+			AND pt.work_no like concat('%',#{map.workNo},'%')
+		</if>
+		<!-- 创建日期 -->
+		<if test="map.testcaseDate != null">
+			AND tc.testcase_date = #{map.testcaseDate}
+		</if>
+		<!-- 必测案例-->
+		<if test="map.necessaryFlag != null">
+			AND tc.IS_TEST = #{map.necessaryFlag}
+		</if>
+		<if test="start != null">
+			limit #{start},#{map.pageSize}
+		</if>
+		</where>
+	</select>
+
+	<!-- queryDetailByTestcaseNoAndPlanId 查询案例根据 计划id 案例id -->
+	<select id="queryDetailByTestcaseNoAndPlanId"
+			parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT t.testcase_No,
+		t.testcase_name, t.testcase_status, t.testcase_type,
+		t.testcase_priority,
+		t.testcase_pre, t.testcase_nature,
+		t.funcation_point,
+		t.IS_TEST,
+		t.testcase_describe,t.expected_result, t.remark,
+		t.testcase_version,
+		t.testcase_people, t.testcase_date,
+		t.testcase_func_id,ptr.RESULT_STATUS,ptr.id,ptr.plan_id,ptr.testcase_execute_date
+		FROM testcase t
+		JOIN FTMS_PLAN_RESULT ptr ON ptr.testcase_id =
+		t.testcase_No
+		WHERE t.testcase_No = #{testcaseNo} AND ptr.plan_id =
+		#{planId}
+	</select>
+	<!-- 根据主键修改 -->
+	<update id="updateByPrimaryKey" parameterType="java.util.Map">
+		UPDATE testcase
+		SET remark = #{remark}
+		WHERE testcase_No = #{testcaseNo}
+	</update>
+
+	<!-- queryTestcaseByOption 案例审核,根据传入选项查询案例 -->
+	<select id="queryTestcaseByOption" resultMap="BaseResultMap">
+		SELECT
+		    distinct fpr.work_no, t.testcase_no, t.testcase_name, t.testcase_type,
+			t.testcase_nature, t.testcase_func_id, t.funcation_point,
+			t.testcase_status, t.testcase_priority,t.testcase_pre, t.IS_TEST,
+			t.testcase_describe,t.expected_result,t.remark,t.testcase_version,
+			t.testcase_people,t.testcase_date, fm.func_model_name
+		FROM
+			FTMS_PLAN_RESULT fpr
+		left join
+			testcase t
+		on
+			fpr.TESTCASE_ID = t.testcase_no
+		left join
+			func_model fm
+		on
+			fm.func_id= t.testcase_func_id
+		left join
+			work_order w
+		on
+			fpr.WORK_NO = w.work_no
+		where
+		<!-- 案例状态 -->
+		<if test="map.testcaseStatus != null">
+			t.testcase_status = #{map.testcaseStatus}
+		</if>
+		<if test="userEnName != null">
+			AND (w.work_leader like concat('%',#{userEnName},'%') OR w.work_manager=#{userEnName})
+		</if>
+		<!-- 功能模块 -->
+		<if test="map.testcaseFuncId != null">
+			AND t.testcase_func_id = #{map.testcaseFuncId}
+		</if>
+		<!-- 案例编号 -->
+		<if test="map.testcaseNo != null">
+			AND t.testcase_No = #{map.testcaseNo}
+		</if>
+		<!-- 案例名称 -->
+		<if test="map.testcaseName != null">
+			AND t.testcase_name like concat('%',#{map.testcaseName},'%')
+		</if>
+		<!-- 案例编写人 -->
+		<if test="map.testcasePeople != null">
+			AND t.testcase_people = #{map.testcasePeople}
+		</if>
+		<!-- 工单编号 -->
+		<if test="map.work_no != null">
+			AND w.work_no like concat('%',#{map.work_no},'%')
+		</if>
+		ORDER BY
+		t.testcase_date  DESC
+		limit
+        #{start},#{pageSize}
+	</select>
+
+	<!--queryTestcaseByPlanIdOrStatus -->
+	<!--根据计划id查询Or状态计划下案例 -->
+	<select id="queryTestcaseByPlanIdOrStatus"
+			parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		SELECT t.testcase_No,
+		t.testcase_name, t.testcase_status, t.testcase_type,
+		t.testcase_priority,
+		t.testcase_pre, t.testcase_nature, t.funcation_point,
+		t.testcase_describe,t.expected_result, t.remark,
+		t.testcase_version,
+		t.IS_TEST,
+		t.testcase_people, t.testcase_date,
+		t.testcase_func_id,
+		ptr.RESULT_STATUS,ptr.id,ptr.plan_id,ptr.testcase_execute_date,
+		fm.func_model_name,sm.sys_module_name,sm.sys_id
+		FROM
+		(select testcase_id,plan_id,RESULT_STATUS,testcase_execute_date,id from
+		FTMS_PLAN_RESULT)ptr ,
+		(SELECT * FROM testcase where testcase_func_id is not null) t ,
+		func_model fm ,
+		sys_model sm
+		where
+		ptr.testcase_id = t.testcase_No
+		and ptr.plan_id = #{planId,jdbcType=INTEGER} and t.testcase_status
+		in(11,30,20,21,22)
+		and t.testcase_func_id = fm.func_id
+		and fm.sys_func_id = sm.sys_id
+		union
+		SELECT t.testcase_No, t.testcase_name, t.testcase_status, t.testcase_type,
+		t.testcase_priority,
+		t.testcase_pre, t.testcase_nature, t.funcation_point,
+		t.testcase_describe,t.expected_result, t.remark,
+		t.testcase_version,t.IS_TEST,
+		t.testcase_people, t.testcase_date,
+		t.testcase_func_id,
+		ptr.RESULT_STATUS,ptr.id,ptr.plan_id,ptr.testcase_execute_date,
+		'' as func_model_name,'' as sys_module_name,'' as sys_id
+		FROM
+		(select distinct testcase_id,plan_id,RESULT_STATUS,testcase_execute_date,id
+		from FTMS_PLAN_RESULT)ptr ,
+		(SELECT * FROM testcase where testcase_func_id is null) t
+		where
+		ptr.testcase_id = t.testcase_No
+		and ptr.plan_id = #{planId,jdbcType=INTEGER} and t.testcase_status in
+		(11,30,20,21,22)
+	</select>
+	<!-- 查询当天时间最大编号 -->
+	<select id="queryMaxCaseNo" parameterType="java.lang.String"
+			resultType="String">
+		select testcase_No FROM testcase
+		where testcase_date=#{testcaseDate,jdbcType=VARCHAR} order by testcase_No
+		desc;
+	</select>
+
+	<!-- 查询执行计划下案例对应状态数量 -->
+	<select id="queryAllStatus" parameterType="java.lang.Integer"
+			resultMap="BaseResulStatustMap">
+		SELECT
+			a.plan_id as PLAN_ID,
+			a.allCase,
+			ifnull(b.exeNum, 0) as exeNum,
+			a.sumSucc,
+			a.sumBlock,
+			a.sumFail,
+			a.sumUnExe
+		FROM
+		(
+			SELECT
+				pl.PLAN_ID,
+				count(fpr.RESULT_STATUS) as allCase,
+				sum(if(fpr.RESULT_STATUS = 1, 1, 0)) as sumSucc,
+				sum(if(fpr.RESULT_STATUS = 2, 1, 0)) as sumBlock,
+				sum(if(fpr.RESULT_STATUS = 3, 1, 0)) as sumFail,
+				sum(if(fpr.RESULT_STATUS = 0, 1, 0)) as sumUnExe
+			FROM
+				plan_list pl
+			LEFT JOIN
+				FTMS_PLAN_RESULT fpr
+			ON
+				fpr.PLAN_ID = pl.plan_id
+			WHERE
+				pl.PLAN_ID = #{planId}
+		) a
+		LEFT JOIN
+		(
+			SELECT
+				plan_id,
+				sum(if(STATUS != 4 and OPR_TYPE = 0, 1, 0)) as exeNum
+			FROM
+				FTMS_TESTCASE_EXE_RECORD
+			WHERE
+				plan_id = #{planId}
+		) b
+		ON
+			a.plan_id = b.plan_id
+	</select>
+
+	<!-- 统计审批案例数 -->
+	<select id="countTestcase" resultType="Integer">
+		SELECT
+			count(t.testcase_no)
+		FROM
+			FTMS_PLAN_RESULT fpr
+		left join
+			testcase t
+		on
+			fpr.TESTCASE_ID = t.testcase_no
+		left join
+			func_model fm
+		on
+			fm.func_id= t.testcase_func_id
+		left join
+			work_order w
+		on
+			fpr.WORK_NO = w.work_no
+		<where>
+		<!-- 案例状态 -->
+		<if test="map.testcaseStatus != null">
+			t.testcase_status = #{map.testcaseStatus}
+		</if>
+		<if test="userEnName != null">
+			AND (w.work_leader like concat('%',#{userEnName},'%') OR w.work_manager=#{userEnName})
+		</if>
+		<!-- 功能模块 -->
+		<if test="map.testcaseFuncId != null">
+			AND t.testcase_func_id = #{map.testcaseFuncId}
+		</if>
+		<!-- 案例编号 -->
+		<if test="map.testcaseNo != null">
+			AND t.testcase_No = #{map.testcaseNo}
+		</if>
+		<!-- 案例名称 -->
+		<if test="map.testcaseName != null">
+			AND t.testcase_name like concat('%',#{map.testcaseName},'%')
+		</if>
+		<!-- 案例编写人 -->
+		<if test="map.testcasePeople != null">
+			AND t.testcase_people = #{map.testcasePeople}
+		</if>
+		<!-- 工单编号 -->
+		<if test="map.work_no != null">
+			AND w.work_no like concat('%',#{map.work_no},'%')
+		</if>
+		</where>
+	</select>
+
+	<!--根据功能菜单id查询案例 -->
+	<select id="countTestcaseByFuncId" resultType="Integer">
+		select count(1) from
+		(
+		SELECT distinct tc.testcase_No
+		FROM
+		(select a.*,fm.func_model_name from testcase a left join func_model fm on a.testcase_func_id=fm.func_id)tc
+		LEFT JOIN
+		FTMS_PLAN_RESULT pt
+		on
+		tc.testcase_no=pt.TESTCASE_ID
+		<where>
+			<!-- 案例状态 -->
+			<if test="map.testcaseStatus != null">
+				AND tc.testcase_status = #{map.testcaseStatus}
+			</if>
+			<!-- 功能菜单id -->
+			<if test="map.testcaseFuncId != null">
+				AND tc.testcase_func_id = #{map.testcaseFuncId}
+			</if>
+			<!-- 功能点 -->
+			<if test="map.funcationPoint != null">
+				AND tc.funcation_point like concat('%',#{map.funcationPoint},'%')
+			</if>
+			<!-- 案例编写人 -->
+			<if test="map.testcasePeople != null">
+				AND tc.testcase_people like concat('%',#{map.testcasePeople},'%')
+			</if>
+			<!-- 案例类型 -->
+			<if test="map.testcaseType != null">
+				AND tc.testcase_type = #{map.testcaseType}
+			</if>
+			<!-- 案例性质 -->
+			<if test="map.testcaseNature != null">
+				AND tc.testcase_nature = #{map.testcaseNature}
+			</if>
+			<!-- 工单号 -->
+			<if test="map.workNo != null">
+				AND pt.work_no like concat('%',#{map.workNo},'%')
+			</if>
+			<!-- 创建日期 -->
+			<if test="map.testcaseDate != null">
+				AND tc.testcase_date = #{map.testcaseDate}
+			</if>
+			<!-- 必测案例-->
+			<if test="map.necessaryFlag != null">
+				AND tc.IS_TEST = #{map.necessaryFlag}
+			</if>
+		</where>
+		) as total
+	</select>
+
+	<update id="changeNecessary" parameterType="java.lang.String">
+		UPDATE testcase SET IS_TEST = #{necessaryFlag}
+		WHERE testcase_no = #{testcaseNo}
+	</update>
+
+	<select id="queryUserApprovalList" parameterType="java.lang.String" resultMap="ApprovalList">
+		select
+			a.num as waitApproval,
+			b.num as waitEffect
+		from
+			(select
+				count(t.testcase_no) as num
+			FROM
+				testcase t
+			left join
+				FTMS_PLAN_RESULT fpr
+			on
+				fpr.TESTCASE_ID = t.testcase_no
+			left join
+				work_order w
+			on
+				fpr.WORK_NO = w.work_no
+			WHERE
+				(w.work_manager=#{userName}
+				or FIND_IN_SET(#{userName},w.work_leader))
+				and testcase_status = '10') a,
+			(select
+				count(t.testcase_no) as num
+			FROM
+				testcase t
+			left join
+				FTMS_PLAN_RESULT fpr
+			on
+				fpr.TESTCASE_ID = t.testcase_no
+			left join
+				work_order w
+			on
+				fpr.WORK_NO = w.work_no
+			WHERE
+				(w.work_manager=#{userName}
+				or FIND_IN_SET(#{userName},w.work_leader))
+				and testcase_status = '20')b
+	</select>
+
+	<select id="queryPlanIdByNo" resultMap="planMap">
+		SELECT
+			plan_id, plan_name
+		FROM
+			plan_list
+		WHERE
+			work_no = #{workNo};
+	</select>
+
+	<resultMap id="planMap" type="java.util.Map">
+		<result column="plan_id" jdbcType="VARCHAR" property="planId" />
+		<result column="plan_name" jdbcType="VARCHAR" property="planName" />
+	</resultMap>
+
+	<select id="querySpeByOrder" resultMap="speOrderMap">
+		SELECT
+			main_task_name,
+			main_task_no,
+			testers,
+			work_manager,
+			work_leader,
+			work_flag,
+			fdev_group_id,
+			work_unit ,
+		    fdev_new ,
+			demand_id ,
+		   demand_no,
+		   demand_name
+		FROM
+			work_order
+		WHERE
+			work_no = #{workNo}
+	</select>
+
+	<resultMap id="speOrderMap" type="java.util.Map">
+		<result column="main_task_name" jdbcType="VARCHAR" property="mainTaskName" />
+		<result column="main_task_no" jdbcType="VARCHAR" property="mainTaskNo" />
+		<result column="testers" jdbcType="VARCHAR" property="testers" />
+		<result column="work_manager" jdbcType="VARCHAR" property="managers" />
+		<result column="work_leader" jdbcType="VARCHAR" property="groupleader" />
+		<result column="work_flag" jdbcType="VARCHAR" property="workFlag" />
+		<result column="group_name" jdbcType="VARCHAR" property="group_name" />
+		<result column="fdev_group_id" jdbcType="VARCHAR" property="fdevGroupId" />
+		<result column="work_unit" jdbcType="VARCHAR" property="unit" />
+		<result column="fdev_new" jdbcType="VARCHAR" property="fdev_new"/>
+		<result column="demand_id" jdbcType="VARCHAR" property="demandId"/>
+		<result column="demand_no" jdbcType="VARCHAR" property="demand_no"/>
+		<result column="demand_name" jdbcType="VARCHAR" property="demand_name"/>
+	</resultMap>
+
+	<update id="updateTestcaseOrder">
+		UPDATE FTMS_PLAN_RESULT
+		SET ORDER_NUM = #{orderNum}
+		WHERE
+		PLAN_ID = #{planId}
+		AND TESTCASE_ID = #{testcaseNo}
+	</update>
+	
+	<!--根据计划id查询计划下所有案例 -->
+	<select id="queryAllTestByPlanId"
+		resultMap="BaseResultMap">
+		SELECT
+		ptr.ORDER_NUM,t.testcase_No,t.testcase_name,t.testcase_status,t.testcase_type,t.testcase_priority,
+		t.testcase_pre,t.testcase_nature,t.funcation_point,t.testcase_describe,t.remark,
+		t.testcase_version,t.testcase_people,t.testcase_date,t.testcase_func_id,t.expected_result,
+		t.IS_TEST,
+		ptr.id,ptr.plan_id,ptr.RESULT_STATUS,
+		date_format(ptr.FNL_TM,'%Y-%m-%d') FNL_TM,fm.func_model_name
+		FROM FTMS_PLAN_RESULT ptr join testcase t on
+		ptr.testcase_id =
+		t.testcase_No
+		left join func_model fm
+		on fm.func_id=t.testcase_func_id
+		where ptr.plan_id =
+		#{planId,jdbcType=INTEGER}
+		order by ptr.ORDER_NUM is null,ptr.ORDER_NUM ASC,ptr.ID ASC
+	</select>
+
+	<select id="queryTestcaseByOptionCount"  resultType="Integer">
+		SELECT
+		count(distinct t.testcase_no)
+		FROM
+		FTMS_PLAN_RESULT fpr
+		left join
+		testcase t
+		on
+		fpr.TESTCASE_ID = t.testcase_no
+		left join
+		func_model fm
+		on
+		fm.func_id= t.testcase_func_id
+		left join
+		work_order w
+		on
+		fpr.WORK_NO = w.work_no
+		where
+		<!-- 案例状态 -->
+		<if test="map.testcaseStatus != null">
+			t.testcase_status = #{map.testcaseStatus}
+		</if>
+		<if test="userEnName != null">
+			AND (w.work_leader like concat('%',#{userEnName},'%') OR w.work_manager=#{userEnName})
+		</if>
+		<!-- 功能模块 -->
+		<if test="map.testcaseFuncId != null">
+			AND t.testcase_func_id = #{map.testcaseFuncId}
+		</if>
+		<!-- 案例编号 -->
+		<if test="map.testcaseNo != null">
+			AND t.testcase_No = #{map.testcaseNo}
+		</if>
+		<!-- 案例名称 -->
+		<if test="map.testcaseName != null">
+			AND t.testcase_name like concat('%',#{map.testcaseName},'%')
+		</if>
+		<!-- 案例编写人 -->
+		<if test="map.testcasePeople != null">
+			AND t.testcase_people = #{map.testcasePeople}
+		</if>
+		<!-- 工单编号 -->
+		<if test="map.work_no != null">
+			AND w.work_no like concat('%',#{map.work_no},'%')
+		</if>
+	</select>
+
+</mapper>

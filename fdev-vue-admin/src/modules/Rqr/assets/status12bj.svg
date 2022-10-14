@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1248px" height="128px" viewBox="0 0 1248 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>暂缓bj</title>
+    <defs>
+        <rect id="path-1" x="0" y="0.714544029" width="1248" height="127" rx="8"></rect>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#1E88E5" stop-opacity="0.364647072" offset="0%"></stop>
+            <stop stop-color="#90CAF9" stop-opacity="0.0463559878" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#1E88E5" stop-opacity="0.364647072" offset="0%"></stop>
+            <stop stop-color="#90CAF9" stop-opacity="0.0463559878" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="切图" transform="translate(-51.000000, -714.000000)">
+            <g id="编组-8" transform="translate(51.000000, 714.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="矩形备份-3" fill="#FFFFFF" xlink:href="#path-1"></use>
+                <rect id="矩形" fill="#4A66DB" mask="url(#mask-2)" x="0" y="-3.28545597" width="8" height="131"></rect>
+                <path d="M895,140.714544 C901.64031,77.5995614 923.632827,31.9875539 960.977551,3.87852159 C1016.99464,-38.2850269 1088.2337,15.7742448 1129.20854,-2.16503399 C1170.18339,-20.1043128 1220.53727,-15.0735703 1246.58313,3.87852159 C1263.94703,16.5132495 1279.41932,62.125257 1293,140.714544 L895,140.714544 Z" id="路径-2备份-4" fill="url(#linearGradient-3)" opacity="0.146647135" mask="url(#mask-2)"></path>
+                <path d="M934,140.714544 C940.623626,77.5995614 962.560886,31.9875539 999.811779,3.87852159 C1055.68812,-38.2850269 1126.74819,15.7742448 1167.62008,-2.16503399 C1208.49197,-20.1043128 1258.71934,-15.0735703 1284.69975,3.87852159 C1302.02003,16.5132495 1317.45344,62.125257 1331,140.714544 L934,140.714544 Z" id="路径-2备份-3" fill="url(#linearGradient-4)" opacity="0.146647135" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gotest.dao.PlanListTestCaseMapper" >
+
+    <resultMap id="ResultMap" type="com.gotest.domain.PlanListTestCase" >
+        <id column="plan_name" property="testplanName" jdbcType="VARCHAR" />
+        <result column="allCount" property="allCount" jdbcType="INTEGER" />
+        <result column="allPassed" property="allPassed" jdbcType="INTEGER" />
+        <result column="allFailed" property="allFailed" jdbcType="INTEGER" />
+        <result column="allBlocked" property="allBlocked" jdbcType="INTEGER" />
+    </resultMap>
+
+
+
+      <!--
+        根据传递过来的workOrderNo工单编号主键查询plan_name
+        首先，根据传递过来的workOrderNo工单编号主键，从plan_list表中查询plan_id（1对多）
+         根据plan_id 从planlist_testcase_rekatuib 中间表中获取testcase表中的testcase_id数据
+            然后根据testcase_id主键查询表testcase表中 案例数据数据详情，得出：
+              根据testcase_status的具体值的判断，
+             统计
+             allCount 案例总数(无需判断，统计数量和即可)、
+              allExecuting，正在执行数
+              allPassed，通过数
+              allFailed，失败数
+              allBlocked, 堵塞数
+              test_status 具体案例状态值。。待定。。。。
+      -->
+    <select id="queryFdevOrderState" resultMap="ResultMap">
+        SELECT
+            plist.plan_name as plan_name,
+            COUNT(pp.plan_id) as allCount,
+            SUM(if(pp.result_status = '1', 1, 0)) as allPassed,
+            SUM(if(pp.result_status = '3', 1, 0)) as allFailed,
+            SUM(if(pp.result_status = '2', 1, 0)) as allBlocked
+        FROM
+        (
+            SELECT
+                plan_id,
+                plan_name
+            FROM
+                plan_list
+            WHERE
+                plan_list.work_no = #{workNo}
+        ) plist
+        LEFT JOIN
+            FTMS_PLAN_RESULT pp
+        ON
+            plist.plan_id = pp.plan_id
+        GROUP BY
+            plist.plan_id
+        <if test="start != null ">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+    <select id="queryFdevOrderStateCount" resultType="java.lang.Integer">
+        SELECT count(a.plan_name) from (
+        SELECT
+        plist.plan_name as plan_name
+        FROM
+        (
+        SELECT
+        plan_id,
+        plan_name
+        FROM
+        plan_list
+        WHERE
+        plan_list.work_no = #{workNo}
+        ) plist
+        LEFT JOIN
+        FTMS_PLAN_RESULT pp
+        ON
+        plist.plan_id = pp.plan_id
+        GROUP BY
+        plist.plan_id) a
+    </select>
+
+    <select id="queryOrderStateByWorkNo" resultType="String">
+        SELECT
+            work_stage
+        FROM
+            work_order
+        WHERE
+            work_no = #{workNo}
+    </select>
+
+    <select id="countCase" resultMap="UnqualifiedCase">
+        SELECT
+        r.RESULT_STATUS, count(*) as count
+        FROM
+        work_order w
+        LEFT JOIN
+        plan_list pl
+        ON
+        w.work_no = pl.work_no
+        LEFT JOIN
+        FTMS_PLAN_RESULT r
+        ON
+        pl.plan_id = r.PLAN_ID
+        WHERE
+        w.work_no = #{workNo}
+        AND
+        r.RESULT_STATUS in (0,1,2,3,4)
+        GROUP BY
+        r.RESULT_STATUS;
+    </select>
+
+    <resultMap id="UnqualifiedCase" type="java.util.Map" >
+        <result column="result_status" property="status" jdbcType="VARCHAR" />
+        <result column="count" property="count" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="queryResultIdByPlanId" resultType="Integer">
+        SELECT
+            ID
+        FROM
+            FTMS_PLAN_RESULT
+        WHERE
+            PLAN_ID = #{planId}
+    </select>
+
+    <update id="updateWorkNoByResultId">
+        UPDATE
+            FTMS_PLAN_RESULT
+        SET
+            work_no = #{workNo}
+        WHERE
+            id = #{resultId}
+    </update>
+
+</mapper>

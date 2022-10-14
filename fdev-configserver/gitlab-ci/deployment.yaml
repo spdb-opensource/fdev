@@ -1,0 +1,64 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+  namespace: fdev
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+    spec:
+      imagePullSecrets:
+        - name: docker-registry-secret
+      containers:
+        - name: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+          image: $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
+          env:
+            - name: CI_PROJECT_NAME
+              value: $CI_PROJECT_NAME
+            - name: CI_ENVIRONMENT_SLUG
+              value: $CI_ENVIRONMENT_SLUG
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: log
+              mountPath: /fdev/log
+      volumes:
+      - name: log
+        hostPath:
+          path: /home/ebank/spdb/fdev/log
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG-svc
+  namespace: fdev
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG-ingress
+  namespace: fdev
+spec:
+  rules:
+    - host: $CI_PROJECT_NAME.$CI_ENVIRONMENT_SLUG.minikube
+      http:
+        paths:
+          - backend:
+              serviceName: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG-svc
+              servicePort: 8080
+            path: /

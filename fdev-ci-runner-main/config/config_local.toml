@@ -1,0 +1,7 @@
+name = "ci-runner-new-local"
+executor = "local"
+concurrent = 10
+log_level = "debug"
+listen_address = ":9252"
+url = "xxx/fconfigci-new"
+artifact_upload_limit = 409600000

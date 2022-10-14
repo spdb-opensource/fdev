@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gotest.dao.MessageFdevMapper" >
+
+    <resultMap id="ResultMap" type="com.gotest.domain.MessageFdev" >
+        <id column="message_id" property="messageId" jdbcType="INTEGER" />
+        <result column="user_en_name" property="userEnName" jdbcType="VARCHAR" />
+        <result column="task_no" property="taskNo" jdbcType="VARCHAR" />
+        <result column="task_name" property="taskName" jdbcType="VARCHAR" />
+        <result column="work_no" property="workNo" jdbcType="VARCHAR" />
+        <result column="work_stage" property="workStage" jdbcType="VARCHAR" />
+        <result column="message_flag" property="messageFlag" jdbcType="VARCHAR" />
+        <result column="task_reason" property="taskReason" jdbcType="VARCHAR" />
+        <result column="jira_no" property="jiraNo" jdbcType="VARCHAR" />
+        <result column="task_desc" property="taskDesc" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="INTEGER" />
+        <result column="rqr_no" property="rqrNo" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="MessageFdev_Column_List">
+        message_id,
+        user_en_name,
+        task_no,
+        task_name,
+        work_no,
+        work_stage,
+        message_flag,
+        task_reason,
+        jira_no,
+        task_desc,
+        create_time,
+        ifnull(rqr_no,"") as rqr_no
+    </sql>
+
+    <sql id="MessageFdev_Column_List_Insert">
+        user_en_name,
+        task_no,
+        task_name,
+        work_no,
+        work_stage,
+        message_flag,
+        task_reason,
+        jira_no,
+        task_desc,
+        create_time,
+        rqr_no
+    </sql>
+    
+    <!--查询指定用户所有未读消息-->
+    <select id="queryMessage" resultMap="ResultMap">
+        SELECT
+            <include refid="MessageFdev_Column_List" />
+        FROM
+            msg_fdev
+        WHERE
+            user_en_name = #{userEnName}
+        AND
+            message_flag = '1'
+        ORDER BY
+            create_time desc
+        LIMIT
+            #{start},#{pageSize}
+    </select>
+    <!--查询指定用户所有未读消息的总数-->
+    <select id="queryMsgCountByUserEnName" resultType="Integer">
+        SELECT
+            count(1)
+        FROM
+            msg_fdev
+        WHERE
+            user_en_name = #{userEnName}
+        AND
+            message_flag = '1'
+        GROUP BY
+            user_en_name;
+    </select>
+
+    <!-- 消息记录 查询指定用户所有 消息-->
+    <select id="queryMessageRecord" resultMap="ResultMap">
+        SELECT
+            <include refid="MessageFdev_Column_List" />
+        FROM
+            msg_fdev
+        WHERE
+            user_en_name = #{userEnName}
+        <if test="messageFlag != null and messageFlag != ''">
+        AND
+            message_flag = #{messageFlag}
+        </if>
+        ORDER BY
+            create_time desc
+        LIMIT
+            #{start},#{pageSize}
+    </select>
+    <!-- 消息记录 查询超级管理员所有 消息-->
+    <select id="queryMasterMessageRecord" resultMap="ResultMap">
+        SELECT
+            <include refid="MessageFdev_Column_List" />
+        FROM
+            msg_fdev
+        WHERE
+            1=1
+        <if test="messageFlag != null and messageFlag != ''">
+            AND
+            message_flag = #{messageFlag}
+        </if>
+        ORDER BY
+            create_time desc
+        LIMIT
+            #{start},#{pageSize}
+    </select>
+
+    <!-- 消息记录 查询指定用户所有未读消息的总数-->
+    <select id="queryMessageRecordCount" resultType="Integer">
+        SELECT
+            count(1)
+        FROM
+            msg_fdev
+        WHERE
+            user_en_name = #{userEnName}
+        <if test="messageFlag != null and messageFlag != ''">
+        AND
+            message_flag = #{messageFlag}
+        </if>
+        GROUP BY
+            user_en_name;
+    </select>
+    <!-- 消息记录 查询指定用户所有未读消息的总数-->
+    <select id="queryMasterMessageRecordCount" resultType="Integer">
+        SELECT
+            count(1)
+        FROM
+            msg_fdev
+        <if test="messageFlag != null and messageFlag != ''">
+        WHERE
+            message_flag = #{messageFlag}
+        </if>
+    </select>
+
+
+    <!--&lt;!&ndash; 根据message_id 设置已读一条信息&ndash;&gt;-->
+    <update id="updateOneMsgByMsgId">
+        UPDATE
+            msg_fdev
+        SET
+            message_flag = '0'
+        WHERE
+            message_id = #{messageId}
+    </update>
+    <!-- 一键已读用户所有信息 -->
+    <update id="updateAllMsgByUserEnName">
+        UPDATE
+            msg_fdev
+        SET
+            message_flag = '0'
+        WHERE
+            message_flag != '0'
+        AND
+            user_en_name = #{userEnName}
+    </update>
+
+    <!-- 新增消息-->
+    <insert id = "addMsgFromFdev" parameterType="com.gotest.domain.MessageFdev">
+        INSERT INTO
+            msg_fdev
+        (<include refid="MessageFdev_Column_List_Insert"/>)
+        values
+        (
+            #{userEnName,jdbcType=VARCHAR},
+            #{taskNo,jdbcType=VARCHAR},
+            #{taskName,jdbcType=VARCHAR},
+            #{workNo,jdbcType=VARCHAR},
+            #{workStage,jdbcType=VARCHAR},
+            #{messageFlag,jdbcType=VARCHAR},
+            #{taskReason,jdbcType=VARCHAR},
+            #{jiraNo,jdbcType=VARCHAR},
+            #{taskDesc,jdbcType=VARCHAR},
+            #{createTime,jdbcType=INTEGER},
+            #{rqrNo,jdbcType=INTEGER}
+        )
+    </insert>
+
+    <select id="queryTestDesc" resultType="String">
+        SELECT
+            REPAIR_DESC
+        FROM
+            FTMS_SUBMIT_SIT_RECORD
+        WHERE
+            work_no = #{workNo}
+    </select>
+
+    <select id="queryFirstTestDesc" resultType="String">
+        SELECT
+            task_desc
+        FROM
+            msg_fdev
+        WHERE
+            work_no = #{workNo}
+        ORDER BY
+            create_time
+        LIMIT
+            0,1
+    </select>
+
+    <select id="queryByTaskNo" resultMap="ResultMap">
+        SELECT
+            f.message_id,
+            f.user_en_name,
+            f.task_no,
+            f.task_name,
+            f.work_no,
+            f.work_stage,
+            f.message_flag,
+            f.task_reason,
+            f.jira_no,
+            f.task_desc,
+            f.create_time,
+            ifnull(f.rqr_no,"") as rqr_no
+        FROM
+            msg_fdev f
+        left join work_order w
+        on f.work_no=w.work_no
+        WHERE
+            f.task_no = #{taskNo}
+        <choose>
+            <when test="orderType != null and orderType != ''">
+                AND
+                w.order_type = #{orderType}
+            </when>
+            <otherwise>
+                AND
+                w.order_type = 'function'
+            </otherwise>
+        </choose>
+    </select>
+
+    <update id="updateWorkNoByMsgId">
+        UPDATE
+            msg_fdev
+        SET
+            work_no = #{workNo}
+        WHERE
+            message_id = #{messageId}
+    </update>
+
+    <update id="updateWorkNoByTaskNos">
+        UPDATE
+            msg_fdev
+        SET
+            work_no = #{newWorkNo}
+        WHERE
+            task_no in
+        <foreach collection="taskIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>

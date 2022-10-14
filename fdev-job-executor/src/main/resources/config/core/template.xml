@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.csii.com.cn/schema/pe"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.csii.com.cn/schema/pe http://www.csii.com.cn/schema/pe/pe.xsd">
+
+    <!-- 抽象父类模板  -->
+    <bean id="abstractTemplate" class="com.csii.pe.template.ext.AbstractTemplate" abstract="true">
+    </bean>
+
+    <template id="publicEmptyTemplate" class="com.csii.pe.template.ext.EmptyTemplate" chain="emptyChain" parent="abstractTemplate"/>
+
+    <!--非权限校验模板-->
+    <template id="publicQueryTemplate" class="com.csii.pe.template.ExecutableSequenceTemplate" chain="emptyChain"/>
+
+    <template id="publicSequenceTemplate" class="com.csii.pe.template.ext.SequenceTemplate" chain="emptyChain" parent="abstractTemplate">
+        <setting>
+            <!-- 是否记录日志 -->
+            <param name="WriteJnl">false</param>
+            <!-- 是否实现事务控制 -->
+            <param name="TransactionEnabled">false</param>
+        </setting>
+    </template>
+</config>

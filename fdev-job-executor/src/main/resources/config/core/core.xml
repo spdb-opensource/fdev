@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.csii.com.cn/schema/pe" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.csii.com.cn/schema/pe http://www.csii.com.cn/schema/pe/pe.xsd">
+
+    <bean id="coreController" class="com.csii.pe.core.CoreControllerImpl"/>
+
+    <!--<bean id="placeholderConfig"-->
+          <!--class="com.csii.uibs.PropertyPlaceholderExtendConfigurer">-->
+        <!--<ref name="commonResourceLocationResolver">commonResourceLocationResolver</ref>-->
+    <!--</bean>-->
+
+    <!--<bean id="commonResourceLocationResolver"-->
+          <!--class="com.csii.uibs.ResourceLocationAuthResolver">-->
+        <!--<list name="locations">-->
+            <!--<param>${SPRING_CLOUD_CONFIG_URI}</param>-->
+            <!--<param>classpath:/application.properties</param>-->
+        <!--</list>-->
+    <!--</bean>-->
+
+    <!-- 信息输出的国际化定义 -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <param name="defaultEncoding">UTF-8</param>
+        <param name="useCodeAsDefaultMessage">true</param>
+        <param name="fallbackToSystemLocale">false</param>
+        <param name="cacheSeconds">10</param>
+        <param name="basenames">
+            classpath:/config/i18n/checkmsg,classpath:/config/i18n/dictionary,classpath:/config/i18n/errmsg
+        </param>
+    </bean>
+
+</config>

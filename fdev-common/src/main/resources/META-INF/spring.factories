@@ -1,0 +1,17 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.spdb.fdev.filter.FilterConfig,\
+com.spdb.fdev.common.FdevControllerAdvice,\
+com.spdb.fdev.common.util.ErrorMessageUtil,\
+com.spdb.fdev.common.aop.LogAspect,\
+com.spdb.fdev.transport.RestTransport,\
+com.spdb.fdev.transport.RestfulAutoConfiguration,\
+com.spdb.fdev.common.validate.RequestValidateAspect,\
+com.spdb.fdev.common.aop.LazyInitAspect,\
+com.spdb.fdev.common.config.RedisConfiguration,\
+com.spdb.fdev.common.util.SpringContextUtil,\
+com.spdb.fdev.common.config.RedisConfiguration,\
+com.spdb.fdev.common.config.MyStringSerializer,\
+com.spdb.fdev.common.config.DeserializerConfig,\
+com.spdb.fdev.transport.RestViewController,\
+com.spdb.fdev.common.aop.OperateRecordAspect,\
+com.spdb.fdev.common.util.UserVerifyUtil

@@ -1,0 +1,25 @@
+.node-deep{
+    background-color:#e8dddd !important;
+}
+.node-cancel{
+    background-color:#ffffff !important;
+}
+.el-tree-node__content:hover{
+    background-color:#e8dddd ;
+}
+/*点击选中之后点击页面上其他的东西时的css样式*/
+.is-current>.el-tree-node__content{
+    background-color:#e8dddd ;
+}
+/*点击选中的时候的css样式*/
+.el-tree-node:focus>.el-tree-node__content{
+    background-color:#ffffff ;
+}
+/*菜单的选项栏的初始样式*/
+.el-tree-node__content{
+    background-color:#ffffff;
+}
+
+.is-expanded{
+    background-color:#ffffff ;
+}

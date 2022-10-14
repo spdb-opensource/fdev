@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>已完成</title>
+    <g id="组件库" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1.7_Navigation_导航2" transform="translate(-1471.000000, -2080.000000)">
+            <g id="编组-10" transform="translate(1154.000000, 2080.000000)">
+                <g id="已完成" transform="translate(317.000000, 0.000000)">
+                    <g id="编组-15" fill="#DDDDDD">
+                        <rect id="矩形" x="0" y="0" width="32" height="32" rx="8"></rect>
+                    </g>
+                    <rect id="矩形" stroke="#FFFFFF" fill="#DDDDDD" x="7.83333333" y="7.16666667" width="16.3333333" height="17.6666667" rx="2"></rect>
+                    <g id="wancheng-2" transform="translate(10.666667, 11.333333)" fill="#FFFFFF" fill-rule="nonzero">
+                        <path d="M0.0181405896,4.72408163 L1.08099773,3.81297052 L3.68136054,5.77142857 C3.68136054,5.77142857 5.60888889,3.67292517 6.66249433,2.76399093 C7.71609977,1.85505669 10.3293424,0.0362811791 10.3293424,0.0362811791 L10.5992744,0.698049887 C10.5992744,0.698049887 7.92970522,3.31664399 6.91437642,4.72408163 C5.89904762,6.13151927 4.39972789,9.29160998 4.39972789,9.29160998 L0.0181405896,4.72408163 Z" id="形状"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

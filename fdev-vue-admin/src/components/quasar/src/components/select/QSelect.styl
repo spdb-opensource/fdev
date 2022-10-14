@@ -1,0 +1,152 @@
+.q-select
+
+  .q-field--error
+    .q-field__label
+      animation: q-field-label .36s
+    .q-field__bottom
+      color: $negative
+    .q-field--highlighted
+      border-color $negative
+      shadow-box none
+    
+  .q-field__append.error
+    width auto !important
+    position relative
+    left 4px
+
+  .q-field__control
+    color $primary
+
+  &.q-field--disabled
+    .q-field__marginal
+      background-color $grey-0
+
+  .q-field__marginal
+    color $grey-3
+    background-color #fff
+    height 24px
+    margin-top 6px
+    &.error
+      min-width 0 !important
+  &.q-field--labeled .q-field__marginal
+    height auto
+    margin-top 0
+     
+  &.q-field--highlighted_shadow
+    .q-field__control:after
+      box-shadow: none
+  &--without-input
+    .q-field__control
+      cursor: pointer
+  &--with-input
+    .q-field__control
+      cursor: text
+
+  .q-field__input
+    min-width: 50px !important
+
+    &--padding
+      padding-left: 4px
+
+  &__autocomplete-input
+    width: 0
+    height: 0
+    padding: 0
+    border: 0
+    opacity: 0
+
+  &__dropdown-icon
+    cursor: pointer
+    transition: transform .28s
+    width: 36px
+
+  &.q-field--readonly
+    .q-field__control, .q-select__dropdown-icon
+      cursor: default
+
+  &__dialog
+    width: 90vw !important
+    max-width: 90vw !important
+    max-height: calc(100vh - 70px) !important
+    background: #fff
+    display: flex
+    flex-direction: column
+
+    > .scroll
+      position: relative
+      background: inherit
+
+  &--menu .q-item
+      padding 7px 10px 7px 16px
+
+  &-multiple--menu&-noflat--menu .q-item
+    padding-right 26px
+    &::after
+      content ''
+      width 16px
+      position relative
+      left 10px
+    &--active::after
+      content ''
+      background-image url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI0LjAuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IuWbvuWxgl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIKCSB2aWV3Qm94PSIwIDAgMTQgMTQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDE0IDE0OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+Cgkuc3Qwe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzA2NjNCRTt9Cjwvc3R5bGU+CjxwYXRoIGlkPSLot6/lvoTlpIfku70iIGNsYXNzPSJzdDAiIGQ9Ik0xMi40LDIuMUw0LjYsOS45bC0zLTNjLTAuMS0wLjEtMC4zLTAuMS0wLjQsMGwtMC4xLDBMMC4xLDhDMCw4LjEsMCw4LjMsMC4xLDguNGw0LjMsNC4zCgljMC4xLDAuMSwwLjMsMC4xLDAuNCwwbDAuMSwwbDkuMS05LjFDMTQsMy41LDE0LDMuMywxNCwzLjJsMC0wLjFsLTEuMS0xLjFDMTIuNywyLDEyLjUsMiwxMi40LDIuMXoiLz4KPC9zdmc+Cg==')
+      background-repeat no-repeat
+      background-position center
+      position relative
+      left 10px
+  
+  &--flat
+    .q-field__native
+      padding-right 8px
+    .q-field__append
+      width auto
+    .q-field__marginal
+      min-width 10px
+      .q-select__dropdown-icon
+        width 10px
+  
+  &--with-chips
+    .q-chip
+      height 20px
+      padding 4px 0 4px 8px
+      margin 2px 4px 2px 0
+      border-radius 2px
+      background-color $grey-0
+      .q-chip__content
+        margin-right 8px
+        color $black-0
+      svg
+        margin-left 0
+        margin-right 8px
+    .q-field__control
+      padding 6px 0 6px 16px
+    .q-field__native
+      min-height 20px
+    &.q-select--hasValue
+      .q-field__control
+        padding-left 12px !important
+    .q-field__marginal
+      margin-top 0
+
+// addressbar always gets shown, so need to slim this down
+body.mobile:not(.native-mobile) .q-select__dialog
+  max-height: calc(100vh - 108px) !important
+
+body.platform-android
+
+  &.native-mobile .q-dialog__inner--top .q-select__dialog
+    max-height: calc(100vh - 24px) !important
+
+  &:not(.native-mobile) .q-dialog__inner--top .q-select__dialog
+    max-height: calc(100vh - 80px) !important
+
+body.platform-ios
+
+  &.native-mobile .q-dialog__inner--top
+    > div
+      border-radius: $generic-border-radius
+
+    .q-select__dialog--focused
+      max-height: 47vh !important
+
+  &:not(.native-mobile) .q-dialog__inner--top .q-select__dialog--focused
+    max-height: 50vh !important

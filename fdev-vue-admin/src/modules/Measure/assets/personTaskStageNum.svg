@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:url(#矩形_1_);}
+	.st1{fill:#FFFFFF;}
+	.st2{fill-rule:evenodd;clip-rule:evenodd;fill:url(#形状结合_2_);}
+</style>
+<title>不同阶段任务量统计备份</title>
+<linearGradient id="矩形_1_" gradientUnits="userSpaceOnUse" x1="-111.119" y1="306.8489" x2="-110.1427" y2="305.8817" gradientTransform="matrix(60 0 0 -60 6667 18411.0762)">
+	<stop  offset="0" style="stop-color:#219CF0"/>
+	<stop  offset="1" style="stop-color:#A2D9FF"/>
+</linearGradient>
+<path id="矩形" class="st0" d="M4,0h52c2.2,0,4,1.8,4,4v52c0,2.2-1.8,4-4,4H4c-2.2,0-4-1.8-4-4V4C0,1.8,1.8,0,4,0z"/>
+<path id="形状结合" class="st1" d="M30,8c6.6,0,12,5.4,12,12c0,2.2-0.6,4.3-1.7,6.1C46.4,27,51,32.2,51,38.5
+	c0,1.4-0.2,2.8-0.7,4.1c1,2.5,1.6,5.2,1.7,8.1l0,0.4h-4c0-1.3-0.1-2.6-0.4-3.9c-2.3,2.4-5.5,3.9-9.1,3.9C31.6,51,26,45.4,26,38.5
+	c0-1.9,0.4-3.7,1.2-5.3c-8.5,1.3-15,8.6-15.2,17.4l0,0.3H8c0-9.8,6.5-18.2,15.4-21c-3.2-2.1-5.4-5.8-5.4-10C18,13.4,23.4,8,30,8z
+	 M30,12c-4.4,0-8,3.6-8,8s3.6,8,8,8c0.8,0,1.5-0.1,2.2-0.3c0.7-0.4,1.4-0.7,2.1-1c2.2-1.4,3.6-3.9,3.6-6.7C38,15.6,34.4,12,30,12z"
+	/>
+<linearGradient id="形状结合_2_" gradientUnits="userSpaceOnUse" x1="-106.619" y1="291.3474" x2="-107.619" y2="291.3474" gradientTransform="matrix(21 0 0 -13 2288 3826.0164)">
+	<stop  offset="0" style="stop-color:#A2D9FF"/>
+	<stop  offset="1" style="stop-color:#219CF0"/>
+</linearGradient>
+<path id="形状结合_1_" class="st2" d="M35.5,32c1.4,0,2.5,1.1,2.5,2.5c0,0.4-0.1,0.9-0.3,1.2l3.3,4.3c0.2,0,0.4-0.1,0.6-0.1
+	c0.2,0,0.5,0,0.7,0.1l2.1-2.5c-0.2-0.3-0.3-0.7-0.3-1.1c0-1.4,1.1-2.5,2.5-2.5s2.5,1.1,2.5,2.5c0,1.4-1.1,2.5-2.5,2.5
+	c-0.2,0-0.5,0-0.7-0.1l-2.1,2.5c0.2,0.3,0.3,0.7,0.3,1.1c0,1.4-1.1,2.5-2.5,2.5c-1.4,0-2.5-1.1-2.5-2.5c0-0.4,0.1-0.9,0.3-1.2
+	l-3.2-4.3c-0.2,0-0.4,0.1-0.6,0.1c-0.2,0-0.5,0-0.7-0.1l-2.1,2.5c0.2,0.3,0.3,0.7,0.3,1.1c0,1.4-1.1,2.5-2.5,2.5S28,41.9,28,40.5
+	s1.1-2.5,2.5-2.5c0.2,0,0.5,0,0.7,0.1l2.1-2.5c-0.2-0.3-0.3-0.7-0.3-1.1C33,33.1,34.1,32,35.5,32z"/>
+</svg>

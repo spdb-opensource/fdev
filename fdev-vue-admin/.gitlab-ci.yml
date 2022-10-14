@@ -1,0 +1,54 @@
+image: xxx/mbpe-public-docker-local/library/fdev-helper:latest
+
+stages:
+  - node-build
+  - maven-build
+  - deploy
+
+variables:
+  CI_REGISTRY: "xxx/mbpe-public-docker-local"
+  CI_REGISTRY_IMAGE: "xxx/mbpe-public-docker-local/library/fdev-admin"
+  CI_REGISTRY_USER: "spdb-mbpe"
+  CI_REGISTRY_PASSWORD: "xxx"
+
+node-build:
+  image: xxx/mbpe-public-docker-local/library/node-helper:latest
+  stage: node-build
+  script:
+    - npm config set registry http://xxx/artifactory/api/npm/mbpe-npm-virtual/
+    - npm install node-sass@4.13.0 --sass-binary-site=http://xxx/ebank_fe_resource/node-sass/raw/master
+    - npm install
+    - export NODE_OPTIONS=--max-old-space-size=8192 && npm run build
+  before_script:
+    - load_cache.sh
+  after_script:
+    - make_cache.sh
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 30 min
+  only:
+    - /^SIT.*$/
+    - /^sit.*$/
+    - /^mock.*$/
+    - /^MOCK.*$/
+    - schedules
+    - /^PRO.*$/
+    - /^pro.*$/
+
+k8s-deploy:
+  services:
+    - xxx/mbpe-public-docker-local/library/docker:dind-spdb
+  stage: deploy
+  script:
+    - cp -r dist gitlab-ci/
+    - build_fdev.py
+    - deploy_fdev.py
+  only:
+    - /^SIT.*$/
+    - /^sit.*$/
+    - /^mock.*$/
+    - /^MOCK.*$/
+    - schedules
+    - /^PRO.*$/
+    - /^pro.*$/

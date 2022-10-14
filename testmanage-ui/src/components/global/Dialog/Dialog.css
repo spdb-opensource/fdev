@@ -1,0 +1,26 @@
+.dialog .el-dialog__header{
+  background:  #409eff!important;
+  padding: 15px 20px;
+}
+.dialog .el-dialog__title {
+  color: white!important;
+  line-height: 25px;
+}
+.dialog .el-dialog__headerbtn .el-icon {
+  color: white!important;
+}
+.dialog {
+  margin: 0 auto!important;
+  max-height: 95vh;
+  overflow: hidden;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.dialog .el-dialog__body{
+  max-height: calc(95vh - 115px);
+  overflow: auto;
+  padding: 20px;
+}
+.have-footer .el-dialog__body{
+  max-height: calc(95vh - 185px);
+}

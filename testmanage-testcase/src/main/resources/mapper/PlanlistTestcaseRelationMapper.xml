@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.manager.ftms.dao.PlanlistTestcaseRelationMapper">
+	<resultMap id="BaseResultMap"
+		type="com.manager.ftms.entity.PlanlistTestcaseRelation">
+		<id column="id" jdbcType="INTEGER" property="planlistTestcaseId" />
+		<result column="TESTCASE_ID" jdbcType="VARCHAR"
+			property="testcaseNo" />
+		<result column="plan_id" jdbcType="INTEGER" property="planId" />
+		<result column="RESULT_STATUS" jdbcType="CHAR"
+			property="testcaseExecuteResult" />
+		<result column="FNL_TM" jdbcType="DATE"
+			property="testcaseExecuteDate" />
+		<result column="FST_TM" jdbcType="VARCHAR" property="fstTm" />
+		<result column="FST_OPR" jdbcType="VARCHAR" property="fstOpr" />
+		<result column="FNL_OPR" jdbcType="VARCHAR" property="fnlOpr" />
+		<result column="CREATE_TM" jdbcType="VARCHAR"
+			property="createTm" />
+		<result column="EXE_NUM" jdbcType="INTEGER" property="exeNum" />
+		<result column="FAIL_EXE_NUM" jdbcType="INTEGER" property="failExeNum" />
+		<result column="BLOCK_EXE_NUM" jdbcType="INTEGER" property="blockExeNum" />
+		<result column="WORK_NO" jdbcType="VARCHAR" property="workNo" />
+	</resultMap>
+
+	<!--删除计划下所有关联关系 -->
+	<delete id="deleteByPlanId" parameterType="java.lang.Integer">
+		DELETE FROM FTMS_PLAN_RESULT
+		WHERE plan_id = #{planId}
+	</delete>
+
+	<insert id="insert" keyProperty="planlistTestcaseId"
+		useGeneratedKeys="true"
+		parameterType="com.manager.ftms.entity.PlanlistTestcaseRelation">
+		insert into FTMS_PLAN_RESULT (id, TESTCASE_ID, plan_id, work_no,
+		RESULT_STATUS, FNL_TM, FST_TM,
+		FST_OPR, FNL_OPR, CREATE_TM, EXE_NUM)
+		values (#{planlistTestcaseId,jdbcType=INTEGER},
+		#{testcaseNo,jdbcType=VARCHAR}, #{planId,jdbcType=INTEGER}, #{workNo,jdbcType=VARCHAR},
+		#{testcaseExecuteResult,jdbcType=CHAR},
+		#{testcaseExecuteDate,jdbcType=DATE}, #{fstTm,jdbcType=VARCHAR},
+		#{fstOpr,jdbcType=VARCHAR}, #{fnlOpr,jdbcType=VARCHAR},
+		#{createTm,jdbcType=VARCHAR}, #{exeNum,jdbcType=INTEGER})
+	</insert>
+
+	<update id="updateByPrimaryKey"
+		parameterType="com.manager.ftms.entity.PlanlistTestcaseRelation">
+		update FTMS_PLAN_RESULT
+		set TESTCASE_ID = #{testcaseNo,jdbcType=VARCHAR},
+		plan_id = #{planId,jdbcType=INTEGER},
+		RESULT_STATUS = #{testcaseExecuteResult,jdbcType=CHAR},
+		FNL_TM = #{testcaseExecuteDate,jdbcType=DATE},
+		FST_TM = #{fstTm,jdbcType=VARCHAR},
+		FST_OPR = #{FST_OPR,jdbcType=VARCHAR},
+		FNL_OPR = #{fnlOpr,jdbcType=VARCHAR},
+		EXE_NUM = #{exeNum,jdbcType=INTEGER}
+		where id = #{planlistTestcaseId,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectByPlanId"
+		resultMap="BaseResultMap">
+		select
+			id, TESTCASE_ID, plan_id, RESULT_STATUS, FNL_TM,
+			FST_TM, FST_OPR, FNL_OPR, EXE_NUM
+		from
+			FTMS_PLAN_RESULT
+		where
+			plan_id = #{map.planId}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select id, TESTCASE_ID, plan_id, RESULT_STATUS, FNL_TM,
+		FST_TM, FST_OPR, FNL_OPR, EXE_NUM, WORK_NO
+		from FTMS_PLAN_RESULT
+	</select>
+
+	<!-- 查询计划-案例关系列表 -->
+	<select id="selectRelationByTestcaseNoAndPlanId"
+		resultMap="BaseResultMap">
+		SELECT id,TESTCASE_ID,plan_id,RESULT_STATUS,FNL_TM,EXE_NUM
+		FROM FTMS_PLAN_RESULT
+		WHERE TESTCASE_ID=#{testcaseNo} AND plan_id=#{planId}
+	</select>
+
+	<!-- 批量复用/复制 -->
+	<insert id="batchAddRelation" parameterType="java.util.List">
+		INSERT INTO FTMS_PLAN_RESULT
+		(TESTCASE_ID,plan_id,work_no,RESULT_STATUS,CREATE_TM,EXE_NUM)
+		VALUES
+		<foreach collection="testcaseNos" item="testcaseNos"
+			separator=",">
+			(#{testcaseNos},#{planId},#{workNo},0,#{createTm},0)
+		</foreach>
+	</insert>
+
+	<!--根据计划id和案例编号查询关系表中存在关系数量 -->
+	<select id="queryCountByPlanIdandTestcaseNo"
+		parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(ID) from FTMS_PLAN_RESULT ptr
+		where ptr.TESTCASE_ID = #{testcaseNo,jdbcType=VARCHAR} and ptr.plan_id =
+		#{planId,jdbcType=INTEGER}
+	</select>
+
+	<!--根据计划id和案例编号查询关系表中存在关系数量 -->
+	<select id="queryCountByTestcaseNo"
+		parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1) from FTMS_PLAN_RESULT ptr
+		where ptr.TESTCASE_ID = #{testcaseNo,jdbcType=VARCHAR}
+	</select>
+
+	<!--根据关系表中流水id删除该关系 -->
+	<delete id="deletePlanlistTsetcaseRelationById"
+		parameterType="java.lang.String">
+		delete from FTMS_PLAN_RESULT
+		where id = #{planlistTestcaseId,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="addPlanlistTsetcaseRelation"
+		parameterType="java.util.Map">
+		<!--新增案例计划关系表 -->
+		insert
+			into
+		FTMS_PLAN_RESULT
+			(TESTCASE_ID,
+			plan_id,
+			RESULT_STATUS,
+			CREATE_TM,EXE_NUM,
+		    CREATE_OPR,
+			work_no
+		)
+		values
+			(#{testcaseNo,jdbcType=VARCHAR},
+			#{planId,jdbcType=INTEGER},
+			#{testcaseExecuteResult,jdbcType=CHAR},
+			#{createTm},
+			0,
+			#{createOpr}
+			,#{workNo,jdbcType=VARCHAR})
+	</insert>
+
+	<!--根据计划id删除案例关系表 -->
+	<delete id="delPlanlistTestcaseIdByPlanId"
+		parameterType="java.lang.Integer">
+		delete from FTMS_PLAN_RESULT
+		where plan_id IN #{planid,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 删除关系 delBatchRelationCase -->
+	<delete id="delBatchRelationCase">
+		delete from FTMS_PLAN_RESULT
+		where
+		<foreach collection="testcaseNoList" open="(" close=")"
+			separator="," item="item" index="index">
+			RESULT_STATUS = #{item}
+		</foreach>
+		and plan_id = #{planId}
+	</delete>
+
+	<select id="queryPlanlistTestcaseRelationCountBytestcaseNo"
+		parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1)
+		from FTMS_PLAN_RESULT
+		where TESTCASE_ID = #{testcaseNo}
+	</select>
+
+	<!-- updateTestCaseExecuteStatus 跟你主键修改案例执行状态 -->
+	<update id="updateTestCaseExecuteStatus"
+		parameterType="java.util.Map">
+		update FTMS_PLAN_RESULT
+		set
+		<if test="testcaseExecuteResult != null">
+			RESULT_STATUS = #{testcaseExecuteResult}
+		</if>
+		<if test="testcaseExecuteDate != null">
+			,FNL_TM = #{testcaseExecuteDate}
+		</if>
+		<if test="fnlOpr != null">
+			,FNL_OPR = #{fnlOpr}
+		</if>
+		<if test="fstOpr != null">
+			,FST_OPR = #{fstOpr}
+		</if>
+		<if test="fstTm != null">
+			,FST_TM = #{fstTm}
+		</if>
+		<if test="exeNum != null">
+			,EXE_NUM = #{exeNum}
+		</if>
+		<if test="failExeNum != null">
+			,FAIL_EXE_NUM = #{failExeNum}
+		</if>
+		<if test="blockExeNum != null">
+			,BLOCK_EXE_NUM = #{blockExeNum}
+		</if>
+		<if test="planlistTestcaseId != null">
+			where id = #{planlistTestcaseId}
+		</if>
+	</update>
+
+	<delete id="delPlanlistTestcaseRelationByTestcaseNo"
+		parameterType="java.util.Map">
+		delete from FTMS_PLAN_RESULT
+		where TESTCASE_ID = #{testcaseNo} and plan_id = #{planId,jdbcType=INTEGER}
+	</delete>
+
+	<!--根据计划查询关系表 -->
+	<select id="queryRelation" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT
+			ID,PLAN_ID,TESTCASE_ID,RESULT_STATUS,FST_OPR,FST_TM,FNL_OPR,FNL_TM,EXE_NUM,FAIL_EXE_NUM,BLOCK_EXE_NUM,WORK_NO
+		FROM
+			FTMS_PLAN_RESULT
+		where
+			id = #{planlistTestcaseId};
+	</select>
+
+	<select id="queryPlanIdByPlanlistTestcaseId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT
+			PLAN_ID
+		FROM
+			FTMS_PLAN_RESULT
+		WHERE
+			ID = #{planlistTestcaseId};
+	</select>
+
+	<update id="updateModify" parameterType="java.util.Map">
+		UPDATE
+			FTMS_PLAN_RESULT
+		SET
+			FNL_UPDATE_TM = #{finalUpdateTime},
+			FNL_UPDATE_OPR = #{finalUpdatePrs}
+		WHERE
+			id = #{planlistTestcaseId}
+	</update>
+
+	<insert id="addTestcaseExeRecord" parameterType="com.manager.ftms.entity.TestcaseExeRecord">
+		INSERT
+		INTO
+			FTMS_TESTCASE_EXE_RECORD
+			(FPR_ID,
+			DATE,
+			OPR,
+			STATUS,
+			WORK_NO,
+			PLAN_ID,
+			TESTCASE_NO,
+			OPR_TYPE)
+		VALUES
+			(#{fprId},
+			#{date},
+			#{opr},
+			#{status},
+			#{workNo},
+			#{planId},
+			#{testcaseNo},
+			#{oprType})
+	</insert>
+
+	<delete id="deleteTestcaseExeRecord">
+		DELETE
+		FROM
+			FTMS_TESTCASE_EXE_RECORD
+		WHERE
+			FPR_ID = #{planlistTsetcaseId}
+		AND
+			(OPR_TYPE = '0'
+		OR
+			OPR_TYPE is null)
+	</delete>
+
+	<update id="updateTestcaseByPlanlistTestcaseId">
+		UPDATE
+			FTMS_PLAN_RESULT
+		SET
+			testcase_id = #{testCaseNo},
+			RESULT_STATUS = '0'
+		WHERE
+			id = #{planlistTestcaseId}
+	</update>
+
+</mapper>

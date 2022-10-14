@@ -1,0 +1,101 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+  namespace: fdev
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+    spec:
+      imagePullSecrets:
+        - name: docker-registry-secret
+      containers:
+        - name: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+          image: $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
+          env:
+            - name: CI_PROJECT_NAME
+              value: $CI_PROJECT_NAME
+            - name: CI_ENVIRONMENT_SLUG
+              value: $CI_ENVIRONMENT_SLUG
+            - name: SW_AGENT_NAME
+              value: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+            - name: SW_AGENT_NAMESPACE
+              value: $CI_ENVIRONMENT_SLUG
+            - name: SW_MONGODB_TRACE_PARAM
+              value: "true"
+            - name: SW_AGENT_COLLECTOR_BACKEND_SERVICES
+              value:xxx:11800,xxx:11800,xxx:11800
+            - name: SW_AGENT_TRACE_IGNORE_PATH
+              value: /fprocesstool/actuator/*
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: log
+              mountPath: /fdev/log
+            - name: skywalking
+              mountPath: /usr/skywalking/agent
+            - name: filedownload
+              mountPath: /fdev/filedownload
+          livenessProbe:
+            httpGet:
+              path: /fprocesstool/actuator/info
+              port: 8080
+              httpHeaders:
+                - name: source
+                  value: back
+            initialDelaySeconds: 120 # 在激活或就绪探测启动之前容器启动后的秒数。
+            periodSeconds: 60 # 每隔多少秒发出一次探测
+            timeoutSeconds: 10 #超时时间
+          resources:
+            limits:
+              cpu: 2
+              memory: 4Gi
+            requests:
+              cpu: 0
+              memory: 0
+      volumes:
+        - name: log
+          hostPath:
+            path: /home/ebank/spdb/fdev/log/fprocesstool/$CI_ENVIRONMENT_SLUG
+        - name: skywalking
+          hostPath:
+            path: /home/ebank/spdb/fdev/skywalking/agent
+        - name: filedownload
+          hostPath:
+            path: /home/ebank/spdb/fdev/fprocesstool/filedownload
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG-svc
+  namespace: fdev
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG-ingress
+  namespace: fdev
+spec:
+  rules:
+    - host: $CI_PROJECT_NAME.$CI_ENVIRONMENT_SLUG.minikube
+      http:
+        paths:
+          - backend:
+              serviceName: $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG-svc
+              servicePort: 8080
+            path: /

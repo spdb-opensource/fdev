@@ -1,0 +1,51 @@
+<div>
+    <pre>
+各位老师好：
+     因开发测试需要，申请以下开通spdb-kf白名单，相应信息如下，烦请老师协助处理，谢谢！
+    <br><br>
+</pre>
+<table cellpadding="10" cellspacing="0" border="1">
+    <thead>
+        <tr>
+            <th>源服务器名称</th>
+            <th>申请类型</th>
+            <th>MAC地址</th>
+            <th>申请人</th>
+            <th>使用人</th>
+            <th>所属小组</th>
+            <th>使用人员类别</th>
+            <th>设备用途</th>
+            <th>使用人公司</th>
+            <th>使用人域用户</th>
+            <th>申请日期</th>
+        </tr>
+    </thead>
+    <#list approvalList as approval>
+        <tr>
+            <td>${approval.phone_type!}</td>
+            <td>spdb-kf网络白名单</td>
+            <td>${approval.phone_mac!}</td>
+            <td>${approval.applicant.user_name_cn!}</td>
+            <td>${approval.user.user_name_cn!}</td>
+            <td>${approval.user.group.name!}</td>
+            <td>
+                <#if approval.user.is_spdb>
+                                                        行内
+                <#else>
+                                                        厂商 
+                </#if>
+            </td>
+            <td>个人手机银行系统平台开发测试</td>
+            <td>${approval.user.company.name!}</td>
+            <td>
+                <#if approval.user.is_spdb>
+                   hdqsmsg01\\${approval.user.vm_user_name!}
+                <#else>
+                   dev\\${approval.user.email!}
+                </#if>
+            </td>
+            <td>${approval.create_time!}</td>
+        </tr>
+    </#list>
+</table>
+</div>
